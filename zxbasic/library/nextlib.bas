@@ -1,6 +1,6 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v5.5 - David Saphier / emook 2018
+' NextLib v6 - David Saphier / emook 2020
 ' Help and thanks Boriel, Flash, Baggers, Brilion, Shiru, Mike Daily 
 ' ---------------------------------------------------------
 
