@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #666666;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style11 {color: #666666}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">DIM</p>
+<p>[Command] - Universal declaration of Variables and arrays </p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> <span class="style3">DIM</span> variablename[,variablename] <span class="style3">AS</span> variabletype[=value] [AT Address] </p>
+<p><em>Parameters:</em></p>
+<p>variablename: name of a variable </p>
+<p>variabletype: any variable type like BYTE, UBYTE, STRING, etc.  If type is not specified, <strong>FLOAT</strong> will be used, unless you use a suffix (<em>sigil</em>) like $ or&nbsp;%. </p>
+<p>Adress: Memory Adress or pointer </p>
+<p><em>Description:</em></p>
+<p><strong>DIM</strong> is used in Sinclair BASIC to declare arrays. In ZX BASIC, its usage has been extended to declare any variable and its type. A <a href="Help_Com_VarTypes.html" target="_self">type</a> is a name for the kind of data (<strong>Integer</strong>, <strong>Byte</strong>, <strong>String</strong>, etc.) it holds.</p>
+<p>ZX BASIC will initialize any numeric variable to 0 (like most BASIC   flavors), and any string variable to an empty string, so you don't need   to initialize them, though it's recommended.</p>
+<p>ZX BASIC allows you to use undeclared variables. In Sinclair BASIC, using an unassigned variable triggered the error <em>Variable not found</em>. </p>
+<p>When you use an undeclared variable, ZX BASIC will try to guess   its type by looking at the context in which it is being used and then   will initialize it with a default value, depending on the type (0 or an   empty string). If it cannot guess the type (this is usually very   difficult), it will fallback to float. The float type is the most   inefficient (though most flexible) type ZX BASIC supports, but it is the   Sinclair BASIC compatible one. So if you want the compiler to make an   efficient and optimized compilation, it is better to declare the   variable types you use in advance using the DIM statement. (Note that   languages like C or Pascal requires every used variable to be declared). </p>
+<p>Declaring a variable that has already been referenced in previous lines will result in a syntax error.</p>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre>REM ' Declares 'a' as a 16 bit signed integer variable
+DIM a AS INTEGER
+
+
+REM ' Declares 'b' as a Float because no type is specified
+DIM b
+
+
+REM ' Declares 'c' as String, because of the '$' suffix
+DIM c$
+
+
+REM ' Declares d as String, using an explicit type
+DIM d AS STRING
+
+
+REM ' Declares x, y as 32bit unsigned integers in a single line
+DIM x, y AS ULONG
+
+
+REM ' Here S is declared as String, because R has a '$'
+DIM R$, S
+
+
+REM ' initialize an unsigned byte with 5
+DIM b AS UBYTE = 5
+
+
+REM ' warning: Using default implicit type 'float' for 'a'
+DIM a = 5
+
+
+REM ' No warning here, because the compiler knows it is an integer (% suffix)
+DIM c% = 5</pre>
+  <pre>REM 'a is not declared, but since you use PI, it must be float
+LET a = PI</pre>
+  <pre>REM 'a here is taken as a FIXED not FLOAT. Beware with precision loss!
+LET a = 3.5</pre>
+</blockquote>
+<p align="left">	For any positive integer, unsigned types will be used. </p>
+<blockquote>
+  <pre>REM ' a will be declared implicitly as BYTE
+FOR a = -1 TO 10
+...
+NEXT
+
+
+REM ' b will be declared as UByte
+FOR b = 1 TO 10
+...
+NEXT
+
+
+REM ' Warning, truncation!
+LET a = -3.5
+
+
+REM ' Warning, sign overflow!
+LET b = -1</pre>
+  <p>&nbsp;</p>
+</blockquote>
+<p>As you might see, using undeclared variables might lead to errors   (truncation, overflow). The compiler will try to warning about these   whenever it can, but sometimes this will be not possible, and errors   might pass silently (you might experience strange behaviors in your   program). </p>
+<p>It might even be difficult for you to guess which type will be   implicitly used for an undeclared variable. The safest choice is to   always declare them. </p>
+<p>You can declare a variable at a fixed memory address. This is called <em>variable mapping</em>. </p>
+<p>E.g. address 23675 contains a system variable which points to UDG address. You could traditionally read this content by doing: </p>
+<blockquote>
+  <pre>PRINT &quot;UDG memory address is &quot;; PEEK 23675 + 256 * PEEK 23676</pre>
+</blockquote>
+<p>It is a 16 bit unsigned integer value (UINTEGER). We can map a variable on that address: </p>
+<blockquote>
+  <pre>DIM UDGaddr AS UINTEGER AT 23675
+PRINT &quot;UDG memory address is &quot;; UDGaddr</pre>
+</blockquote>
+<p>This is more readable. Also, setting a value to this variable changes UDG address. </p>
+<p>A variable is just a memory position containing data. In same cases you   might find useful a variable having more than one name, for the sake of   code readability: </p>
+<blockquote>
+  <pre>DIM a AS FLOAT = PI
+REM 'Now let's declare an alias of 'a', called 'radians'
+DIM radians AS FLOAT AT @a
+PRINT &quot;radians = &quot;; radians
+LET radians = 1.5
+PRINT &quot;a = &quot;; a</pre>
+</blockquote>
+<p>As you can see, both <em>radians</em> and <em>a</em> can be used interchangeably. </p>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This identifier is compatible with Sinclair BASIC (see <a href="Help_Cmd_Print.html" target="_self">PRINT</a>), but <em>expands</em> it, since it allows positioning at rows 22 and 23 (all 24 rows are   available to the programmer). Traditionally, Sinclair BASIC only allows   to print at rows 0..21. </li>
+  <li>This identifier <em>expands</em> the Sinclair BASIC version when used with <a href="Help_Cmd_And.html" target="_self">DIM</a> </li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>DIM, PRINT, CSRLIN, POS </p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

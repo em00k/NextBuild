@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #0000FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">FourSpriter</p>
+<p>[Sprites] - Handling of char-based 2x2 Sprites with background preservation. </p>
+<hr />
+<p>Description:</p>
+<p class="style2">SUB MJfspMoveSprite(n,x,y) </p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p>x (Ubyte): X Coordinate </p>
+<p>y (Ubyte)   : Y Coordinate </p>
+<p><em>Notes:</em></p>
+<p>Moves sprite #n to new coordinates (x, y)</p>
+<p>&nbsp;</p>
+<p class="style2">SUB MJfspColourSprite(n,attr1,attr2,attr3,attr4)</p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p>attr1 to attr4 (Ubyte): Attributes to assign to Sprite </p>
+<p><em>Notes:</em></p>
+<p>Colours sprite #n</p>
+<p></p>
+<p class="style2">SUB MJfspSetGfxSprite(n,char1,char2,char3,char4) </p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p>char1 to char4 (Ubyte): Characters to assign to Sprite </p>
+<p><em>Notes:</em></p>
+<p>Sets sprite #n's four characters</p>
+<p></p>
+<p class="style2">SUB MJfspActivateSprite(n)</p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p><em>Notes:</em></p>
+<p>Activates sprite #n</p>
+<p>&nbsp;</p>
+<p class="style2">SUB MJfspDeactivateSprite(n)</p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p><em>Notes:</em></p>
+<p>Deactivates sprite #n</p>
+<p>&nbsp;</p>
+<p class="style3"><strong>MJfspDuplicateCoordinatesSprite (n)</strong></p>
+<p><em>Parameters:</em></p>
+<p>n (Ubyte): Number of Sprite </p>
+<p><em>Notes:</em></p>
+<p>Does CX = X and CY = Y for Sprite #n, used when defining the sprite.</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspSetGfxAddress (addres)</strong></p>
+<p><em>Parameters:</em></p>
+<p>n (Uinteger): Number of Sprite </p>
+<p><em>Notes:</em></p>
+<p>Sets the address where graphics data is read.</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspInitSprites ()</strong></p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Notes:</em></p>
+<p>Calls init_sprite routine in fsp 2.1</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspBorraSprites ()</strong></p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Notes:</em></p>
+<p>Calls borra_sprites routine in fsp 2.1</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspPintaSprites ()</strong></p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Notes:</em></p>
+<p>Calls pinta_sprites routine in fsp 2.1</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspUpdateCoordinates ()</strong></p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Notes:</em></p>
+<p>Calls upd_coord routine in fsp 2.1</p>
+<p class="style3">&nbsp;</p>
+<p class="style3"><strong>MJfspUpdateSprites ()</strong></p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Notes:</em></p>
+<p>Calls upd_sprites routine in fsp 2.1.  Basicly makes changes. Erases sprites, stores background, and repaints them</p>
+<hr />
+<p>#Include &lt;fourspriter.bas&gt;</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

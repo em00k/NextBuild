@@ -1,0 +1,107 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #0000FF;
+	font-weight: bold;
+}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">String</p>
+<p>[String] - Extended String functions. </p>
+<hr />
+<p>Description:</p>
+<p class="style2">FUNCTION mid$(String$,From,Len) </p>
+<p><em>Parameters:</em></p>
+<p>String$: Source String from which we extract</p>
+<p>From: Count of character where to start</p>
+<p>Len: Length of extracted String in chars   </p>
+<p><em>Returns:</em></p>
+<p>Extracted String </p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION left$(String$,Len) </p>
+<p><em>Parameters:</em></p>
+<p>String$: Source String from which we extract</p>
+<p>Len: Length of extracted String in chars. E.g. if you select 17, so first 17 chars of a string are returned </p>
+<p><em>Returns:</em></p>
+<p>Extracted String</p>
+<p></p>
+<p class="style2">FUNCTION right$(String$,Len) </p>
+<p><em>Parameters:</em></p>
+<p>String$: Source String from which we extract</p>
+<p>Len: Length of extracted String in chars. E.g. if you select 17, so last 17 chars of a string are returned </p>
+<p><em>Returns:</em></p>
+<p>Extracted String</p>
+<p></p>
+<p class="style2">FUNCTION strpos2(String1$,String2$) </p>
+<p><em>Parameters (must be variables, not Expressions!):</em></p>
+<p>String1$: String to search</p>
+<p>String2$: The String to find inside String1$  </p>
+<p><em>Returns:</em></p>
+<p>Position of String2$ inside the String1$.</p>
+<p><em>Notes:</em></p>
+<p>If the String2$ is not found inside String1$, it returns a value greater than size of String1$.</p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION strpos(String1$,String2$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to search</p>
+<p>String2$: The String to find inside String1$ </p>
+<p><em>Returns:</em></p>
+<p>Position of String2$ inside the String1$.</p>
+<p><em>Notes:</em></p>
+<p>If the String2$ is not found inside String1$, it returns a value greater than size of String1$.</p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION inStr(String1$,String2$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to search</p>
+<p>String2$: The String to find inside String1$ </p>
+<p><em>Returns:</em></p>
+<p>If  String2$ is not found inside the String1$, returns 0, or any other value if found. </p>
+<p><em>Notes:</em></p>
+<p>If the String2$ is not found inside String1$, it returns a value greater than size of String1$. </p>
+<p>&nbsp;</p>
+<p class="style2">SUB ucase2$(String$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to convert to upper case, the result will be written in the same variable. </p>
+<p><em>Returns:</em></p>
+<p>Nothing</p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION  ucase(String$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to convert to upper case</p>
+<p><em>Returns:</em></p>
+<p>String converted to upper case </p>
+<p>&nbsp;</p>
+<p class="style2">SUB lcase2$(String$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to convert to lower case, the result will be written in the same variable. </p>
+<p><em>Returns:</em></p>
+<p>Nothing</p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION  lcase(String$) </p>
+<p><em>Parameters:</em></p>
+<p>String1$: String to convert to lower case</p>
+<p><em>Returns:</em></p>
+<p>String converted to lower case </p>
+<p>&nbsp;</p>
+<hr />
+<p>#Include &lt;string.bas&gt;</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

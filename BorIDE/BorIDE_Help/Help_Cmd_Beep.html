@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF00FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style5 {color: #FF0000}
+.style7 {color: #FF00FF}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">BEEP</p>
+<p>[Statement] - Generates sound</p>
+<hr />
+<p>Syntax:</p>
+<p class="style2">BEEP duration,pitch </p>
+<p><em>Parameters:</em></p>
+<p>duration=floating point value defining the duration in seconds</p>
+<p>pitch=tone given in semitones above middle C using negative numbers for notes below middle C </p>
+<p><em>Description:</em></p>
+<p>Uses Spectrum 48 build-in speaker to generate a tone. nothing else can be executed while the tone is played</p>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3">REM</span> 'Makes a beep
+<span class="style3">LET</span> duration = <span class="style5">0.1</span>
+<span class="style3">LET</span> tone=5
+<span class="style3">BEEP </span>duration,tone
+<span class="style3">REM</span> 'tone was played<span class="style5"></span></pre>
+</blockquote>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This function is 100% Sinclair BASIC Compatible </li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>---</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>
