@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF00FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style10 {color: #FF00FF}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">bAND</p>
+<p>[Function] - Binary AND of two values</p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> a bAND b</p>
+<p><em>Parameters:</em></p>
+<p>a,b: Two integer numbers</p>
+<p><em>Description:</em></p>
+<p>Performs the <em>Bitwise Conjunction</em> and returns 1 for every bit if and only if both bits are 1. Can be used for masking Bits.</p>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3"></span>
+<span class="style3">PRINT</span> 255 <span class="style10">bAND</span> 7
+
+
+DIM adr AS UINTEGER
+FOR adr=16384 TO 22527
+	POKE adr,PEEK adr&amp;170
+NEXT adr</pre></blockquote>
+<p>The first of above function, when called, returns 7. The second is a small program which will delete every 2nd pixel of the display.</p>
+<p><br />
+</p>
+<table align="center">
+  <caption>
+    a <strong>AND</strong> b
+  </caption>
+  <tbody>
+    <tr>
+      <th> a </th>
+      <th> b </th>
+      <th> Result </th>
+    </tr>
+    <tr>
+      <td> 0 </td>
+      <td> 0 </td>
+      <td> 0 </td>
+    </tr>
+    <tr>
+      <td> 0 </td>
+      <td> 1 </td>
+      <td> 0 </td>
+    </tr>
+    <tr>
+      <td> 1 </td>
+      <td> 0 </td>
+      <td> 0 </td>
+    </tr>
+    <tr>
+      <td> 1 </td>
+      <td> 1 </td>
+      <td> 1 </td>
+    </tr>
+  </tbody>
+</table>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This function does not exist in Sinclair BASIC.</li>
+  <li>It can be also written as &quot;&amp;&quot;, eg: 255&amp;7</li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>bNOT, bOR, bXOR</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>
