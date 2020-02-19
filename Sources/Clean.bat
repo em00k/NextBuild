@@ -1,0 +1,1 @@
+del /S temp.tap temp.bin memory.txt compiled.sna *sna *bmi *bor

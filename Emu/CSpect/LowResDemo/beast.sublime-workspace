@@ -1,0 +1,660 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "SpriteBouncing.asm",
+			"settings":
+			{
+				"buffer_size": 1426,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "/C/source/ZXSpectrum/esxDOS/esxdos_api.txt",
+			"settings":
+			{
+				"buffer_size": 10244,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/C/source/ZXSpectrum/esxDOS/esxdos.inc",
+			"settings":
+			{
+				"buffer_size": 2317,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "scroll.asm",
+			"settings":
+			{
+				"buffer_size": 2942,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "includes.asm",
+			"settings":
+			{
+				"buffer_size": 2147,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "irq.asm",
+			"settings":
+			{
+				"buffer_size": 1767,
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "utils.asm",
+			"settings":
+			{
+				"buffer_size": 10784,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		},
+		{
+			"file": "filesys.asm",
+			"settings":
+			{
+				"buffer_size": 8551,
+				"encoding": "Cyrillic (Windows 1251)",
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "Packages/z80asm/z80asm.sublime-build",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/z80asm/z80asm.sublime-build",
+					""
+				],
+				[
+					"Packages/z80asm/z80asm.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/z80asm/z80asm.sublime-build",
+					"Build and Run"
+				]
+			],
+			[
+				"Packages/z80asm/z80asm.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/C/source/ZXSpectrum/Demo/LowResDemo/layer2.asm",
+		"/C/source/ZXSpectrum/Demo/raddemo/test.sna",
+		"/C/source/ZXSpectrum/Demo/Layer2/utils.asm",
+		"/C/source/ZXSpectrum/Lemmings/irq.asm",
+		"/C/source/ZXSpectrum/Lemmings/utils.asm",
+		"/C/source/ZXSpectrum/esxDOS/esxdos.inc",
+		"/C/source/ZXSpectrum/esxDOS/errors.inc",
+		"/C/source/ZXSpectrum/Lemmings/data.asm",
+		"/E/Dropbox/Backups/Source/ZXSpectrum/Lemmings/docs/draw_example.asm",
+		"/C/source/ZXSpectrum/Lemmings/SpriteManager.asm",
+		"/C/source/ZXSpectrum/Lemmings/bob.asm",
+		"/C/source/ZXSpectrum/Demo/Layer2/layer2.asm",
+		"/C/source/ZXSpectrum/Lemmings/a.bat",
+		"/C/source/ZXSpectrum/Lemmings/filesys.asm",
+		"/C/source/ZXSpectrum/Lemmings/docs/lemmings_lvl_file_format.txt",
+		"/C/source/ZXSpectrum/Lemmings/panel.asm",
+		"/C/source/ZXSpectrum/Lemmings/scroll.asm",
+		"/C/source/ZXSpectrum/Lemmings/lemming.asm",
+		"/C/source/ZXSpectrum/Lemmings/includes.asm",
+		"/C/source/ZXSpectrum/Demo/rad/test.asm",
+		"/C/source/ZXSpectrum/Lemmings/_LemmingsNext.asm",
+		"/C/source/ZXSpectrum/Lemmings/level.asm",
+		"/C/source/ZXSpectrum/em/e.bat",
+		"/C/source/ZXSpectrum/Demo/jim1/test.asm",
+		"/C/source/ZXSpectrum/em/help.txt",
+		"/C/source/ZXSpectrum/Demo/test/zzz.asm",
+		"/C/source/ZXSpectrum/esxDOS/esxdos_api.txt",
+		"/C/source/ZXSpectrum/Demo/rad/a.bat",
+		"/C/source/ZXSpectrum/Demo/Layer2/SpriteBouncing.asm",
+		"/C/source/ZXSpectrum/Demo/Layer2/filesys.asm",
+		"/C/source/ZXSpectrum/Lemmings/lemmings.sna.map",
+		"/C/source/ZXSpectrum/Lemmings/SpriteBouncing.asm",
+		"/E/Dropbox/Backups/Games/lem_src/SRC32/LEMMINGS/GRAPHICS/LEMMSMA.MOG",
+		"/C/source/ZXSpectrum/Lemmings/docs/compression.h",
+		"/C/source/ZXSpectrum/Lemmings/LemDS/lemmings_winlemm_lvl_to_lds/lemmings_winlemm_lvl_to_lds/lemmings_level.c",
+		"/C/source/ZXSpectrum/Lemmings/LemDS/lemmings_winlemm_lvl_to_lds/lemmings_winlemm_lvl_to_lds/utility.c",
+		"/C/source/ZXSpectrum/Lemmings/LemDS/lemmings_winlemm_lvl_to_lds/lemmings_winlemm_lvl_to_lds/lemmings_level.h",
+		"/C/source/ZXSpectrum/Demo/a.bat",
+		"/C/source/ZXSpectrum/Demo/utils.asm",
+		"/E/Dropbox/Backups/Games/lem_src/SRC32/LEMMINGS/ICONWND.CPP",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/helps/Basic Symbols",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/helps/Z80 Opcodes",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/z80asm.about",
+		"/C/source/ZXSpectrum/Lemmings/lemmings.asm",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/build.bat",
+		"/E/Program Files/Sublime Text 3/Packages/z80asm/buildrun.bat",
+		"/E/Program Files/Sublime Text 3/Packages/z80asm/build.bat",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/z80asm.sublime-build",
+		"/C/Users/Mike/AppData/Roaming/Sublime Text 3/Packages/z80asm/z80asm.sublime-settings",
+		"/C/source/ZXSpectrum/muti_scroller.asm",
+		"/C/source/ZXSpectrum/Lemmings/scroll_offsets.asm",
+		"/C/source/ZXSpectrum/Lemmings/bank_offset.asm",
+		"/C/source/ZXSpectrum/Lemmings/layer2.sna",
+		"/C/source/ZXSpectrum/Layer2/a.bat",
+		"/C/source/XeO3/Plus4/xeo3.inc",
+		"/C/source/ZXSpectrum/Layer2/SpriteBouncing.asm",
+		"/C/source/ZXSpectrum/Layer2/utils.asm",
+		"/C/source/ZXSpectrum/Layer2/includes.asm",
+		"/C/source/ZXSpectrum/Layer2/scroll.asm",
+		"/C/source/ZXSpectrum/Layer2/irq.asm",
+		"/C/source/ZXSpectrum/Layer2/filesys.asm",
+		"/C/source/ZXSpectrum/Layer2/layer2.asm",
+		"/C/source/ZXSpectrum/Layer2/layer2.sna",
+		"/C/source/ZXSpectrum/Layer2/tilemap.asm",
+		"/C/source/ZXSpectrum/t/bin/cd.asm",
+		"/C/source/ZXSpectrum/Layer2/ATICATAK.SNA",
+		"/C/source/ZXSpectrum/Framework/spritetest.asm",
+		"/C/source/ZXSpectrum/graphics/LemmingsMock256x192.cpp",
+		"/C/source/ZXSpectrum/Layer2/main.asm",
+		"/C/source/XeO3/Plus4/SCROLL.S",
+		"/C/source/XeO3/Plus4/xeo3.s",
+		"/C/source/ZXSpectrum/Framework/files.asm",
+		"/C/source/XeO3/Plus4/Map/map.raw",
+		"/C/source/XeO3/Plus4/loader.s",
+		"/C/source/XeO3/Plus4/CharSprites.s",
+		"/C/source/XeO3/Plus4/Commands.s",
+		"/C/source/XeO3/Plus4/mconv.s",
+		"/C/source/XeO3/Plus4/mcm.s",
+		"/C/source/XeO3/Plus4/MASKLOOP.S",
+		"/C/source/XeO3/Plus4/MAIN.S",
+		"/C/source/XeO3/Plus4/DemoLevel/DemoPaths.s",
+		"/C/source/ZXSPectrum/Framework/a.bat",
+		"/C/source/ZXSpectrum/Framework/main.asm",
+		"/C/Users/Mike/AppData/Local/GameMakerStudio2/obf_43B7DEAC_Javascript/html5game/obf.js",
+		"/C/Users/Mike/AppData/Local/GameMakerStudio2/obf_4722F9CA_Javascript/html5game/obf.js",
+		"/C/Users/Mike/Documents/GameMakerStudio2/file_rename_html5_bug/objects/object0/Create_0.gml",
+		"/C/source/EMULATORS/MINUS4/6502.cpp",
+		"/C/source/EMULATORS/MINUS4/CSOUND.CPP",
+		"/C/source/EMULATORS/MINUS4/Debug.cpp",
+		"/C/source/EMULATORS/MINUS4/Minus4w.cpp",
+		"/C/source/ZXSpectrum/Interface1Rom.asm",
+		"/C/source/ZXSpectrum/GoshWonderfulRom.asm",
+		"/C/source/EMULATORS/DC64/all.h",
+		"/C/source/EMULATORS/MINUS4/HEADERS/ALL.H",
+		"/C/source/EMULATORS/MINUS4/HEADERS/6502.H",
+		"/C/source/EMULATORS/MINUS4/HEADERS/6502ASM.H",
+		"/C/source/ZXSpectrum/Framework/main.s",
+		"/C/source/ZXSpectrum/ZEsarUX_win-5.asm",
+		"/C/source/ZXSpectrum/Framework/a.bat",
+		"/C/source/ZXSpectrum/ZXSpectrum4/ZXSpectrum4.exe.config"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 96.0,
+		"where_history":
+		[
+			"C:\\source\\zxspectrum\\Lemmings",
+			"E:\\Dropbox\\Backups\\Games\\lem_src\\SRC32\\LEMMINGS",
+			"C:\\source\\ZXSpectrum\\Lemmings",
+			"C:\\source\\XeO3\\Plus4"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"SetLayerOrder",
+			"seek",
+			"RAM",
+			"SD card",
+			"SD",
+			"PANELNUMBERSADDRESS",
+			"LevelAddress",
+			"TestFiles",
+			"filehandle",
+			"CurrentBank",
+			"9e",
+			"seek\nseek",
+			"$15",
+			"LemmingsFile",
+			"\t\tld\ta,PanelBank\n",
+			"SetBank",
+			"LemmingsBank",
+			"error_opening",
+			"FileHandle",
+			"FA_READ",
+			"F_SEEK",
+			"$57",
+			"57",
+			"6335",
+			"SRLE",
+			"LEMMSMA.SPR",
+			"jp",
+			"push",
+			"finishloop",
+			"jp",
+			"UploadSprites",
+			"(c)",
+			"ldir",
+			"filehandle",
+			"2",
+			"0x",
+			"LemDemoFile",
+			"defb",
+			"F_CHDIR",
+			"fopen",
+			"carry set",
+			"ENODRV",
+			"scroll",
+			"RenderTileStore",
+			"StopScroll",
+			"bosspath",
+			"scroll",
+			"StopScroll\n",
+			"ScreenIndex",
+			"2",
+			"$243b",
+			"incbin",
+			"_C",
+			".text",
+			".equ",
+			".word",
+			"#",
+			"#if",
+			"2096",
+			"6000",
+			"2164"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"SpriteReg",
+			"($57)",
+			"ldi",
+			"$",
+			"db",
+			"1",
+			""
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 4,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "SpriteBouncing.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1426,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1178,
+								1178
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/C/source/ZXSpectrum/esxDOS/esxdos_api.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10244,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1959.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/C/source/ZXSpectrum/esxDOS/esxdos.inc",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2317,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1750,
+								1762
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/HTML/HTML.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 432.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "scroll.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2942,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								421,
+								421
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1635.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "includes.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2147,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								217,
+								217
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "irq.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1767,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								771,
+								771
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage",
+							"tab_size": 8,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "utils.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10784,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1940,
+								209
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "filesys.asm",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 8551,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2936,
+								2936
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/z80asm/z80asm.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1527.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 28.0
+	},
+	"input":
+	{
+		"height": 36.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 146.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "radasjim.sublime-project",
+	"replace":
+	{
+		"height": 52.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 198.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

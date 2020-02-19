@@ -1,0 +1,1 @@
+echo Z:\NextBuild6\

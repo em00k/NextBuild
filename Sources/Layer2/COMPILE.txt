@@ -1,0 +1,131 @@
+Z:/NextBuild6/zxbasic/library/nextlib.bas:60: warning: Parameter 'nn' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:60: warning: Parameter 'na' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:75: warning: SUB 'MMU8new' declared as FASTCALL with 2 parameters
+Z:/NextBuild6/zxbasic/library/nextlib.bas:74: warning: Parameter 'slot' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:74: warning: Parameter 'memorybank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:108: warning: Parameter 'memorybank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:147: warning: Parameter 'slot' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:157: warning: Parameter 'slot' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:166: warning: Parameter 'x' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:166: warning: Parameter 'y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:166: warning: Parameter 's' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:196: warning: Parameter 'switch' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:232: warning: SUB 'ScrollLayer' declared as FASTCALL with 2 parameters
+Z:/NextBuild6/zxbasic/library/nextlib.bas:231: warning: Parameter 'x' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:231: warning: Parameter 'y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:252: warning: SUB 'PlotL2' declared as FASTCALL with 3 parameters
+Z:/NextBuild6/zxbasic/library/nextlib.bas:251: warning: Parameter 'X' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:251: warning: Parameter 'Y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:251: warning: Parameter 'T' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:286: warning: SUB 'PlotL2Shadow' declared as FASTCALL with 3 parameters
+Z:/NextBuild6/zxbasic/library/nextlib.bas:285: warning: Parameter 'X' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:285: warning: Parameter 'Y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:285: warning: Parameter 'T' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:309: warning: SUB 'CIRCLEL2' declared as FASTCALL with 4 parameters
+Z:/NextBuild6/zxbasic/library/nextlib.bas:308: warning: Parameter 'x' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:308: warning: Parameter 'y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:308: warning: Parameter 'radius' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:308: warning: Parameter 'col' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:508: warning: Parameter 'reg' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:508: warning: Parameter 'value' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:522: warning: Parameter 'bank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:536: warning: Parameter 'source' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:536: warning: Parameter 'dest' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:614: warning: Parameter 'Total' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:614: warning: Parameter 'spraddress' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:637: warning: Parameter 'spriteid' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:637: warning: Parameter 'visible' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'x' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'spriteid' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'pattern' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'mflip' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:661: warning: Parameter 'anchor' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:780: warning: Parameter 'address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:780: warning: Parameter 'length' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:780: warning: Parameter 'offset' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:937: warning: Using default implicit type 'uinteger' for 'tlen'
+Z:/NextBuild6/zxbasic/library/nextlib.bas:930: warning: Parameter 'address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:930: warning: Parameter 'length' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1057: warning: Parameter 'X' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1057: warning: Parameter 'Y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1057: warning: Parameter 'T' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1112: warning: Parameter 'X' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1112: warning: Parameter 'Y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1112: warning: Parameter 'T' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1183: warning: Parameter 'address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1183: warning: Parameter 'colours' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1183: warning: Parameter 'offset' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1217: warning: Parameter 'colour' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1275: warning: Parameter 'x1' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1275: warning: Parameter 'x2' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1275: warning: Parameter 'y1' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1275: warning: Parameter 'y2' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1292: warning: Parameter 'x1' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1292: warning: Parameter 'x2' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1292: warning: Parameter 'y1' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1292: warning: Parameter 'y2' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'blkoff' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'numberoftiles' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'x' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'y' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'width' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1308: warning: Parameter 'mapwidth' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1457: warning: Parameter 'vt2address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1457: warning: Parameter 'bank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1482: warning: Parameter 'musicadd' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1482: warning: Parameter 'length' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1482: warning: Parameter 'bank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1482: warning: Parameter 'IMJump' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1557: warning: Parameter 'switch' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1557: warning: Parameter 'bank' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1819: warning: Parameter 'address' is never used
+Z:/NextBuild6/zxbasic/library/nextlib.bas:1861: warning: Parameter 'fx' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:31: warning: SUB 'MemMove' declared as FASTCALL with 3 parameters
+Z:/NextBuild6/zxbasic/library/memcopy.bas:30: warning: Parameter 'source' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:30: warning: Parameter 'dest' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:30: warning: Parameter 'length' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:65: warning: SUB 'MemCopy' declared as FASTCALL with 3 parameters
+Z:/NextBuild6/zxbasic/library/memcopy.bas:64: warning: Parameter 'source' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:64: warning: Parameter 'dest' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:64: warning: Parameter 'length' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:96: warning: SUB 'MemSet' declared as FASTCALL with 3 parameters
+Z:/NextBuild6/zxbasic/library/memcopy.bas:95: warning: Parameter 'dest' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:95: warning: Parameter 'value' is never used
+Z:/NextBuild6/zxbasic/library/memcopy.bas:95: warning: Parameter 'length' is never used
+Z:\NextBuild6\Sources\Layer2\temp.bas:21: warning: Using default implicit type 'integer' for 'C'
+Z:\NextBuild6\Sources\Layer2\temp.bas:52: warning: Using default implicit type 'ubyte' for 'R'
+Z:\NextBuild6\Sources\Layer2\temp.bas:52: warning: Using default implicit type 'ubyte' for 'R2'
+Z:\NextBuild6\Sources\Layer2\temp.bas:60: warning: Function 'MMU8' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:74: warning: Function 'MMU8new' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:108: warning: Function 'MMU16' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:147: warning: Function 'GetMMU' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:157: warning: Function 'GetReg' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:166: warning: Function 'Debug' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:231: warning: Function 'ScrollLayer' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:285: warning: Function 'PlotL2Shadow' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:308: warning: Function 'CIRCLEL2' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:508: warning: Function 'NextRegA' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:522: warning: Function 'swapbank' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:536: warning: Function 'zx7Unpack' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:614: warning: Function 'InitSprites' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:637: warning: Function 'RemoveSprite' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:661: warning: Function 'UpdateSprite' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:708: warning: Function 'LoadBMP' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:930: warning: Function 'SaveSD' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1057: warning: Function 'DoTile' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1112: warning: Function 'DoTile8' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1292: warning: Function 'ClipULA' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1308: warning: Function 'TileMap' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1457: warning: Function 'InitVT2' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1482: warning: Function 'InitCallback' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1557: warning: Function 'SFXCallback' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1819: warning: Function 'SFXInit' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:1861: warning: Function 'PlaySFX' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:30: warning: Function 'MemMove' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:64: warning: Function 'MemCopy' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:95: warning: Function 'MemSet' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:20: warning: Function 'dist' is never called and has been ignored
+Z:\NextBuild6\Sources\Layer2\temp.bas:52: warning: Variable 'R2' is never used
+Z:\NextBuild6\Sources\Layer2\temp.bas:50: warning: Variable 'XO' is never used

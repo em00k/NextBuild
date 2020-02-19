@@ -1,0 +1,141 @@
+C:\NextBuildv5\Sources\eggterminator\temp.bas:55: warning: missing whitespace after the macro name
+C:/NextBuildv5/zxbasic/library/nextlib.bas:65: warning: Parameter 'nn' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:65: warning: Parameter 'na' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:80: warning: SUB 'MMU8new' declared as FASTCALL with 2 parameters
+C:/NextBuildv5/zxbasic/library/nextlib.bas:79: warning: Parameter 'slot' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:79: warning: Parameter 'memorybank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:113: warning: Parameter 'memorybank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:152: warning: Parameter 'slot' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:162: warning: Parameter 'slot' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:171: warning: Parameter 'x' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:171: warning: Parameter 'y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:171: warning: Parameter 's' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:200: warning: Parameter 'switch' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:236: warning: SUB 'ScrollLayer' declared as FASTCALL with 2 parameters
+C:/NextBuildv5/zxbasic/library/nextlib.bas:235: warning: Parameter 'x' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:235: warning: Parameter 'y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:256: warning: SUB 'PlotL2' declared as FASTCALL with 3 parameters
+C:/NextBuildv5/zxbasic/library/nextlib.bas:255: warning: Parameter 'X' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:255: warning: Parameter 'Y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:255: warning: Parameter 'T' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:291: warning: SUB 'PlotL2Shadow' declared as FASTCALL with 3 parameters
+C:/NextBuildv5/zxbasic/library/nextlib.bas:290: warning: Parameter 'X' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:290: warning: Parameter 'Y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:290: warning: Parameter 'T' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:314: warning: SUB 'CIRCLEL2' declared as FASTCALL with 4 parameters
+C:/NextBuildv5/zxbasic/library/nextlib.bas:313: warning: Parameter 'x' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:313: warning: Parameter 'y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:313: warning: Parameter 'radius' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:313: warning: Parameter 'col' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:513: warning: Parameter 'reg' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:513: warning: Parameter 'value' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:527: warning: Parameter 'bank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:541: warning: Parameter 'source' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:541: warning: Parameter 'dest' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:619: warning: Parameter 'Total' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:619: warning: Parameter 'spraddress' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:642: warning: Parameter 'spriteid' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:642: warning: Parameter 'visible' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'x' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'spriteid' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'pattern' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'mflip' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:666: warning: Parameter 'anchor' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:808: warning: Parameter 'bank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:821: warning: Parameter 'address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:821: warning: Parameter 'length' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:821: warning: Parameter 'offset' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:978: warning: Using default implicit type 'uinteger' for 'tlen'
+C:/NextBuildv5/zxbasic/library/nextlib.bas:971: warning: Parameter 'address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:971: warning: Parameter 'length' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1098: warning: Parameter 'X' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1098: warning: Parameter 'Y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1098: warning: Parameter 'T' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1153: warning: Parameter 'X' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1153: warning: Parameter 'Y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1153: warning: Parameter 'T' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1225: warning: Parameter 'address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1225: warning: Parameter 'colours' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1225: warning: Parameter 'offset' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1261: warning: Parameter 'colour' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1319: warning: Parameter 'x1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1319: warning: Parameter 'x2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1319: warning: Parameter 'y1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1319: warning: Parameter 'y2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1336: warning: Parameter 'x1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1336: warning: Parameter 'x2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1336: warning: Parameter 'y1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1336: warning: Parameter 'y2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1352: warning: Parameter 'x1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1352: warning: Parameter 'x2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1352: warning: Parameter 'y1' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1352: warning: Parameter 'y2' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'blkoff' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'numberoftiles' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'x' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'y' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'width' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1368: warning: Parameter 'mapwidth' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1517: warning: Parameter 'vt2address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1517: warning: Parameter 'bank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1542: warning: Parameter 'musicadd' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1542: warning: Parameter 'length' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1542: warning: Parameter 'bank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1542: warning: Parameter 'IMJump' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1617: warning: Parameter 'switch' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1617: warning: Parameter 'bank' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1879: warning: Parameter 'address' is never used
+C:/NextBuildv5/zxbasic/library/nextlib.bas:1921: warning: Parameter 'fx' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:43: warning: Using default implicit type 'ubyte' for 'eggfucker'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:63: warning: Using default implicit type 'float' for 'mox'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:63: warning: Using default implicit type 'float' for 'moy'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:72: warning: Using default implicit type 'uinteger' for 'sprx'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:72: warning: Using default implicit type 'float' for 'spry'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:93: warning: Using default implicit type 'string' for 'ik'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:94: warning: Using default implicit type 'float' for 'keybut'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:111: warning: Using default implicit type 'float' for 'ex'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:157: warning: Using default implicit type 'float' for 'px'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:157: warning: Using default implicit type 'float' for 'py'
+C:\NextBuildv5\Sources\eggterminator\temp.bas:258: warning: Parameter 'scaler' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:280: warning: Parameter 'dmsloopv' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:296: warning: SUB 'DMAPlay' declared as FASTCALL with 4 parameters
+C:\NextBuildv5\Sources\eggterminator\temp.bas:295: warning: Parameter 'address' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:295: warning: Parameter 'dmalen' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:295: warning: Parameter 'scaler' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:295: warning: Parameter 'repeat' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:79: warning: Function 'MMU8new' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:113: warning: Function 'MMU16' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:152: warning: Function 'GetMMU' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:162: warning: Function 'GetReg' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:171: warning: Function 'Debug' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:235: warning: Function 'ScrollLayer' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:290: warning: Function 'PlotL2Shadow' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:313: warning: Function 'CIRCLEL2' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:513: warning: Function 'NextRegA' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:527: warning: Function 'swapbank' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:541: warning: Function 'zx7Unpack' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:714: warning: Function 'LoadBMP' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:786: warning: Function 'ReserveBank' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:808: warning: Function 'FreeBank' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:971: warning: Function 'SaveSD' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1098: warning: Function 'DoTile' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1153: warning: Function 'DoTile8' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1225: warning: Function 'PalUpload' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1319: warning: Function 'ClipLayer2' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1336: warning: Function 'ClipULA' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1352: warning: Function 'ClipTile' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1368: warning: Function 'TileMap' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1517: warning: Function 'InitVT2' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1542: warning: Function 'InitCallback' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1617: warning: Function 'SFXCallback' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1879: warning: Function 'SFXInit' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:1921: warning: Function 'PlaySFX' is never called and has been ignored
+C:\NextBuildv5\Sources\eggterminator\temp.bas:40: warning: Variable 'tlen' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:38: warning: Variable 'dmaloop' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:37: warning: Variable 'cracktwo' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:37: warning: Variable 'eggdead' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:36: warning: Variable 'oldmox' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:36: warning: Variable 'oldmoy' is never used
+C:\NextBuildv5\Sources\eggterminator\temp.bas:280: warning: Function 'DMALoop' is never called and has been ignored
