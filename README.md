@@ -11,7 +11,7 @@ http://zxbasic.uk/nextbuild/
 You will need this for VSC if not using BorIDE or something similar:
 
 NOTE : the demo .bas file have an associated .cfg file that stores the ORG address from BorIDE, so if demos fail to work, check the .cfg in a text editor as some depend on a starting address being set.
-
+```
 {
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
@@ -40,3 +40,4 @@ NOTE : the demo .bas file have an associated .cfg file that stores the ORG addre
         }
     ]
 }
+```
