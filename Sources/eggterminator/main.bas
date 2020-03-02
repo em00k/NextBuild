@@ -43,8 +43,6 @@ dmaloop=1 : eggfucker = 2 : crackone = 6 : cracktwo = 7 : eggdead = 8 : eggpower
 eggframe = eggfucker : samplebank = 0 
 CopyToBanks()
 
-
-BBREAK
 MMU8(7,40)
 DMAPlay($e000,@sampleend-@sample-64,100,0)
 
@@ -292,7 +290,6 @@ Sub fastcall DMAPlay(byval address as uinteger,dmalen as uinteger, byval scaler 
 	Z80DMAPORT EQU 107
 	SPECDRUM EQU $FFDF
 	BUFFER_SIZE	EQU 8192
-	BREAK
 PLAY:
 	ld (dmaaddress), HL 
 	pop hl 
@@ -389,7 +386,6 @@ mgunsampleend:
 
 Sub CopyToBanks()
 asm 
-	BREAK
 	
 	ld a,40
 	dw $92ed : DB $57			; sample 1 in bank 40
