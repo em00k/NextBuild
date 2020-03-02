@@ -1,0 +1,57 @@
+{
+    
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+        // for the documentation about the tasks.json format
+        "version": "2.0.0",
+        "tasks": [
+            {
+                "label": "Boriel Compile Current",
+                "type": "shell",
+                "windows": {
+                    "command": "c:\\temp\\Nexbuildfixes\\NextBuild\\Scripts\\compile.bat"
+                },
+                "args": [
+                    "\"${fileDirname}\\temp.bas\"",
+                    "-S",
+                    "${input:startaddress}",
+                    "-o",
+                    "output.bin",
+                    "-O",
+                    "2",
+                    "--heap-size=1000",
+                    "--emmit-backend",
+                    "--explicit"
+                ],
+                "problemMatcher": []
+            },
+            {
+                "label": "Boriel Create Temp",
+                "type": "shell",
+                "windows": {
+                    "command": "copy-item"
+                },
+                "args": [
+                    "-path",
+                    "${file}",
+                    "-destination",
+                    "${fileDirname}\\temp.bas"
+                ]
+            },
+            {
+                "label": "Boriel Compile And Run",
+                "dependsOn": [
+                    "Boriel Create Temp",
+                    "Boriel Compile Current"
+                ],
+                "problemMatcher": []
+            }
+        ],
+        "inputs": [
+            {
+                "type": "promptString",
+                "id": "startaddress",
+                "description": "Start Address : ",
+                "default": "24576"
+            }
+        ]
+    }

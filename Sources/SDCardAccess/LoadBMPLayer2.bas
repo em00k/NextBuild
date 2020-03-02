@@ -7,7 +7,7 @@ border 0
 
 LoadBMP("13.bmp")
 ShowLayer2(1)			' ON 
-BBREAK
+
 dim x as ubyte = 0 
 ' lets scroll layer2
 pause 0 

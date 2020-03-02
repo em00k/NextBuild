@@ -53,7 +53,7 @@ do
 	for id = 11 to 21
 		yy=peek(@sinpos+cast(uinteger,offset))>>2
 		xx=peek(@sinpos+cast(uinteger,offset2))>>3
-		UpdateSprite(mx+xx,my+yy,id,frame,0)
+		UpdateSprite(mx+xx,my+yy,id,frame,0,0)
 		if mx <64+16*11 : mx=mx+16 : else : mx=64 : endif 
 		if offset+add<255 : offset=offset+add : else : offset=0 : endif 
 		if offset2<255 : offset2=offset2+1 : else : offset2=0 : endif 
