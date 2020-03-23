@@ -1,71 +1,99 @@
-#include <nextlib.bas>
-border 0
+rem rotating cube - freebasic
 
-dim frame,mx,my,yy,xx,count,f as ubyte 
-dim offset as fixed 
-DIM add as fixed=1.799
+'#!v
+'!bin "h:\test.bin" -a
 
-LoadBMP("spiral.bmp")
-ShowLayer2(1)			' ON 
+#INCLUDE <nextlib.bas>
+#INCLUDE <memcopy.bas>
+NextReg(8,$fe)								' no contention 
+NextReg(7,3)									' 14mhz
+NextReg($14,$0)  							' Global transparency bits 7-0 = Transparency color value (0xE3 after a reset)
+NextReg($40,0)   							' 16 = paper 0 on L2 palette index 
+NextReg($41,$0)  							'	Palette Value 
+NextReg($15,%00001011)
+NextReg($4A,0)								' Trasnparent Fallback
+NextReg($12,9)  							' layer2 rams   16kb banks 
+NextReg($13,12)  							' layer2 shadow
+NextReg($43,%00010001	)  							' layer2 shadow
+PalUpload(@rainbow, 0,16)
+function dist(byval dista as integer,byval distb as integer,byval distc as integer,byval distd as integer) as ubyte
+	C=(((dista - distc) * (dista - distc)) + ((distb - distd) * (distb - distd)))
+	asm 
+		;BREAK 
+		; use John Metcalfs fast sqr 
+		; http://www.retroprogramming.com/2017/07/a-fast-z80-integer-square-root.html
+		fastsqr: ld a,h : 	ld de,0B0C0h : 	add a,e : jr c,sq7 : ld a,h : 	ld d,0F0h
+		sq7: add a,d : jr nc,sq6 : res 5,d : db 254 
+		sq6: sub d : sra d : set 2,d : add a,d : jr nc,sq5 : res 3,d : db 254 
+		sq5: sub d : sra d : inc d : add a,d : jr nc,sq4 : res 1,d : db 254 
+		sq4: sub d : sra d : ld h,a : add hl,de : jr nc,sq3 : ld e,040h : db 210
+		sq3: sbc hl,de : sra d : ld a,e : rra : or 010h : ld e,a : add hl,de : jr nc,sq2 : and 0DFh : db 218 
+		sq2: sbc hl,de : sra d : rra : or 04h : ld e,a : add hl,de : jr nc,sq1 : and 0F7h : db 218
+		sq1: sbc hl,de : sra d : rra : inc a : ld e,a : add hl,de : jr nc,sq0 : and 0FDh
+		sq0: sra d : rra : cpl : ld hl,0 : ADD_HL_A : ld (._C),a
+	END ASM 
+		Return C
+end function
 
-' lets scroll layer2
-xx=2 : x = xx
+paper 0 : ink 6: border 0 : cls
+CLS256(0) : ShowLayer2(1) 
+'pause 0
+dim co(255) as byte 
+dim si(255) as byte 
+'Dim R, R2,  D2, XA, YA, YT,L as integer
+dim C as uinteger
+dim offset,kx as float 
+dim ca as byte 
+dim Color, cc,nc, W, H,rx,X, Y,value,XX,YY,u,v,o,p,a,b,XO,YO,t,r as ubyte 
+nc = 0 : offset = 64
+R = 127 : R2 = R * R : H = 192 : W = 255
+ClipLayer2(00,254,0,191)
+for kx = 0 to 6.28*5 step 0.025
+
+ co(rx) = int(offset*cos(kx))
+ si(rx) = int(offset*sin(kx))>>3
+ 'print co(rx),si(rx)   ',ZA	
+ rx = rx + 1
+ if rx=0 : kx = 6.28*5 : endif 
+next kx
+rx=2 : XO =0 
+
+For X = 0 To W-1 
+        
+				For Y = 0 To H-1 
+					ca=(co(X+X)-si(YO*6)) : 
+					C=cast(uinteger,ca) : C = C - ( cast(uinteger,( (X/rx) + (YO*4))) ) : 
+					Color = cast(ubyte,(C  ) )  
+					
+					PlotL2(cast(ubyte,(X)),cast(ubyte,(Y)),Color)
+					'PlotL2(cast(ubyte,(X)),127-cast(ubyte,(Y)),Color)
+					'PlotL2(cast(ubyte,(X)),128+cast(ubyte,(Y)),Color)
+					YO=YO+1' : if YO>191 : YO = 0 : ENDIF 
+        Next
+				'XO=XO+1 ': if XO>126 : XO = 0 : ENDIF 		
+Next
+
 do 
-
-for id = 0 to 255
-		
-		yy=peek(@sinpos+cast(uinteger,offset))
-		xx=peek(@sinposb+cast(uinteger,offset))<<1
-		ScrollLayer(xx,yy)
-		if offset+add<254 : offset=offset+add : else : offset=0 : endif 
-		pause 1
-		
-next id 
-
+	pause 1 
+	PalUpload(@rainbow, nc,b)
+	'NextReg($40,0) : NextReg($44,0) : NextReg($44,0)
+	'if b>2 : 
+	b=b-2 ': else : b = 254 : endif 
+	cc=cc+1 ': b=b-2 : if b = 0 : b = 254 : endif 
+' 	if cc=255
+' 		if nc = 16
+' 			nc = 32
+' 		elseif nc = 32
+' 			nc = 0
+' 		elseif nc = 0
+' 			nc = 16
+' 		endif 
+' 	endif 
 loop 
 
-
-end   
-
-sinpos:
-	asm
-db 50,48,47,46,45,43,42,41,40,39,37,36,35,34,33,31
-db 30,29,28,27,26,25,24,23,22,21,20,19,18,17,16,15
-db 14,13,12,12,11,10,9,9,8,7,7,6,5,5,4,4
-db 3,3,2,2,2,1,1,1,0,0,0,0,0,0,0,0
-db 0,0,0,0,0,0,0,0,1,1,1,1,2,2,3,3
-db 3,4,4,5,6,6,7,7,8,9,10,10,11,12,13,14
-db 14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30
-db 31,32,33,34,36,37,38,39,40,42,43,44,45,46,48,49
-db 50,51,53,54,55,56,57,59,60,61,62,63,65,66,67,68
-db 69,70,72,73,74,75,76,77,78,79,80,81,82,83,84,85
-db 85,86,87,88,89,89,90,91,92,92,93,93,94,95,95,96
-db 96,96,97,97,98,98,98,98,99,99,99,99,99,99,99,99
-db 99,99,99,99,99,99,99,99,98,98,98,97,97,97,96,96
-db 95,95,94,94,93,92,92,91,90,90,89,88,87,87,86,85
-db 84,83,82,81,80,79,78,77,76,75,74,73,72,71,70,69
-db 68,66,65,64,63,62,60,59,58,57,56,54,53,52,51,50
-
-	end asm
-	
-sinposb:
-	asm
-db 0,0,0,0,0,0,0,0,0,1,1,1,2,2,2,3
-db 3,4,4,5,5,6,7,7,8,9,9,10,11,12,13,13
-db 14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29
-db 31,32,33,34,35,36,38,39,40,41,42,44,45,46,47,49
-db 50,51,52,53,55,56,57,58,60,61,62,63,64,66,67,68
-db 69,70,71,72,73,74,76,77,78,79,80,81,82,82,83,84
-db 85,86,87,88,88,89,90,91,91,92,93,93,94,94,95,95
-db 96,96,97,97,98,98,98,98,99,99,99,99,99,99,99,99
-db 99,99,99,99,99,99,99,99,98,98,98,98,97,97,96,96
-db 95,95,94,94,93,93,92,91,91,90,89,88,88,87,86,85
-db 84,83,82,82,81,80,79,78,77,76,75,73,72,71,70,69
-db 68,67,66,64,63,62,61,60,58,57,56,55,53,52,51,50
-db 49,47,46,45,44,42,41,40,39,38,36,35,34,33,32,31
-db 29,28,27,26,25,24,23,22,21,20,19,18,17,16,15,14
-db 13,13,12,11,10,9,9,8,7,7,6,5,5,4,4,3
-db 3,2,2,2,1,1,1,0,0,0,0,0,0,0,0,0
-
-	end asm
-      
+End
+rainbow: 
+asm 
+	incbin "rainbow.pal" 
+	incbin "rainbow.pal" 
+end asm         
