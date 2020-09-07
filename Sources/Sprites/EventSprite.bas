@@ -1,6 +1,8 @@
+'!ORG=32768
 ' Quick Sprite Example 2
 ' NextBuild (ZXB/CSpect)
 ' emook2018 - use keys 1 and 2 to mess with the sine wav (dirty!)
+
 #include <nextlib.bas>
 dim vecX,vecY,dir,interia,movecar as ubyte 
 vecX=80:vecY=0: dir = 4 : d = 4
@@ -244,4 +246,4 @@ Sprite1:
 	db  $E3, $E3, $E3, $6D, $92, $88, $88, $88, $88, $88, $A8, $A8, $6D, $92, $E3, $E3;
 	db  $E3, $E3, $E3, $6D, $6D, $E3, $88, $88, $88, $A8, $A8, $E3, $6D, $6D, $E3, $E3;
 
-end asm          
+end asm           

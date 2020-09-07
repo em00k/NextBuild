@@ -1,9 +1,0 @@
-Z:\NextBuild6\Sources\IMMusic\temp.bas:36: warning: Using default implicit type 'ubyte' for 'a'
-Z:\NextBuild6\Sources\IMMusic\temp.bas:38: warning: Using default implicit type 'float' for 'p'
-Z:\NextBuild6\Sources\IMMusic\temp.bas:73: warning: Parameter 'musicadd' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:73: warning: Parameter 'vt2address' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:73: warning: Parameter 'bank' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:134: warning: Parameter 'switch' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:134: warning: Parameter 'bank' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:331: warning: Parameter 'address' is never used
-Z:\NextBuild6\Sources\IMMusic\temp.bas:373: warning: Parameter 'fx' is never used

@@ -6,8 +6,8 @@
 			opt             ZXNEXT 
 			org 	23552 
 			incbin "sysvars.bin" 
-			org     33000-1 				
+			org     24576-1 				
 StackStart:	db		0 
-StartAddress:	org 33000 
+StartAddress:	org 24576 
 			incbin "temp.bin" 
 			ret 

@@ -1,2 +1,0 @@
-TILES.tiles.png
-C:\NextBuildv5\Sources\xmas2019\data\TILES.Untitled 1.layer-Layer 1.map001.map
