@@ -17,6 +17,7 @@ import api.errmsg as errmsg
 from .symbol_ import Symbol
 from .function import SymbolFUNCTION
 from .arglist import SymbolARGLIST
+from .argument import SymbolARGUMENT
 from .var import SymbolVAR
 from .type_ import Type
 
@@ -28,16 +29,22 @@ class SymbolCALL(Symbol):
 
     Parameters:
         id_: The symbol table entry
-        arglist: a SymbolArglist instance
+        arglist: a SymbolARGLIST instance
         lineno: source code line where this call was made
     """
 
-    def __init__(self, entry, arglist, lineno):
+    def __init__(self, entry: SymbolFUNCTION, arglist, lineno):
         super(SymbolCALL, self).__init__()
         assert isinstance(lineno, int)
+        assert all(isinstance(x, SymbolARGUMENT) for x in arglist)
         self.entry = entry
         self.args = arglist  # Func. call / array access
         self.lineno = lineno
+
+        if entry.token == 'FUNCTION':
+            for arg, param in zip(arglist, entry.params):  # Sets dependency graph for each argument -> parameter
+                if arg.value is not None:
+                    arg.value.add_required_symbol(param)
 
     @property
     def entry(self):

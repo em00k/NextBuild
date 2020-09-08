@@ -10,13 +10,14 @@
 # ----------------------------------------------------------------------
 
 import re
+from collections import Counter
+
 from ast_ import Ast
 import api.global_
 
 
 class Symbol(Ast):
-    """ Symbol object to store everything related to
-    a symbol.
+    """ Symbol object to store everything related to a symbol.
     """
     def __init__(self, *children):
         super(Symbol, self).__init__()
@@ -24,6 +25,37 @@ class Symbol(Ast):
         for child in children:
             assert isinstance(child, Symbol)
             self.appendChild(child)
+
+        self._required_by: Counter = Counter()  # Symbols that depends on this one
+        self._requires: Counter = Counter()  # Symbols this one depends on
+
+    @property
+    def required_by(self) -> Counter:
+        return self._required_by
+
+    @property
+    def requires(self) -> Counter:
+        return Counter(self._requires)
+
+    def mark_as_required_by(self, other: 'Symbol'):
+        if self is other:
+            return
+
+        self._required_by.update([other])
+        other._requires.update([self])
+
+        for sym in other.required_by:
+            sym.add_required_symbol(self)
+
+    def add_required_symbol(self, other: 'Symbol'):
+        if self is other:
+            return
+
+        self._requires.update([other])
+        other._required_by.update([self])
+
+        for sym in other.requires:
+            sym.mark_as_required_by(self)
 
     @property
     def token(self):
@@ -63,3 +95,7 @@ class Symbol(Ast):
             val = getattr(other, attr)
             if isinstance(val, str) or str(val)[0] != '<':  # Not a value
                 setattr(self, attr, val)
+
+    @property
+    def is_needed(self) -> bool:
+        return len(self.required_by) > 0

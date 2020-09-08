@@ -22,7 +22,9 @@ namespace Plugin
         /// <summary>All writes from this address come from this plugin</summary>
         Memory_Write = 4,
         /// <summary>Next register write</summary>
-        NextReg_Write = 5
+        NextReg_Write = 5,
+        /// <summary>Next register read</summary>
+        NextReg_Read = 6
     };
 
 

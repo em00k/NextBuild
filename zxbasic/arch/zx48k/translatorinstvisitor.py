@@ -127,8 +127,8 @@ class TranslatorInstVisitor(NodeVisitor):
     def ic_label(self, label: str):
         return self.emit('label', label)
 
-    def ic_larrd(self, offset, arg1, size, arg2):
-        return self.emit('larrd', offset, arg1, size, arg2)
+    def ic_larrd(self, offset, arg1, size, arg2, bound_ptrs):
+        return self.emit('larrd', offset, arg1, size, arg2, bound_ptrs)
 
     def ic_le(self, type_, t, t1, t2):
         return self.emit('le' + self.TSUFFIX(type_), t, t1, t2)
@@ -196,8 +196,8 @@ class TranslatorInstVisitor(NodeVisitor):
     def ic_pastore(self, type_, offset, t):
         return self.emit('pastore' + self.TSUFFIX(type_), offset, t)
 
-    def ic_pload(self, type_, t1, t2):
-        return self.emit('pload' + self.TSUFFIX(type_), t1, t2)
+    def ic_pload(self, type_, t1, offset):
+        return self.emit('pload' + self.TSUFFIX(type_), t1, offset)
 
     def ic_pow(self, type_):
         return self.emit('pow' + self.TSUFFIX(type_))

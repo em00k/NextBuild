@@ -1,44 +1,104 @@
-[v1.9.8](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.8)
+[v1.12.1](https://github.com/boriel/zxbasic/tree/v1.12.1)
+===
++ ! Fix Mac OS native package
++ ! Fix bug with DIM var AT @label (or any constant expr)
++ Other minor cosmetic changes in libraries
+
+[v1.12.0](https://github.com/boriel/zxbasic/tree/v1.12.0)
+===
++ Improved documentation
++ New binary releases now available for Linux and Mac OS!
++ Added new library for Windows scrolling
+
+[v1.11.1](https://github.com/boriel/zxbasic/tree/v1.11.1)
+===
++ ! Fix bug with constant LBOUND / UBOUND usage in array parameters
+
+[v1.11.0](https://github.com/boriel/zxbasic/tree/v1.11.0)
+===
++ Allow passing arrays as parameters byRef!
++ ! Several bugfixes and improved stability and code cleanup
++ Add PRINTFXZ by Eunar Saukas and Andrew Owen (ported by Britlion)
+
+[v1.10.3](https://github.com/boriel/zxbasic/tree/v1.10.3)
+===
++ ! Bugfixes and improved stability
++ Internal refactors in code. Also -d (debug) behaviour updated
+
+[v1.10.2](https://github.com/boriel/zxbasic/tree/v1.10.2)
+===
++ ! Fix a critical bug with local arrays
+
+[v1.10.1](https://github.com/boriel/zxbasic/tree/v1.10.1)
+===
++ Deprecating `zxb` executable in favour of `zxbc`
++ ! Many bugs fixed (CODE, VAL, preprocessor...)
++ ! Improved stability
++ Can now hide LOAD messages using -D HIDE_LOAD_MSG
++ Improved Windows deployment
++ Fixes a Warning for python 3.8.x
+
+[v1.10.0](https://github.com/boriel/zxbasic/tree/v1.10.0)
+===
++ ! Fix warning in arrays boundaries checks
++ Added support for ZX Next extended ASM instruction set
++ Allow shifting SCREEN coordinates for drawing
++ Add mini-pacman example
++ Add tool for viewing .SCR files
++ Improved compatibility with Sinclair BASIC (--sinclair)
++ Updates testing and parsing tools
++ Code generation optimized
++ Many bugfixes and improved stability
++ Updates in online documentation
+
+[v1.9.9](https://github.com/boriel/zxbasic/tree/v1.9.9)
+===
++ ! Fix warning in parameters ByRef
++ Makes LOAD and SAVE to ignore BREAK
++ ! Little bug fixes and better stability
++ Some docs and README fixes and improvements
+
+[v1.9.8](https://github.com/boriel/zxbasic/tree/v1.9.8)
 ===
 + ! Fix memory leak bug when doing procrustean substring assignation
 + Also optimizes substring access not allocating mem when not needed
 
-[v1.9.7](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.7)
+[v1.9.7](https://github.com/boriel/zxbasic/tree/v1.9.7)
 ===
 + Allow some extra chars within the ASM sections for 3rd party assemblers
 + ! Little bugfixes
 + Now printing at the end scrolls up the screen!
 
-[v1.9.6](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.6)
+[v1.9.6](https://github.com/boriel/zxbasic/tree/v1.9.6)
 ===
 + ! Bugfix: grammar errors for RESTORE
 + Change LD (IX/IY + NN), r instructions to standardize it
 
-[v1.9.5](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.5)
+[v1.9.5](https://github.com/boriel/zxbasic/tree/v1.9.5)
 ===
 + ! Bugfix: error compiling to binary with headerless mode (thx to em00k)
 + ! Bugfix: fixes several crashes under some conditions
 
-[v1.9.4](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.4)
+[v1.9.4](https://github.com/boriel/zxbasic/tree/v1.9.4)
 ===
 + ! Bugfix: Fixes escape code for backslash (thx to em00k)
 
-[v1.9.3](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.3)
+[v1.9.3](https://github.com/boriel/zxbasic/tree/v1.9.3)
 ===
 + ! Bugfix: fixes some bugs in the parser to improve stability.
 
-[v1.9.2](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.2)
+[v1.9.2](https://github.com/boriel/zxbasic/tree/v1.9.2)
 ===
 + ! Bugfix: fixes a bug in the optimizer (-O3 and -O4)
 + Add `fastplot.bas` library
 
-[v1.9.1](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.1)
+[v1.9.1](https://github.com/boriel/zxbasic/tree/v1.9.1)
 ===
 + ! Bugfix: array access read / write might overflow. Fixed.
 + Array access speedup and optimization.
 + Dropped support for PyPy and Python 2.x
 
-[v1.9.0](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.9.0)
+[v1.9.0](https://github.com/boriel/zxbasic/tree/v1.9.0)
 ===
 + New and completely refactored optimizer which now allow patterns.<br />
   This new optimizer (after a year of hard work) not only optimizes better,<br />
@@ -48,7 +108,7 @@
 + zxbasm allows labels to be declared without using colon.
 + Some other little optimization
 
-[v1.8.10](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.10)
+[v1.8.10](https://github.com/boriel/zxbasic/tree/v1.8.10)
 ===
 + ! Bugfix: `FLASH 8` and `BRIGHT 8` were not working correctly. Fixed.
 + Changelog file renamed to `Changelog.md` and renovated. Now uses Markdown.
@@ -58,29 +118,29 @@
 + Add `--append-binary` command line flag to append binaries to tape file
 + Add `--append-headless-binary` cmdlie flag to do like the above, but headless. 
 
-[v1.8.9](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.9)
+[v1.8.9](https://github.com/boriel/zxbasic/tree/v1.8.9)
 ===
 + ! Bugfix: Crash in `READ` and `DATA` sentences under some cases
 + ! Bugfix: Fix `INT` to behave like the original one (Round to -INF)
 + ! Bugfix: `--array-check` was not working properly. Fixed!
 
-[v1.8.8](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.8)
+[v1.8.8](https://github.com/boriel/zxbasic/tree/v1.8.8)
 ===
 + ! Bugfix: fix 32 bit operations (`DIV`, `MOD`...)
 
-[v1.8.7](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.7)
+[v1.8.7](https://github.com/boriel/zxbasic/tree/v1.8.7)
 ===
 + ! Bugfix: do not remove ASM blocks (optimize)
 
-[v1.8.6](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.6)
+[v1.8.6](https://github.com/boriel/zxbasic/tree/v1.8.6)
 ===
 + ! Bugfix: `END` instruction was not returning result. Fixed.
 
-[v1.8.5](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.5)
+[v1.8.5](https://github.com/boriel/zxbasic/tree/v1.8.5)
 ===
 + ! Bugfix: crash on bad array declaration
 
-[v1.8.4](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.4)
+[v1.8.4](https://github.com/boriel/zxbasic/tree/v1.8.4)
 ===
 + ! Several bugfixes with contants declaration
 + Suport for UTF-8 BOM files
@@ -89,7 +149,7 @@
 + ! Other bugfixes and better stability
 + Better warning explanation under some circumstances
 
-[v1.8.3](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.3)
+[v1.8.3](https://github.com/boriel/zxbasic/tree/v1.8.3)
 ===
 + ! Bugfix in the peephole optimizer (`-O2`)
 + ! Several bugfixes to improve stability
@@ -97,14 +157,14 @@
 + Support for extended array str element operations
 + ! Other syntax bugfixes
 
-[v1.8.2](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.2)
+[v1.8.2](https://github.com/boriel/zxbasic/tree/v1.8.2)
 ===
 + ! Bugfixes in the peephole optimizer
 + Shorter and faster generated code (deep optimizations)
 + ! Bugfix in the `PRINT42` routine that now supports newlines, etc
 + Implemented routine `input42` (`INPUT42.BAS`) for `PRINT42` mode
 
-[v1.8.1](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.1)
+[v1.8.1](https://github.com/boriel/zxbasic/tree/v1.8.1)
 ===
 + ! Bugfixes in the peephole optimizer
 + ! Bugfix in `OUT` instruction
@@ -113,7 +173,7 @@
 * Added `basic.bas` library (meta-interpreter) and `eval.bas` example!!
   (thanks to @mcleod_ideafix!!!)
 
-[v1.8.0](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.8.0)
+[v1.8.0](https://github.com/boriel/zxbasic/tree/v1.8.0)
 ===
 + ! Bugfixes in the peephole optimizer (`-O3`)
 + Better optimized code
@@ -121,42 +181,42 @@
 + Fixes minor errors and bugs
 + Now single line `IF` sentences does not require `END IF`
 
-[v1.7.2](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.7.2)
+[v1.7.2](https://github.com/boriel/zxbasic/tree/v1.7.2)
 ===
 + ! Bugfixes in libraries `esxdos.bas` and `memcopy.bas`
 + Improved `pong.bas` example
 + Improved readme file :) (thanks to @harko and @haplo)
 
-[v1.7.1](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.7.1)
+[v1.7.1](https://github.com/boriel/zxbasic/tree/v1.7.1)
 ===
 + ! Bugfixes with `-O3` and `DATA` statements
 + Little improvements
 + Updates `README.md` file and added `TESTING.md` one.
 
-[v1.7.0](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.7.0)
+[v1.7.0](https://github.com/boriel/zxbasic/tree/v1.7.0)
 ===
 + Added `READ`, `DATA`, `RESTORE` (finally!)
 + Allows to call SUBs with no parenthesis (e.g. `mySUB 1, 2+a`)
 + Allows to call FUNCTIONS with 1 or no params with no parenthesis (e.g. `MyFunc x+2`)
 + Some bug fixes for better stability
 
-[v1.6.13](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.13)
+[v1.6.13](https://github.com/boriel/zxbasic/tree/v1.6.13)
 ===
 + ! Fixes and improves strict mode checking
 + Adds `#error` and `#warning` directives
 
-[v1.6.12](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.12)
+[v1.6.12](https://github.com/boriel/zxbasic/tree/v1.6.12)
 ===
 + Adds missing default font (Haplo) for Radastan mode
 + ! Bugfixes and little improvements
 
-[v1.6.11](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.11)
+[v1.6.11](https://github.com/boriel/zxbasic/tree/v1.6.11)
 ===
 + ! Fix infinite recursive include in Windows OS (yes, win sucks)
 + Little optimizations in `memset()` and `RND`
 + Standardize file includes like in cpp
 
-[v1.6.10](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.10)
+[v1.6.10](https://github.com/boriel/zxbasic/tree/v1.6.10)
 ===
 + Added many more drawing primitives for Radastan Mode
 + Added instructions `ON .. GOTO` and `ON .. GOSUB`
@@ -166,7 +226,7 @@
 + Allows array initialization with @label references
 + Switch `.bas` libraries (not the compiler) to **MIT license**
 
-[v1.6.9](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.9)
+[v1.6.9](https://github.com/boriel/zxbasic/tree/v1.6.9)
 ===
 + ! Fixes a bug in the peephole (`-O3`) optimizer
 + Improved speed for `Integer` / `Unteger` operations
@@ -177,13 +237,13 @@
 + ! Fixes and improvements to the ESXDOS library (by @mcleod_ideafix)
 + Added new ESXDOS sample program (directory tree listing)
 
-[v1.6.8](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.8)
+[v1.6.8](https://github.com/boriel/zxbasic/tree/v1.6.8)
 ===
 + ! Fixed some bugs in the assembler
 + ! Fixed a bug when calling a function in advance
 + ! Fixed a problem in tox, setting the terminal to UTF-8
 
-[v1.6.7](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.7)
+[v1.6.7](https://github.com/boriel/zxbasic/tree/v1.6.7)
 ===
 + Added more testing and bitbucket pipelines using tox
 + ! Do not optimize user inlined ASM. It must go as is.
@@ -193,14 +253,14 @@
 + ! Fix to make make it to work in python 2.7
 + ! Refactorize the assembler to use centralized configuration
 
-[v1.6.6](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.6.6)
+[v1.6.6](https://github.com/boriel/zxbasic/tree/v1.6.6)
 ===
 + ! Fixed a bug in constant evaluation
 + ! Allows non constant initialization of scalar variables like DIM a$ = "hi"
 + ! Fix bugs in the assembler not allowing complex expressions
 + ! Fix a rare crash when using functions before declaring them
 
-[v1.4.0.x](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.4.0.x)
+[v1.4.0.x](https://github.com/boriel/zxbasic/tree/v1.4.0.x)
 ===
 
 This is a long (near 3 year) set of versions in which the compiler
@@ -220,7 +280,7 @@ The major feature in this release is the posibility to declare nested functions.
 These functions are declared within others, and can only be called from within
 their respective parent function body.
 
-[v1.3.0](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.3.0)
+[v1.3.0](https://github.com/boriel/zxbasic/tree/v1.3.0)
 ===
 + ! Fixed a bug in `USR <string>`
 + ! Fixed a bug in `SAVE` / `LOAD`
@@ -234,7 +294,7 @@ their respective parent function body.
 + ! Fixed a bug with peephole optimizer (`-O3`)
 + Some changes and code refactorization towards 2.x branch
 
-[v1.2.9](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.2.9)
+[v1.2.9](https://github.com/boriel/zxbasic/tree/v1.2.9)
 ===
 + ! Fixed a serious bug with ALL integer (signed/unsigned) operands
   which were not working correctly under some circumstances.
@@ -251,7 +311,7 @@ their respective parent function body.
 + Fixed more than 50 other minor bugs in both the compiler and the assembler
 + `THEN` keyword is now optional in `IF` statements
 
-[v1.2.8](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.2.8)
+[v1.2.8](https://github.com/boriel/zxbasic/tree/v1.2.8)
 ===
 + Code rearranged and restructured for future deep refactorizations.
 + ! Complete rewritten backend (or almost!) to fix a bug in code
@@ -278,7 +338,7 @@ their respective parent function body.
 + ! `CSRLN` and `POS` optimized to this new `PRINT` scheme!
 ... and much much more
 
-[v1.2.7](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.2.7)
+[v1.2.7](https://github.com/boriel/zxbasic/tree/v1.2.7)
 ===
 + `DRAW` is now much faster (and a bit more larger)
 + `PLOT`, `DRAW` and `CIRCLE` now supports change screen address (for double-buffering)
@@ -296,7 +356,7 @@ their respective parent function body.
   optimized for space (and also slightly faster)
 + Added Flight Simulator example
 
-[v1.2.6](https://bitbucket.org/zxbasic/zxbasic/commits/tag/v1.2.6)
+[v1.2.6](https://github.com/boriel/zxbasic/tree/v1.2.6)
 ===
 + Bitwise `bAND`, `bOR`, `bXOR`, `bNOT` finally added for 8, 16 and 32 bits
 + The assembler now supports `ALIGN <integer>` directive

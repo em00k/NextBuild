@@ -1,69 +1,217 @@
-﻿#CSpect V2.12.5 ZXSpectrum emulator by Mike Dailly
-(c)1998-2020 All rights reserved
+﻿#CSpect V2.12.36 ZXSpectrum emulator by Mike Dailly
+(c)Copyright 1998-2020 All rights reserved
 
 Be aware...emulator is far from well tested, and might crash for any reason - sometimes just out of pure spite!
 
 NOTE: DISTRIBUTION WITH COMMERCIAL TITLES IS NOT PERMITTED WITHOUT WRITTEN CONSENT.
 
-Installing
-----------
-Windows - You will need the latest .NET, and openAL ( https://www.openal.org/downloads/ )
-Linux   - You will need the full MONO  (on ubuntu do "apt-get install mono-devel" )
-OSX     - You will need the latest mono from https://www.mono-project.com/
-
-
-NXtel release
--------------
-NXtel is written by SevenFFF / Robin Verhagen-Guest and is 
-(c) Copyright 2018,2019, all rights reserved, and released under the GPL3 License.
-( see license here: https://github.com/Threetwosevensixseven/NXtel/blob/master/LICENSE)
-Latest versions can be found here: https://github.com/Threetwosevensixseven/NXtel/releases
-
-
-
-Command Line Options
-======================================================================================
--zxnext            =  enable Next hardware registers
--nextrom           =  enable the Next ROM ("enNextZX.rom", "enNxtmmc.rom" and SD card image required)
--zx128             =  enable ZX Spectrum 128 mode
--s7                =  enable 7Mhz mode
--s14               =  enable 14Mhz mode
--s28               =  enable 28Mhz mode
--exit              =  to enable "EXIT" opcode of "DD 00"
--brk               =  to enable "BREAK" opcode of "DD 01"
--esc               =  to disable ESCAPE exit key (use exit opcode, close button or ALT+F4 to exit)
--cur               =  to map cursor keys to 6789 (l/r/d/u)
--8_3               =  set filenames back to 8.3 detection
--mmc=<dir\ or file>=  enable RST $08 usage, must provide path to "root" dir of emulated SD card (eg  "-mmc=.\" or "-mmc=c:\test\")
--sd2=<path\file>   =  Second SD card image file
--map=<path\file>   =  SNASM format map file for use in the debugger. format is: "<16bit address> <physical address> <type> <primary_label>[@<local>]"
--sound             =  disable sound
--joy               =  disable joysticks
--w<size>           =  set window size (1 to 4)
--r                 =  Remember window settings (in "cspect.dat" file, just delete the file to reset)
--16bit             =  Use the logical (16bit) addresses in the debugger only
--60                =  60Hz mode
--fullscreen        =  Startup in fullscreen mode
--vsync             =  Sync to display (for smoother scrolling when using "-60 -sound", but a little faster)
--com="COM?:BAUD"   =  Setup com port for UART. i.e. -com="COM5:115200". if not set, coms will be disabled.
--stop              =  Start in the debugger.
--log_cpu           =  Log the CPU status out
--basickeys		   =  Enable Next BASIC key interface (F10 toggles)
--tv				   =  Disable the TV shader (or CTRL+F1)
--emu               =  Enable the emulator "bit" in the hardware registers
--major=<value>     =  Sets the value returned by NextReg $01
--minor=<value>     =  Sets the value returned by NextReg $0E
-
 
 Whats new
 ======================================================================================
+v2.12.36
+--------
+Fixed F_RENAME to use IX instead of HL (now working)
+Fixed sprite clipping (I think)
+First pass at Tiles and Tilemaps in bank 7
+
+v2.12.35
+--------
+Faked esxDOS loading now returns an "access denied" error, if it tried to open a file that is write protected
+Transparent border now working (ULA off)
+Added F_RENAME (untested)
+
+v2.12.34
+--------
+Fixed HEX editing in the memory window so that it's case insensitive. (don't have to press SHIFT)
+ReadMe.txt now holds the "manual" part of this text file, and this is now "just" the version info.
+
+v2.12.33
+--------
+You can now click on the memory window to edit bytes directly by typing HEX values into it ENTER or click off to stop
+You can now press KEYPAD_ENTER to display the game screen while in the debugger
+
+v2.12.32
+--------
+Fixed reg $8E bit 3 usage - don't change RAM mapping
+Fixed Layer 2 palette colour offsets (NextReg $70)
+Regs $6E and $6F now return top 2 bits as 0
+
+v2.12.31
+--------
+Added DAC's B,C and D
+Added SAVE to the debugger:  SAVE "NAME",add,len,   SAVE "NAME",BANK:OFFSET,length,    SAVE "NAME",BANK:OFFSET,BANK:OFFSET
+You can now read DMA Registers
+CTRL+F7 now executes to cursor in the debugger
+Added the demo "mod_player.nex" added to #CSpect package
+
+v2.12.30
+--------
+Layer 2 palette offset added to 256,320 and 640 modes.
+Fixed a crash when a write to E3 happens, and the roms haven't been loaded.
+Fixed a crash in the debugger when you entered a bank:offset and the offset was an invalid symbol
+Tilereg $6E set to $2C on power up - same as hardware. (don't assume though, set it)
+Tilereg $6F set to $0C on power up - same as hardware. (don't assume though, set it)
+
+v2.12.29
+--------
+640x256 Layer 2 mode added
+
+v2.12.28
+--------
+Fixed DMA prescaler (usually used for digial audio)
+
+v2.12.27
+--------
+Fixed a crash in AY Audio when loading in large files via fake esxDOS.
+
+v2.12.26
+--------
+Fixed a crash inside the debugger.
+Added a new eDebugCommand.ClearAllBreakpoints to the iCSpect plugin interface
+
+v2.12.25
+--------
+Fixed Tilemaps being over the border when the border is transparent
+
+v2.12.24
+--------
+Lower border colour fixed
+Added some wait states to slow down 28Mhz mode to more closely match the real machine
+
+v2.12.23
+--------
+CTRL+F3 (or CTRL+PrintScreen) will now save a screenshot in the current working directory
+
+v2.12.22
+--------
+Fixed a stupid typo on iCSpect interface to get sprites.
+
+v2.12.21
+--------
+NextReg 0x1c can now be read
+NextRegs 0x61 and 0x62 can now be read correctly
+iCSpect memory interface changed to take/return byte arrays
+Reading/Setting NextReg 255 (which isn't a real one) was crashing the emulator due to plugins
+Fixed the fallback colour, was only 8 bit instead of 9
+Fixed reading of the raster line for lower in the screen (lower 64 pixels usually)
+Fixed some threading issues in the serial coms (on USB hardware)
+Fixed and changed baud rates, and added in all normal ones (HDMI timing = 27000000/baud )  
+   2000000 = 13
+   1152000 = 23
+   921600  = 29
+   576000  = 46
+   460800  = 58
+   256000  = 105
+   230400  = 117
+   128000  = 210
+   115200  = 234
+   57600   = 468
+   38400   = 703
+   31250   = 864
+   19200   = 1406
+   9600    = 2812
+   2400    = 11250
+   1200    = 22500
+
+v2.12.20
+--------
+Removed debug code that could cause a crash on others machines
+
+v2.12.19
+--------
+Fixed a bug in 48k Layer 2 offset mapping (untested)
+Changed set/clear breakpoints to be a proper set/clear
+
+v2.12.18
+--------
+Fixed Layer 2,320x256 clip window
+Fixed a crash in Layer 2, 320x256 rendering
+Fixed NextReg0 (machine type) initialisation bug
+
+v2.12.17
+--------
+1Bit tilemaps now use Global Transparency for it's transparency, not the tile index
+Have added GetSprite() and SetSprite() to iCSpect interface for plugin writers
+
+
+v2.12.16
+--------
+Reverted .NEX border colour palette change, was just wrong.
+Added PeekSprite(address) and PokeSprite(address,value) to iCSpect interface for plugins
+
+v2.12.15
+--------
+Added plugin "tick" into debugger mode
+
+v2.12.14
+--------
+Plugin API can now control the debugger using the new extended eDebugCommand enum
+-remote command line switch added, to disable the "visible" part of the debugger
+
+v2.12.13
+--------
+Fixed GetRegister() callback
+Fixed NextReg 0x05 reading
+Setup some of the Nextreg on reset (also helps reset a bit better)
+Fixed bit 3 of new NextReg 0x8E, which fixes dot commands (and sprite editor exiting)
+
+v2.12.12
+--------
+Changed number of scanlines to 262 (HDMI) for 60Hz
+
+v2.12.11
+--------
+Fixed a crash in plugin creation
+
+v2.12.10
+--------
+Added pluging "eAccess.NextReg_Read" type (untested)
+
+v2.12.9
+-------
+50hz/60hz bit now set in NextReg 5
+-debug added to the command line. You can now "start" in the debugger.
+
+v2.12.8
+-------
+Fixed AY partial port decoding
+Fixed a minor reset stall when it was waiting on a HALT before the reset
+NextReg 0x8c added
+NextReg 0x8e added
+
+v2.12.7 (internal)
+-------
+Added AltRom1 support
+
+v2.12.6 (internal)
+-------
+Fixed a serial port "send" bug. Now sends the whole byte
+Fixed tile attribute byte bit 7 - top bit of palette offset was being ignored
+Fixed esxDOS date/time function (M_GETDATE $8E)
+NEX file 1.3 now parsed... should load more things
+NEX files get IRQs switched off when loaded (as per machine)
+Fixed esxDOS date is wrong
+Fixed Border colour now sets the palette entry as well
+Fixed GetRegister() in plugins not working
+Fixed Copper run then loop not working
+Fixed Top line (in 256 pixel high view) is missing
+Fixed DI followed by HALT should stop the CPU
+Fixed Hires tilemap has clipping on far right
+F8 not steps over conditional jumps and branches that go backwards. Branches forwards are taken.
+Fixed ADD HL/DE/BC,A no longer affects flags
+Fixed OUTI so that B is decemented first. (OTIR was already like that)
+Minor change to 60hz audio
+NextReg 0x69 can now be read.
+DMA Continue mode added
+Fixed a timing issue with DMA, so timing much better
+
+
 v2.12.5
 -------
 Border now comes from fallback colour if paper/ink mode is 255 (as per hardware)
 Fixed Plugin loading. Was broken due to new system loading+resetting.
 Added new "Tick" to iPlugin interface, called once per emulated frame
 Added Debugger() call to CSpect interface, allowing you to enter the debugger from the emulator
-Added Plugin example (and current interface)
 
 v2.12.4
 -------
@@ -81,7 +229,7 @@ v2.12.2
 -------
 Changed 320x256 mode to use Y/X orientation (0,0)=$0000, (1,0)=$0100, (2,0)=$0200.  (0,1)=$0001,(0,2)=$0002 etc...
 
-v2.12.1
+v2.12.1 
 -------
 Plugin system can now get/set Z80 registers
 A better reset on load of an SNA/Nex file. Should be a complete system reset now...
@@ -719,340 +867,4 @@ Loading files from RST $08 require the drive to be set (or gotten) properly - as
 Basic Audio now added (beeper)
 New sprite priorities using register 21. Bits 4,3,2
 New Layer 2 double buffering via Reg 18,Reg 19 and bit 3 of port $123b
-
-
-#CSpect Plugins
-======================================================================================
-An example (empty) plugin is provided.
-Write a DLL based on the iPlugin interface, and implement all members of that interface.
-// access types
-public enum eAccess
-{
-    /// <summary>Capture all READ data comes from this port</summary>
-    Port_Read = 1,
-    /// <summary>Capture all WRITE data to this port</summary>
-    Port_Write = 2,
-    /// <summary>All reads to this address come from this plugin</summary>
-    Memory_Read = 3,
-    /// <summary>All writes from this address come from this plugin</summary>
-    Memory_Write = 4,
-    /// <summary>Next register write</summary>
-    NextReg_Write = 5
-};
-
-
-bool Write(eAccess _type, int _port, byte _value )
----------------------------------------------------
-On write access this function is called with the access type, port and byte being written.
-If you use the value passed, you can return TRUE to indicate you've used the value, and no 
-more extensions or internal functions will be called.
-
-
-byte Read(eAccess _type, int _address, out bool _isvalid)
----------------------------------------------------------
-On read access to the requested address/port/reg, this function is called.
-_isvalid should be set to true if you "use up" the value, or it'll be pased onto 
-other plugins, or the internal functions will be called.
-
-
-List<sIO> Init( iCSpect _CSpect )
----------------------------------
-Initialise the plugin. iCSpect it an interface back into the emulator that allows you to
-Peek,Poke, IN,OUT, and Set/Get Nextreg values.
-returns a list of IO request structures.
-
-
-void Quit()
------------
-Is called on exit, letting you free up unmanaged system resources.
-
-
-
-Final new Z80 opcodes on the NEXT (V1.10.06 core)
-======================================================================================
-   swapnib           ED 23           8Ts      A bits 7-4 swap with A bits 3-0
-   mul               ED 30           8Ts      Multiply D*E = DE (no flags set)
-   add  hl,a         ED 31           8Ts      Add A to HL (no flags set)
-   add  de,a         ED 32           8Ts      Add A to DE (no flags set)
-   add  bc,a         ED 33           8Ts      Add A to BC (no flags set)
-   add  hl,$0000     ED 34 LO HI     16Ts     Add $0000 to HL (no flags set)
-   add  de,$0000     ED 35 LO HI     16Ts     Add $0000 to DE (no flags set)
-   add  bc,$0000     ED 36 LO HI     16Ts     Add $0000 to BC (no flags set)
-   ldix              ED A4           16Ts     As LDI,  but if byte==A does not copy
-   ldirx             ED B4           21Ts     As LDIR, but if byte==A does not copy
-   lddx              ED AC           16Ts     As LDD,  but if byte==A does not copy, and DE is incremented
-   lddrx             ED BC           21Ts     As LDDR,  but if byte==A does not copy
-   ldpirx            ED B7           16/21Ts  (de) = ( (hl&$fff8)+(E&7) ) when != A
-   ldirscale         ED B6           21Ts     As LDIRX,  if(hl)!=A then (de)=(hl); HL_E'+=BC'; DE+=DE'; dec BC; Loop.
-   ldws				 ED A5			 14Ts	  LD (DE),(HL): INC D: INC L
-   mirror a          ED 24           8Ts      Mirror the bits in A     
-   push $0000        ED 8A LO HI     19Ts     Push 16bit immidiate value
-   nextreg reg,val   ED 91 reg,val   20Ts     Set a NEXT register (like doing out($243b),reg then out($253b),val )
-   nextreg reg,a     ED 92 reg       17Ts     Set a NEXT register using A (like doing out($243b),reg then out($253b),A )
-   pixeldn           ED 93           8Ts      Move down a line on the ULA screen
-   pixelad           ED 94           8Ts      Using D,E (as Y,X) calculate the ULA screen address and store in HL
-   setae             ED 95           8Ts      Using the lower 3 bits of E (X coordinate), set the correct bit value in A
-   test $00          ED 27           11Ts     And A with $XX and set all flags. A is not affected.
-   outinb            ED 90           16Ts     OUT (C),(HL), HL++
-
-
-
-General Emulator Keys
-======================================================================================
-Escape - quit
-F1 - Enter/Exit debugger
-F2 - load SNA
-F3 - reset
-F5 - 3.5Mhz mode  	(when not in debugger)
-F6 - 7Mhz mode		(when not in debugger)
-F7 - 14Mhz mode		(when not in debugger)
-F8 - 28Mhz mode		(when not in debugger)
-F10 - Toggle Key mode
-
-
-
-
-Debugger Keys
-======================================================================================
-F1                  - Exit debugger
-F2                  - load SNA
-F3                  - reset
-F7                  - single step
-F8                  - Step over (for loops calls etc)
-F9                  - toggle breakpoint on current line
-Up                  - move user bar up
-Down                - move user bar down
-PageUp              - Page disassembly window up
-PageDown            - Page disassembly window down
-SHIFT+Up            - move memory window up 16 bytes
-SHIFT+Down          - move memory window down 16 bytes
-SHIFT+PageUp        - Page memory window up
-SHIFT+PageDown      - Page memory window down
-CTRL+SHIFT+Up       - move trace window up 16 bytes
-CTRL+SHIFT+Down     - move trace window down 16 bytes
-CTRL+SHIFT+PageUp   - Page trace window up
-CTRL+SHIFT+PageDown - Page trace window down
-
-Mouse is used to toggle "switches"
-HEX/DEC mode can be toggled via "switches"
-
-
-
-
-Debugger Commands
-======================================================================================
-M <address>         Set memory window base address (in normal 64k window)
-M <bank>:<offset>   Set memory window into physical memory using bank/offset
-G <address>         Goto address in disassembly window
-BR <address>        Toggle Breakpoint
-WRITE <address>     Toggle a WRITE access break point
-READ  <address>     Toggle a READ access break point (also when EXECUTED)
-PUSH <value>        push a 16 bit value onto the stack
-POP				    pop the top of the stack
-POKE <add>,<val>    Poke a value into memory
-Registers:
-   A  <value>       Set the A register
-   A' <value>       Set alternate A register
-   F  <value>       Set the Flags register
-   F' <value>       Set alternate Flags register
-   AF <value>       Set 16bit register pair value
-   AF'<value>       Set 16bit register pair value
-   |
-   | same for all others
-   |
-   SP <value>       Set the stack register
-   PC <value>       Set alternate program counter register
-LOG OUT [port]      LOG all port writes to [port]. If port is not specified, ALL port writes are logged.
-                    (Logging only occurs when values to the port change)
-LOG IN  [port]      LOG all port reads from [port]. If port is not specified, ALL port reads are logged.
-                    (Logging only occurs when values port changes)
-
-
-Some Registers
-======================================================================================
-
-Layer 2 access
-==============
-port $123b
-bit 0 = WRITE paging on. $0000-$3fff write access goes to selected Layer 2 page 
-bit 1 = Layer 2 ON (visible)
-bit 2 = Read paging on. $0000-$3fff read access goes to selected Layer 2 page 
-bit 3 = Page in back buffer (reg 19)
-bit 6/7= VRAM Banking selection (layer 2 uses 3 banks)
-         00 to map the first 16K of Layer2 over the bottom 16K
-         01 to map the second 16K of Layer2 over the bottom 16K
-         10 to map the last 16K of Layer2 over the bottom 16K
-         11 to map all 48K of Layer2 over the bottom 48K of memory
-
-Tilemap format
-==============
-bits 15-12 : palette offset
-bit 11 : x mirror
-bit 10 : y mirror
-bit 9 : rotate
-bit 8 : ula over tilemap
-bits 7-0 : tile id
-
-
-
-
-
-Kempston mouse 
-==============
-Buttons  $fadf
-Wheel    $fadf	  ( top 4 bits )
-Mouse X  $fddf    (0 to 255 continuous clocking)
-Mouse Y  $ffdf    (0 to 255 continuous clocking) 
-
-
-Kempston Joystick
-=================
-Port $1f(first) and port $37(second)
-Right = 1
-Left  = 2 
-Down  = 4
-Up    = 8
-Fire/B= 16
-C     = 32		; Sega pad
-A     = 64		; Sega pad
-Start = 128		; Sega pad
-
-
-esxDOS simulation
-===================
-M_GETSETDRV	-	simulated
-F_OPEN		-	simulated
-F_READ		-	simulated
-F_WRITE		-	simulated
-F_CLOSE		-	simulated
-F_SEEK      -   simulated
-F_FSTAT     -   simulated
-F_STAT      -   simulated
-
-
-.NEX file format (V1.0)
-=======================
-unsigned char Next[4];			//"Next"
-unsigned char VersionNumber[4];	//"V1.0"
-unsigned char RAM_Required;		//0=768K, 1=1792K
-unsigned char NumBanksToLoad;	//0-112 x 16K banks
-unsigned char LoadingScreen;	//1=YES load palette also and layer2 at 16K page 9.
-unsigned char BorderColour;		//0-7 ld a,BorderColour:out(254),a
-unsigned short SP;				//Stack Pointer
-unsigned short PC;				//Code Entry Point : $0000 = Don't run just load.
-unsigned short NumExtraFiles;	//NumExtraFiles
-unsigned char Banks[64+48];		//Which 16K Banks load.
-unsigned char RestOf512Bytes[512-(4+4 +1+1+1+1 +2+2+2 +64+48 )];
-if LoadingScreen!=0 {
-	unsigned short	palette[256];
-	unsigned char	Layer2LoadingScreen[49152];
-}
-Banks[...]						// Bank 5 is first (loaded to $4000), then bank 2 (to $8000) then bank 0(to $C000)  - IF these banks are in the file via Banks[] array
-
-
-Next OS streaming API
----------------------
-; *************************************************************************** 
-; * DISK_FILEMAP ($85)                                                      * 
-; *************************************************************************** 
-; Obtain a map of card addresses describing the space occupied by the file. 
-; Can be called multiple times if buffer is filled, continuing from previous. 
-; Entry: 
-;       A=file handle (just opened, or following previous DISK_FILEMAP calls) 
-;       IX=buffer 
-;       DE=max entries (each 6 bytes: 4 byte address, 2 byte sector count) 
-; Exit (success): 
-;       Fc=0 
-;       DE=max entries-number of entries returned 
-;       HL=address in buffer after last entry 
-;       A=card flags: bit 0=card id (0 or 1) 
-;                     bit 1=0 for byte addressing, 1 for block addressing 
-; Exit (failure): 
-;       Fc=1 
-;       A=error 
-; 
-; NOTES: 
-; Each entry may describe an area of the file between 2K and just under 32MB 
-; in size, depending upon the fragmentation and disk format. 
-; Please see example application code, stream.asm, for full usage information 
-; (available separately or at the end of this document).
-
-; *************************************************************************** 
-; * DISK_STRMSTART ($86)                                                    * 
-; *************************************************************************** 
-; Start reading from the card in streaming mode. 
-; Entry: IXDE=card address 
-;        BC=number of 512-byte blocks to stream 
-;        A=card flags. $80 = don't wait for card being ready.
-; Exit (success): Fc=0 
-;                 B=0 for SD/MMC protocol, 1 for IDE protocol 
-;                 C=8-bit data port 
-; Exit (failure): Fc=1, A=esx_edevicebusy 
-; ; NOTES: 
-; On the Next, this call always returns with B=0 (SD/MMC protocol) and C=$EB 
-; When streaming using the SD/MMC protocol, after every 512 bytes you must read 
-; a 2-byte CRC value (which can be discarded) and then wait for a $FE value 
-; indicating that the next block is ready to be read. 
-; Please see example application code, stream.asm, for full usage information 
-; (available separately or at the end of this document).
-
-; *************************************************************************** 
-; * DISK_STRMEND ($87)                                                      * 
-; *************************************************************************** 
-; Stop current streaming operation. 
-; Entry: A=card flags 
-; Exit (success): Fc=0 
-; Exit (failure): Fc=1, A=esx_edevicebusy 
-; 
-; NOTES: 
-; This call must be made to terminate a streaming operation. 
-; Please see example application code, stream.asm, for full usage information 
-; (available separately or at the end of this document).
-
-
-
-Manual SDCARD setup 
--------------------
-Download the latest SD card from https://www.specnext.com/category/downloads/
-Copy onto an SD card (preferably 2GB and less than 16GB as it's your Next HD for all your work)
-Copy the files "enNextZX.rom" and "enNxtmmc.rom" from this SD Card into the root of the CSpect folder
-Download Win32DiskImager ( https://sourceforge.net/projects/win32diskimager/ )
-make an image of the SD card
-start CSpect with the command line... 
-
-"CSpect.exe -w3 -zxnext -nextrom -mmc=<SD_CARD_PATH>\sdcard.img"
-
-I'd also recommend downloading HDFMonkey, which lets you copy files to/from the SD image. 
-This tool can be used while CSpect is running, meaning you can just reset and remount the image
-if you put new files on it - just like the real machine.
-This tool also lets you rescue files saved onto the image by #CSpect - like a BASIC program
-you may have written, or a hiscore file from a game etc.
-I found a copy of this tool here: http://uto.speccy.org/downloads/hdfmonkey_windows.zip
-
-
-
-
-ZX Spectrum ROM
-----------------
-Amstrad have kindly given their permission for the redistribution of their copyrighted material but retain that copyright
-
-
-
-
-Wish List
----------
-ULA+Tilemap Stencil mode
-Smooth scroll timex (hires/colour) screen
-ULA off means lowres/times is also off (Bit 7 disabled all TIMEX modes, 128K shadow, LoRes, ULA but not the BORDER)
-Default INI file for options
-Save memory from debugger
-Realtime Clock
-60Hz Audio
-Fix mouse on OS under Mono (*OSX OpenTK has a bug in it, stopping this for now)
-Assosiate .NEX files with #CSpect on windows
-"Step Out" in the debugger (break on RET)
-Source level debugging
-Next register display/Change
-Sprite register display/change
-AY Register display/change
 

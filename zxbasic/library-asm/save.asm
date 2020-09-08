@@ -14,8 +14,10 @@ SAVE_CODE:
     LOCAL ROM_SAVE
     LOCAL __ERR_EMPTY
     LOCAL SAVE_STOP
-    
-    ROM_SAVE EQU 0970h    
+
+#ifdef __ENABLE_BREAK__
+    ROM_SAVE EQU 0970h
+#endif
     MEMBOT EQU 23698 ; Use the CALC mem to store header
 
     pop hl   ; Return address
@@ -79,8 +81,16 @@ SAVE_CONT:
     ldir     ; Copy String block NAME
     ld l, (ix + 13)
     ld h, (ix + 14)    ; Restores start of bytes    
-    
+
+    ld a, r
+    push af
     call ROM_SAVE
+
+    LOCAL NO_INT
+    pop af
+    jp po, NO_INT
+    ei
+NO_INT:
     ; Recovers ECHO_E since ROM SAVE changes it
     ld hl, 1821h
     ld (23682), hl
@@ -90,5 +100,69 @@ SAVE_CONT:
 SAVE_STOP:
     pop ix
     jp __STOP
+
+#ifndef __ENABLE_BREAK__
+    LOCAL CHAN_OPEN
+    LOCAL PO_MSG
+    LOCAL WAIT_KEY
+    LOCAL SA_BYTES
+    LOCAL SA_CHK_BRK
+    LOCAL SA_CONT
+
+    CHAN_OPEN EQU 1601h
+    PO_MSG EQU 0C0Ah
+    WAIT_KEY EQU 15D4h
+    SA_BYTES EQU 04C6h
+
+ROM_SAVE:
+    push hl
+    ld a, 0FDh
+    call CHAN_OPEN
+    xor a
+    ld de, 09A1h
+    call PO_MSG
+    set 5, (iy + 02h)
+    call WAIT_KEY
+    push ix
+    ld de, 0011h
+    xor a
+    call SA_BYTES
+    pop ix
+
+    call SA_CHK_BRK
+    jr c, SA_CONT
+    pop ix
+    ret
+
+SA_CONT:
+    ei
+    ld b, 32h
+
+LOCAL SA_1_SEC
+SA_1_SEC:
+    halt
+    djnz SA_1_SEC
+
+    ld e, (ix + 0Bh)
+    ld d, (ix + 0Ch)
+    ld a, 0FFh
+    pop ix
+    call SA_BYTES
+
+SA_CHK_BRK:
+    ld b, a
+    ld a, (5C48h)
+    and 38h
+    rrca
+    rrca
+    rrca
+    out (0FEh), a
+    ld a, 7Fh
+    in a, (0FEh)
+    rra
+    ld a, b
+    ret
+
+#endif
     
     ENDP

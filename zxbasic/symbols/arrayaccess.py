@@ -10,10 +10,11 @@
 # ----------------------------------------------------------------------
 
 import api.global_ as gl
-from api.errmsg import syntax_error
+from api.errmsg import error
 from api.errmsg import warning
 from api.check import is_number
 from api.check import is_const
+from api.constants import SCOPE
 
 from .call import SymbolCALL
 from .number import SymbolNUMBER as NUMBER
@@ -33,11 +34,12 @@ class SymbolARRAYACCESS(SymbolCALL):
     it only returns the pointer address to the element).
 
     Parameters:
-        entry will be the symboltable entry.
+        entry will be the symbol table entry.
         Arglist a SymbolARGLIST instance.
     """
     def __init__(self, entry, arglist, lineno):
         super(SymbolARRAYACCESS, self).__init__(entry, arglist, lineno)
+        assert all(gl.BOUND_TYPE == x.type_.type_ for x in arglist), "Invalid type for array index"
 
     @property
     def entry(self):
@@ -77,6 +79,9 @@ class SymbolARRAYACCESS(SymbolCALL):
         Otherwise, if it's not constant (e.g. A(i))
         returns None
         """
+        if self.scope == SCOPE.parameter:
+            return None
+
         offset = 0
         # Now we must typecast each argument to a u16 (POINTER) type
         # i is the dimension ith index, b is the bound
@@ -103,24 +108,31 @@ class SymbolARRAYACCESS(SymbolCALL):
         if variable is None:
             return None
 
-        if len(variable.bounds) != len(arglist):
-            syntax_error(lineno, "Array '%s' has %i dimensions, not %i" %
-                         (variable.name, len(variable.bounds), len(arglist)))
-            return None
+        if variable.scope != SCOPE.parameter:
+            if len(variable.bounds) != len(arglist):
+                error(lineno, "Array '%s' has %i dimensions, not %i" %
+                      (variable.name, len(variable.bounds), len(arglist)))
+                return None
 
-        # Checks for array subscript range if the subscript is constant
-        # e.g. A(1) is a constant subscript access
-        for i, b in zip(arglist, variable.bounds):
+            # Checks for array subscript range if the subscript is constant
+            # e.g. A(1) is a constant subscript access
             btype = gl.SYMBOL_TABLE.basic_types[gl.BOUND_TYPE]
-            lower_bound = NUMBER(b.lower, type_=btype, lineno=lineno)
-            i.value = BINARY.make_node('MINUS',
-                                       TYPECAST.make_node(btype, i.value, lineno),
-                                       lower_bound, lineno, func=lambda x, y: x - y,
-                                       type_=btype)
-            if is_number(i.value) or is_const(i.value):
-                val = i.value.value
-                if val < 0 or val > b.count:
-                    warning(lineno, "Array '%s' subscript out of range" % id_)
+            for i, b in zip(arglist, variable.bounds):
+                lower_bound = NUMBER(b.lower, type_=btype, lineno=lineno)
+
+                if is_number(i.value) or is_const(i.value):
+                    val = i.value.value
+                    if val < b.lower or val > b.upper:
+                        warning(lineno, "Array '%s' subscript out of range" % id_)
+
+                i.value = BINARY.make_node('MINUS',
+                                           TYPECAST.make_node(btype, i.value, lineno),
+                                           lower_bound, lineno, func=lambda x, y: x - y,
+                                           type_=btype)
+        else:
+            btype = gl.SYMBOL_TABLE.basic_types[gl.BOUND_TYPE]
+            for arg in arglist:
+                arg.value = TYPECAST.make_node(btype, arg.value, arg.value.lineno)
 
         # Returns the variable entry and the node
         return cls(variable, arglist, lineno)

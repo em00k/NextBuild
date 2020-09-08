@@ -8,6 +8,7 @@
 # This program is Free Software and is released under the terms of
 #                    the GNU General License
 # ----------------------------------------------------------------------
+from typing import Optional
 
 from api.constants import CLASS
 from api.constants import KIND
@@ -47,18 +48,18 @@ class SymbolFUNCTION(SymbolVAR):
 
         if self.__kind != KIND.unknown and self.__kind != value:
             q = KIND.to_string(KIND.sub) if self.__kind == KIND.function else KIND.to_string(KIND.function)
-            api.errmsg.syntax_error(lineno, "'%s' is a %s, not a %s" %
-                                    (self.name, KIND.to_string(self.__kind).upper(), q.upper()))
+            api.errmsg.error(lineno, "'%s' is a %s, not a %s" %
+                             (self.name, KIND.to_string(self.__kind).upper(), q.upper()))
         self.__kind = value
 
     @property
-    def params(self):
+    def params(self) -> SymbolPARAMLIST:
         if not self.children:
             return SymbolPARAMLIST()
         return self.children[0]
 
     @params.setter
-    def params(self, value):
+    def params(self, value: SymbolPARAMLIST):
         assert isinstance(value, SymbolPARAMLIST)
         if self.children is None:
             self.children = []
@@ -69,14 +70,14 @@ class SymbolFUNCTION(SymbolVAR):
             self.children = [value]
 
     @property
-    def body(self):
+    def body(self) -> SymbolBLOCK:
         if not self.children or len(self.children) < 2:
             self.body = SymbolBLOCK()
 
         return self.children[1]
 
     @body.setter
-    def body(self, value):
+    def body(self, value: Optional[SymbolBLOCK]):
         if value is None:
             value = SymbolBLOCK()
         assert isinstance(value, SymbolBLOCK)

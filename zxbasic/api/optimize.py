@@ -6,12 +6,14 @@ from .config import OPTIONS
 import api.errmsg
 from api.errmsg import warning
 import api.check as chk
-from api.constants import TYPE
+from api.constants import TYPE, SCOPE, CLASS
 import api.global_ as gl
 import symbols
 import types
 from api.debug import __DEBUG__
 from api.errmsg import warning_not_used
+import api.utils
+import api.symboltable
 
 
 class ToVisit(object):
@@ -67,8 +69,6 @@ class OptimizerVisitor(NodeVisitor):
             return None
 
         __DEBUG__("Optimizer: Visiting node {}".format(str(node.obj)), 1)
-
-        # print node.obj.token, node.obj.__repr__()
         methname = 'visit_' + node.obj.token
         meth = getattr(self, methname, None)
         if meth is None:
@@ -84,14 +84,14 @@ class OptimizerVisitor(NodeVisitor):
         if node.operand.token != 'ARRAYACCESS':
             if not chk.is_dynamic(node.operand):
                 node = symbols.CONST(node, node.lineno)
-        elif node.operand.offset is not None:  # A constant access. Calculate offset
-            node = symbols.BINARY.make_node('PLUS',
-                                            symbols.UNARY('ADDRESS', node.operand.entry, node.lineno,
-                                                          type_=self.TYPE(gl.PTR_TYPE)),
-                                            symbols.NUMBER(node.operand.offset, lineno=node.operand.lineno,
-                                                           type_=self.TYPE(gl.PTR_TYPE)),
-                                            lineno=node.lineno, func=lambda x, y: x + y
-                                            )
+        elif node.operand.offset is not None:  # A constant access
+            if node.operand.scope == SCOPE.global_:  # Calculate offset if global variable
+                node = symbols.BINARY.make_node(
+                    'PLUS',
+                    symbols.UNARY('ADDRESS', node.operand.entry, node.lineno, type_=self.TYPE(gl.PTR_TYPE)),
+                    symbols.NUMBER(node.operand.offset, lineno=node.operand.lineno, type_=self.TYPE(gl.PTR_TYPE)),
+                    lineno=node.lineno, func=lambda x, y: x + y
+                )
         yield node
 
     def visit_BINARY(self, node):
@@ -110,7 +110,8 @@ class OptimizerVisitor(NodeVisitor):
         node = (yield self.generic_visit(node))
 
         if all(chk.is_static(arg.value) for arg in node.operand):
-            yield symbols.STRING(''.join(chr(x.value.value & 0xFF) for x in node.operand), node.lineno)
+            yield symbols.STRING(''.join(
+                chr(api.utils.get_final_value(x.value) & 0xFF) for x in node.operand), node.lineno)
         else:
             yield node
 
@@ -122,10 +123,12 @@ class OptimizerVisitor(NodeVisitor):
 
     def visit_FUNCCALL(self, node):
         node.args = (yield self.generic_visit(node.args))  # Avoid infinite recursion not visiting node.entry
+        self._check_if_any_arg_is_an_array_and_needs_lbound_or_ubound(node.entry.params, node.args)
         yield node
 
     def visit_CALL(self, node):
         node.args = (yield self.generic_visit(node.args))  # Avoid infinite recursion not visiting node.entry
+        self._check_if_any_arg_is_an_array_and_needs_lbound_or_ubound(node.entry.params, node.args)
         yield node
 
     def visit_FUNCDECL(self, node):
@@ -146,7 +149,7 @@ class OptimizerVisitor(NodeVisitor):
     def visit_LET(self, node):
         if self.O_LEVEL > 1 and not node.children[0].accessed:
             warning_not_used(node.children[0].lineno, node.children[0].name)
-            yield self.NOP
+            yield symbols.BLOCK(*list(self.filter_inorder(node.children[1], lambda x: isinstance(x, symbols.CALL))))
         else:
             yield (yield self.generic_visit(node))
 
@@ -249,3 +252,33 @@ class OptimizerVisitor(NodeVisitor):
         for i in range(len(node.children)):
             node.children[i] = (yield ToVisit(node.children[i]))
         yield node
+
+    def _check_if_any_arg_is_an_array_and_needs_lbound_or_ubound(self, params: symbols.PARAMLIST,
+                                                                 args: symbols.ARGLIST):
+        """ Given a list of params and a list of args, traverse them to check if any arg is a byRef array parameter,
+        and if so, whether it's use_lbound or use_ubound flag is updated to True and if it's a local var. If so, it's
+        offset size has changed and must be reevaluated!
+        """
+        for arg, param in zip(args, params):
+            if not param.byref or param.class_ != CLASS.array:
+                continue
+
+            if arg.value.lbound_used and arg.value.ubound_used:
+                continue
+
+            self._update_bound_status(arg.value)
+
+    def _update_bound_status(self, arg: symbols.VARARRAY):
+        old_lbound_used = arg.lbound_used
+        old_ubound_used = arg.ubound_used
+
+        for p in arg.requires:
+            arg.lbound_used = arg.lbound_used or p.lbound_used
+            arg.ubound_used = arg.ubound_used or p.ubound_used
+
+        if old_lbound_used != arg.lbound_used or old_ubound_used != arg.ubound_used:
+            if arg.scope == SCOPE.global_:
+                return
+
+            if arg.scope == SCOPE.local and not arg.byref:
+                arg.scopeRef.owner.locals_size = api.symboltable.SymbolTable.compute_offsets(arg.scopeRef)

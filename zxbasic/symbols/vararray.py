@@ -14,6 +14,7 @@ import functools
 import api.global_ as gl
 from api.constants import TYPE
 from api.constants import CLASS
+from api.constants import SCOPE
 from .var import SymbolVAR
 from .boundlist import SymbolBOUNDLIST
 
@@ -21,6 +22,9 @@ from .boundlist import SymbolBOUNDLIST
 class SymbolVARARRAY(SymbolVAR):
     """ This class expands VAR top denote Array Variables
     """
+    lbound_used = False  # True if LBound has been used on this array
+    ubound_used = False  # True if UBound has been used on this array
+
     def __init__(self, varname, bounds, lineno, offset=None, type_=None):
         super(SymbolVARARRAY, self).__init__(varname, lineno, offset=offset, type_=type_, class_=CLASS.array)
         self.bounds = bounds
@@ -42,13 +46,13 @@ class SymbolVARARRAY(SymbolVAR):
 
     @property
     def size(self):
-        return self.count * self.type_.size
+        return self.count * self.type_.size if self.scope != SCOPE.parameter else TYPE.size(gl.PTR_TYPE)
 
     @property
     def memsize(self):
         """ Total array cell + indexes size
         """
-        return 2 * TYPE.size(gl.PTR_TYPE)
+        return (2 + (2 if self.lbound_used or self.ubound_used else 0)) * TYPE.size(gl.PTR_TYPE)
 
     @property
     def data_label(self):

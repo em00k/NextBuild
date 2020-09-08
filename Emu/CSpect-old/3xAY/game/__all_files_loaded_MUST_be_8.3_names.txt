@@ -1,0 +1,1 @@
+Any file you load from esxDOS must be 8.3 format, including paths or you'll get a loading error.

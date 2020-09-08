@@ -1,0 +1,1 @@
+CSpect.exe -fullscreen -sound -w2 -60 -vsync -zxnext -mmc=.\ parallax.nex

@@ -73,6 +73,12 @@ namespace i2C_Sample
         // **********************************************************************
         public bool Write(eAccess _type, int _port, byte _value)
         {
+            //if (_type == eAccess.Port_Write && _port == 0xfe)
+            //{
+            //    return true;
+            //}
+
+
             switch (_port)
             {
                 case PORT_CLOCK: break;
