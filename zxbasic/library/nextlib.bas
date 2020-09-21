@@ -97,8 +97,6 @@ asm
 	LAYER2_ACCESS_PORT EQU $123B
 end asm 
 
-border 7 : paper 7: ink 0 : cls 
-
 Sub MMU8(byval nn as ubyte, byval na as ubyte)
 	asm 	
 		PROC 
