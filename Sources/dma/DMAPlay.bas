@@ -1,6 +1,8 @@
+'!ORG=24576
 '#!v
 '!sna "h:\wav20.snx" -a
-'!noemu
+'ww#!noemu
+cls 
 #include <nextlib.bas>
 dim scaler,dmaloop  as ubyte
 dim off as uinteger
@@ -10,13 +12,15 @@ NextReg(7,3)
 showwave($c000)
 nib = 46
 tlen = @sampleend-@sample-44
+div = tlen / 32
 dmaloop=1
 ' set up the dma play, start = @ sample+64 (+WAV header),length,scaler and repeat flag
 
-DMAPlay(@sample+64,@sampleend-@sample-64,100,1)
+DMAPlay(@sample+44,tlen,100,1)
 print at 18,0;"Key 1-9 for keys O/P finetune"
 Print at 1,0;"ftune  ";nib;"  "
 print at 1,11;"Loop On  (l=on/off)"
+print at 0,10;tlen 
 DO : 
 
 	k=inkey$ 
@@ -56,13 +60,21 @@ DO :
 		beak = 31
 	endif 
 
+	out $6b,$BB : Out $6b,%10 : a=in($6b)
+	out $6b,$BB : Out $6b,%100 : b=in($6b)
+	out $6b,$BB : Out $6b,%1 : c=in($6b)
+	bl = cast(ubyte,(b*256+a)/div)
 	if bl<32
-		if bl < 32 : bl = in ($6b) - 100: else : playtrig = 0 : poke 22912+bl,0+8*7 : bl = 0 :  endif 
+		'if bl < 32 : bl = in ($6b) : else : playtrig = 0 : poke 22912+bl,0+8*7 : bl = 0 :  endif 
 		poke 22912+cast(uinteger,bl)-1,0+8*7
 		poke 22912+cast(uinteger,bl),2+8*1
 	endif 
 	
-	print at 0,10;" ";in ($6b)-100;" " 
+
+'	print at 0,10;" ";a;" " 
+'	print at 0,14;" ";b;" " 
+	print at 2,14;" ";c;" " 
+	print at 0,24;b*256+a;" " 
 	
 LOOP 
 
@@ -79,11 +91,13 @@ sub showwave(waveaddress as uinteger)
 	tlen = tlen /512 : off = 0 
 	' rubbish waveform draw
 	for x = 0 to 512
+	
 		yy=cast(byte,peek(@sample+44+cast(uinteger,off)))-80
 		print at 2,0;@sample+44+cast(uinteger,off)
 		plot x/2,80+(yy/8)
 		draw 0,-(192+yy)
 		off=off+tlen
+	
 	next x 
 	
 end sub 
@@ -91,19 +105,23 @@ end sub
 SUB DMAUpdate(byval scaler as ubyte)
 	'
 	asm 
+	
 		; quick sets DMA 
+		; a = new value on entry 
 		ld e,a
-		ld bc,$6b
-		ld a,$68
+		ld bc,$6b		; DMAPORT
+		ld a,$68		; R2-PORT B ADDRESS
 		out (c),a
-		ld a,$22
+		ld a,$22		; CYCLE LENGTH PORT
 		out (c),a
-		ld a,e			; new scaler value 
+		ld a,e			; new prescaler value 
 		out (c),a
-		ld a,$cf
+		ld a,$cf		; R6-LOAD we will now start from the begining 
 		out (c),a
-		ld a,$87
+		ld a,$87		; R6-ENABLE DMA
 		out (c),a
+		
+		
 	end asm 
 	print at 0,18;scaler 
 end sub 
@@ -192,7 +210,7 @@ dmarepeat:			; $B2 for short burst $82 for one shot
 	DEFB $82			;R5-STOP ON END OF BLOCK, RDY ACTIVE LOW
 	;
 	DEFB $BB			;READ MASK FOLLOWS
-	DEFB $10			;MASK - ONLY PORT A HI BYTE
+	DEFB $100			;MASK - ONLY PORT A HI BYTE
 
 	DEFB $CF			;R6-LOAD
 	DEFB $B3			;R6-FORCE READY
@@ -209,7 +227,8 @@ end sub
 sample:
 ASM 
 sample:
-	incbin "data/hit.wav"
+	incbin "data/lab.wav"
+	defs 10,$7f
 end asm 
 sampleend:
-      
+          
