@@ -6,7 +6,7 @@
 
 ' THIS REQUIRES THE LATEST BORIEL ZX COMPILER beta 2 ALONG WITH NEXTLIB v7
 '
-
+' mod engine by mike dailly https://github.com/mikedailly/mod_player
 
 ' xmas 2020 intro byte em00k, davidsaphier
 ' back ground image from google and tweaked / animated 
