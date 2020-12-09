@@ -1,12 +1,13 @@
+'#!sna "h:\starspri.sna" -a 
 ' Quick Sprite Example
 ' NextBuild (ZXB/CSpect)
 ' emook2018 - use keys 1 and 2 to mess with the sine wav (dirty!)
 
 paper 0: border 1 : bright 0: ink 7 : cls 
 
-dim my,yy,xx,count,f as ubyte 
-dim mx as uinteger
-dim offset,frame as fixed 
+dim mx,my,count,f as ubyte 
+dim yy,xx as ubyte 
+dim offset,frame,offset2 as fixed 
 DIM add as fixed=1
 DIM add2 as fixed=1
  
@@ -24,7 +25,7 @@ InitSprites(16,@Sprites)
 NextReg($14,$e3)  					' glbal transparency 
 NextReg($40,$18)    				' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper etc? 	' 24 = paper bright 0 
 NextReg($41,$e3)  					' $41
-NextReg($7,$1)  					' go 7mhz 
+NextReg($7,$2)  					' go 7mhz 
 
 ' Bit	Function
 ' 7	Enable Lores Layer
@@ -43,23 +44,24 @@ mx = 64
 my = 80
 id = 0 
 offset=0
+offset2=32
 
 ' lets do a loop and move some stuff around 
 
 do
 
 	for id = 11 to 21
-		yy=peek(@sinpos+cast(uinteger,offset+add2))'<<1
-		xx=peek(@sinposb+cast(uinteger,offset))'<<1
-		UpdateSprite(cast(uinteger,mx+xx),cast(ubyte,my)+yy,id,frame,0,0)
-		if mx <64+16*10 : mx=mx+16 : else : mx=64 : endif 
-		if offset+add<254 : offset=offset+add : else : offset=0 : endif 
-		
+		yy=peek(@sinpos+cast(uinteger,offset))>>2
+		xx=peek(@sinpos+cast(uinteger,offset2))>>3
+		UpdateSprite(mx+xx,my+yy,id,frame,0,0)
+		if mx <64+16*11 : mx=mx+16 : else : mx=64 : endif 
+		if offset+add<255 : offset=offset+add : else : offset=0 : endif 
+		if offset2<255 : offset2=offset2+1 : else : offset2=0 : endif 
 	next id 
 
 	if frame+0.2<3 : frame=frame+0.2 : else : frame=0 : endif 
 
-	pause 2
+	pause 1
 
 	if inkey="2"
 		add=add+0.1
@@ -87,22 +89,26 @@ loop
 
 sinpos:
 asm
-db 16,15,15,14,14,14,13,13,12,12,12,11,11,10,10,10
-db 9,9,9,8,8,8,7,7,7,6,6,6,5,5,5,4
-db 4,4,4,3,3,3,3,2,2,2,2,2,1,1,1,1
-db 1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1
-db 1,1,1,1,1,2,2,2,2,2,3,3,3,3,4,4
-db 4,5,5,5,5,6,6,6,7,7,7,8,8,8,9,9
-db 10,10,10,11,11,11,12,12,13,13,13,14,14,15,15,15
-db 16,16,16,17,17,18,18,18,19,19,20,20,20,21,21,21
-db 22,22,23,23,23,24,24,24,25,25,25,26,26,26,26,27
-db 27,27,28,28,28,28,29,29,29,29,29,30,30,30,30,30
-db 30,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31
-db 31,31,31,31,31,31,31,31,31,31,31,31,31,31,30,30
-db 30,30,30,30,29,29,29,29,29,28,28,28,28,27,27,27
-db 27,26,26,26,25,25,25,24,24,24,23,23,23,22,22,22
-db 21,21,21,20,20,19,19,19,18,18,17,17,17,16,16,16
+db 64,62,60,59,57,56,54,53,51,49,48,46,45,43,42,40
+db 39,37,36,35,33,32,30,29,28,27,25,24,23,22,20,19
+db 18,17,16,15,14,13,12,11,10,9,8,8,7,6,6,5
+db 4,4,3,3,2,2,1,1,1,0,0,0,0,0,0,0
+db 0,0,0,0,0,0,0,1,1,1,2,2,2,3,3,4
+db 5,5,6,7,7,8,9,10,11,11,12,13,14,15,16,18
+db 19,20,21,22,23,25,26,27,28,30,31,33,34,35,37,38
+db 40,41,43,44,46,47,49,50,52,53,55,56,58,60,61,63
+db 64,66,67,69,71,72,74,75,77,78,80,81,83,84,86,87
+db 89,90,92,93,94,96,97,99,100,101,102,104,105,106,107,108
+db 109,111,112,113,114,115,116,116,117,118,119,120,120,121,122,122
+db 123,124,124,125,125,125,126,126,126,127,127,127,127,127,127,127
+db 127,127,127,127,127,127,127,126,126,126,125,125,124,124,123,123
+db 122,121,121,120,119,119,118,117,116,115,114,113,112,111,110,109
+db 108,107,105,104,103,102,100,99,98,97,95,94,92,91,90,88
+db 87,85,84,82,81,79,78,76,74,73,71,70,68,67,65,64
+
+
+
+
 end asm
 	
 sinposb:
@@ -205,4 +211,4 @@ Ball4:
 	db  $E3, $E3, $25, $25, $25, $E3, $E3, $E3, $E3, $E3, $E3, $25, $25, $25, $E3, $E3;
 	db  $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3;
 sprexit:
-end asm       
+end asm        

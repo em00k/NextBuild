@@ -2,7 +2,7 @@ rem @echo off
 set tmppath=%~dpn0
 rem echo %tmppath%
 FOR /F "usebackq" %%i IN (`%~dp0path.bat`) DO SET ZXBC=%%i
-SET ZXB="%ZXBC%\zxbasic\zxb.exe"
+SET ZXB="%ZXBC%\zxbasic2\zxb.exe"
 ::SET ZXB="%ZXBC%\oldzxbs\zxbasic191\zxb.exe"
 ::SET ZXB="%ZXBC%ZXBCnew\zxb.exe"
 SET EMU="%ZXBC%Emu\Fuse\fuse.exe"
@@ -22,7 +22,9 @@ if "%6"  == "--debug-array" goto dofuse
 if "%7"  == "--debug-array" goto dofuse
 if "%8"  == "--debug-array" goto dofuse
 	
-	%ZXB% %1 %2 %3 -o %pname%%fname%.bin -a -M Memory.txt -O3 --heap-size=4096 2>%pname%COMPILE.txt
+::	%ZXB% %1 %2 %3 -o %pname%%fname%.bin -a -M Memory.txt -O3 --heap-size=4096 2>%pname%COMPILE.txt
+
+	%ZXB% %1 %2 %3 -O3 -o %pname%%fname%.bin --arch zxnext --mmap %pname%Memory.txt --heap-size=2048 2>%pname%COMPILE.txt 
 
 :: 	%ZXB% %1 %2 %3 -o %pname%%fname%.asm --heap-size=3124 -A
 

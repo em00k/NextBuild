@@ -78,6 +78,7 @@ if peek($b000)<>0
 			endif 
 			if type2$( to 2)="PRG"
 				fname$=splitted$
+				BBREAK
 					LoadSD(fname$( to ),$b400,1,$19)
 					LoadSD(fname$( to ),$b401,1,$1E)
 					LoadSD(fname$( to ),$b402,2002,98)
@@ -506,4 +507,4 @@ finish:
 asm 
  rst 56
 end asm 
-                  
+                   

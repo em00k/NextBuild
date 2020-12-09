@@ -1,1 +1,0 @@
-CSpect.exe -sound -w2 -zxnext -mmc=.\ NXtel.nex
