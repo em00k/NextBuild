@@ -20,7 +20,7 @@ NOTE : the demo .bas file have an associated .cfg file that stores the ORG addre
         {
             "label": "echo",
             "type": "shell",
-            "command": "C:\\NextBuildv6\\Scripts\\compile.bat ${file} -S ",
+            "command": "C:\\NextBuildv7\\Scripts\\compile.bat ${file} -S ",
             "args": [
 
                 "${input:startaddress}"
