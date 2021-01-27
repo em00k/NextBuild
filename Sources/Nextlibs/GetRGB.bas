@@ -1,6 +1,6 @@
-'!#bin "h:\temp.bin"
-'!#noemu
+
 #include <nextlib.bas>
+
 NextReg(8,$fe)								' no contention 
 NextReg($43,$1)								' ULANext enabled 
 NextReg(7,2)									' 14mhz

@@ -48,8 +48,6 @@ for x=16 to 95
 	pause 1 
 next x 
 
-END 
-
 DO : LOOP 
 
 

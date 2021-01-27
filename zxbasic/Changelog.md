@@ -1,3 +1,41 @@
+[v1.14.1](https://github.com/boriel/zxbasic/tree/v1.14.1)
+===
++ Fixed bugs and improved stability
++ Assembler will show a warning on DB truncated values
++ Input key taps will emit sound (mute then with a POKE)
++ Little optimizations
+
+[v1.14.0](https://github.com/boriel/zxbasic/tree/v1.14.0)
+===
++ Added token pasting ## and stringizing # operators to the
+  preprocessor
++ Warnings and error messages improved with codes
++ Warnings can now be silenced with -Wxxx (i.e. -W150)
++ Improved error reporting (files and line numbers)  
++ Improved code generation and optimization
++ Speed compilation increased by 100%!
++ ! Fixed many bugs and improved stability
+
+[v1.13.2](https://github.com/boriel/zxbasic/tree/v1.13.2)
+===
++ ! Fix bug with optimizer
++ ! Fix crash with some syntax errors
++ ! Allow { and } in ASM for 3rd party assemblers
++ Other minor bugfixes
+
+[v1.13.1](https://github.com/boriel/zxbasic/tree/v1.13.1)
+===
++ ! Fix bug with LEN()
+
+[v1.13.0](https://github.com/boriel/zxbasic/tree/v1.13.0)
+===
++ ! Fix potential endless compiling
++ ! Fix several bugs unused functions
++ ! Fix bug with SAVE DATA
++ Add 2 extra optimization patterns
++ ! Fix bug with include file names on warnings
++ Add --arch=<architecture>, start of ZX Next backend!
+
 [v1.12.1](https://github.com/boriel/zxbasic/tree/v1.12.1)
 ===
 + ! Fix Mac OS native package

@@ -2,6 +2,9 @@
 '!sna "h:\image.sna" -a 
 
 #include <nextlib.bas>
+asm 
+ ei 
+end asm 
 border 0
 'NextReg($15,%00100001)		' Sprites, ULA SPR L2 	
 

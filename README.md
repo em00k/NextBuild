@@ -1,4 +1,5 @@
-# NextBuild v6
+# NextBuild v7 Full Release 
+
 NextBuild : A suite of tools based on Boriel's ZX Basic Compiler targetting the ZX Spectrum Next
 
 This is the latest version I have been trying to get out, a few suggested hosting on git so it can be a WIP.
@@ -7,37 +8,20 @@ Please report any bugs and I will try to fix them.
 
 http://zxbasic.uk/nextbuild/
 
+Latest ZXBasic Compiler included v15.1.0
+Now generates NEX & bin files 
+Scripts rewritten in python so will work on Win, Mac & Linux
 
-You will need this for VSC if not using BorIDE or something similar:
+Download the archive and extract to a folder, launch VScode
+and choose "Open Folder", select the "Sources" folder inside
+of \NextBuildv7 
 
-NOTE : the demo .bas file have an associated .cfg file that stores the ORG address from BorIDE, so if demos fail to work, check the .cfg in a text editor as some depend on a starting address being set.
-```
-{
-    // See https://go.microsoft.com/fwlink/?LinkId=733558
-    // for the documentation about the tasks.json format
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "echo",
-            "type": "shell",
-            "command": "C:\\NextBuildv6\\Scripts\\compile.bat ${file} -S ",
-            "args": [
+Load a source .bas file (try examples) and then compile by
+using the terminal menu and Run Build Task - you can configure
+a keyboard shortcut in your prefs. 
 
-                "${input:startaddress}"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        }
-    ],
-    "inputs": [
-        {
-            "type": "promptString",
-            "id": "startaddress",
-            "description": "Start Address : ",
-            "default": "24576"
-        }
-    ]
-}
-```
+This should compile and launch in CSpect if there is an error 
+the Compile.txt is opened in the default text editor. 
+
+See https://www.youtube.com/watch?v=kF_jfE7mAvg how to setup for 
+Windows. 

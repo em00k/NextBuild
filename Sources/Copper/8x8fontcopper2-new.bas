@@ -80,7 +80,7 @@ dim d as ubyte
 d=1
 pause 20
 
-'setcopper(reg)
+setcopper(reg)
 for t=0 to 16
 	b=t 
 	NextRegF($56,$35+b)
@@ -142,7 +142,7 @@ do
 		endif 
 
 	next 
-
+	WaitRetrace(1)
 	
 loop 
 

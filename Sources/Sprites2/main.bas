@@ -22,10 +22,12 @@ poke 23607,60					' for cspect to set the font correctly
 InitSprites(16,@Sprites)
 
 ' http://devnext.referata.com/wiki/Board_feature_control
-NextReg($14,$e3)  					' glbal transparency 
-NextReg($40,$18)    				' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper etc? 	' 24 = paper bright 0 
-NextReg($41,$e3)  					' $41
-NextReg($7,$2)  					' go 7mhz 
+asm 
+	NextReg $14,$e3  					;' glbal transparency 
+	NextReg $40,$18    					;' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper etc? 	' 24 = paper bright 0 
+	NextReg $41,$e3  					;' $41
+	NextReg $7,$1   					;' go 7mhz 
+end asm 
 
 ' Bit	Function
 ' 7	Enable Lores Layer
@@ -211,4 +213,4 @@ Ball4:
 	db  $E3, $E3, $25, $25, $25, $E3, $E3, $E3, $E3, $E3, $E3, $25, $25, $25, $E3, $E3;
 	db  $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3, $E3;
 sprexit:
-end asm       
+end asm        

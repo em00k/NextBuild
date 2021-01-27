@@ -1,5 +1,6 @@
 ![Boriel ZX Basic](img/zxbasic_logo.png)
 
+[![Build Status](https://github.com/boriel/zxbasic/workflows/ZXBasic/badge.svg)](https://github.com/boriel/zxbasic/actions)
 [![Build Status](https://travis-ci.com/boriel/zxbasic.svg?branch=master)](https://travis-ci.com/boriel/zxbasic)
 [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](./LICENSE.txt)
 [![pyversions](https://img.shields.io/pypi/pyversions/zxbasic.svg)](https://pypi.python.org/pypi/zxbasic)
@@ -46,14 +47,14 @@ There are, basically, two flavors (both with identical capabilities):
 
  - For Windows you can download de win32 executable (Windows .exe zip package) version. 
 To install just uncompress it in a directory of your choice.
-The main executable is `zxb.exe` (more on this later). With this toolchain
+The main executable is `zxbc.exe` (more on this later). With this toolchain
 also comes `zxbasm.exe` (the assembler) and `zxbpp.exe` (the preprocessor), but these 
 are not needed when programming in BASIC.
 
  - For Linux and Mac OSX there is a python version, so you will need a python
 interpreter (available on many platforms, and usually already installed in Linux and Mac OSX).
 Just uncompress it in a directory of your choice and installation is done. :-)
-The main executables are `zxb.py` (the compiler), `zxbasm.py` (the assembler) and `zxbpp.py` (the preprocessor).
+The main executables are `zxbc.py` (the compiler), `zxbasm.py` (the assembler) and `zxbpp.py` (the preprocessor).
 You can use this version in Windows, but will need to install a python interpreter first.
 
 ##### Examples
@@ -69,17 +70,17 @@ QUICK START
 -----------
 
 For a quick start, just open a terminal in your PC in the same directory you uncompressed ZX Basic
-and type `zxb` (on Windows) or `zxb.py` (OSX, Linux). You should see a zxbasic message like this:
+and type `zxbc` (on Windows) or `zxbc.py` (OSX, Linux). You should see a zxbasic message like this:
 
 ```
-usage: zxb [-h] [-d] [-O OPTIMIZE] [-o OUTPUT_FILE] [-T] [-t] [-B] [-a] [-A]
+usage: zxbc [-h] [-d] [-O OPTIMIZE] [-o OUTPUT_FILE] [-T] [-t] [-B] [-a] [-A]
            [-S ORG] [-e STDERR] [--array-base ARRAY_BASE]
            [--string-base STRING_BASE] [-Z] [-H HEAP_SIZE] [--debug-memory]
            [--debug-array] [--strict-bool] [--enable-break] [-E] [--explicit]
            [-D DEFINES] [-M MEMORY_MAP] [-i] [-I INCLUDE_PATH] [--strict]
            [--version]
            PROGRAM
-zxb: error: the following arguments are required: PROGRAM
+zxbc: error: the following arguments are required: PROGRAM
 ```
 
 Create a text file with the following content:
@@ -91,7 +92,7 @@ Create a text file with the following content:
 
 Save it as `hello.bas` and finally compile it with:
 ~~~~
-zxb -taB hello.bas
+zxbc -taB hello.bas
 ~~~~
 
 If everything went well, a file named `hello.tap` should be created.
@@ -101,7 +102,7 @@ Congratulations! You're now ready to create compiled BASIC programs for
 your machine. Check and compile the examples included in the examples/ folder
 or go to the [documentation page](https://zxbasic.readthedocs.io/en/latest/) for further info.
 
-AKNOWLEDGEMENTS
+ACKNOWLEDGEMENTS
 ---------------
 
 These are some people who has contributed in a way or another. I consider

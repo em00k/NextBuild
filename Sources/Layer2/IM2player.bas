@@ -1,6 +1,5 @@
 
 'IJUMP = $BFBF				' memory location of interrupt routine jump put a jmp to our routine
-border 1
 
 'SUB InitMusic(Address as uinteger)
 
@@ -80,7 +79,7 @@ goto includeexit
 vt2:
 asm 
 vt2player:
-	incbin "vt49152.bin"
+	incbin "./data/vt49152.bin"
 end asm 
 
 asm 

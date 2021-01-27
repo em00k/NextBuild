@@ -52,7 +52,8 @@ Command Line Options
 -minor=<value>     =  Sets the value returned by NextReg $0E
 -debug             =  start up in the debugger
 -remote            =  Enable the remote debugger mode, by disabling the debugger screen.
-
+-fill=$XXXXX...XX  =  Fill memory with this hex sequence on power up
+-rewind            =  Enable CPU history for debugger rewinding
 
 
 
@@ -156,6 +157,8 @@ CTRL+SHIFT+Up       - move trace window up 16 bytes
 CTRL+SHIFT+Down     - move trace window down 16 bytes
 CTRL+SHIFT+PageUp   - Page trace window up
 CTRL+SHIFT+PageDown - Page trace window down
+CTRL+SHIFT+[0-9]    - Set Bookmark
+CTRL+[0-9]          - Goto Bookmark
 
 Mouse is used to toggle "switches"
 HEX/DEC mode can be toggled via "switches"
@@ -196,7 +199,7 @@ NEXTREG <reg>,<val> Poke a next register
 SAVE "NAME",add,len                   Save in the 64K memory space
 SAVE "NAME",BANK:OFFSET,length        Save in physical memory using a bank and offset as the start address
 SAVE "NAME",BANK:OFFSET,BANK:OFFSET   Save in physical memory using a bank and offset as the start address, and as an end address
-
+REWIND              Enable/Disable CPU rewind mode
 
 
 

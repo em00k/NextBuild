@@ -1,4 +1,5 @@
 #include <nextlib.bas>
+' testing sting splitting
 
 declare function SplitString(s$ as string,split$ as string,index as ubyte) as string
 declare function PeekString(Memory as uinteger) as string 

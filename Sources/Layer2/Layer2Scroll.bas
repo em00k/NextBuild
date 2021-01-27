@@ -1,4 +1,9 @@
 #include <nextlib.bas>
+'#!copy=h:\layer2scroll2.nex
+asm 
+	di 
+end asm 
+
 border 0
 
 dim frame,mx,my,yy,xx,count,f as ubyte 
@@ -6,7 +11,7 @@ dim offset as fixed
 DIM add as fixed=1.799
 
 LoadBMP("spiral.bmp")
-ShowLayer2(1)			' ON 
+ShowLayer2(1)		
 
 ' lets scroll layer2
 xx=2 : x = xx
@@ -18,7 +23,7 @@ for id = 0 to 255
 		xx=peek(@sinposb+cast(uinteger,offset))<<1
 		ScrollLayer(xx,yy)
 		if offset+add<254 : offset=offset+add : else : offset=0 : endif 
-		pause 1
+		WaitRetrace(1)
 		
 next id 
 
