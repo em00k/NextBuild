@@ -1283,7 +1283,7 @@ Sub SaveSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 
 	fileopen:		
 		
-		ld b,158					; mode write
+		ld b,$e					; mode write added via issue 
 		;db 33						; open 
 		;ld	b,$0c
 		push ix
