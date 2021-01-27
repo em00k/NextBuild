@@ -1,0 +1,16 @@
+mini1	Mostrar un único sprite
+mini2	Mostrar y mover un sprite
+mini3	Mostrar y mover un sprite con un bmp de fondo
+mini4	Mostrar y mover un sprite con un bmp de fondo y tiles
+mini5	Mostrar y mover un sprite con un bmp de fondo haciendo scroll
+mini6	Mostrar y mover un sprite con un bmp de fondo haciendo scroll con clipping para mostrar el layer de ULA
+mini7	Animación de sprite y efecto espejo 
+mini8	Dibujar un tilemap leyendo un mapa en memoria
+mini9	Colisiones entre sprites por rectángulo
+
+
+
+
+
+
+
