@@ -26,4 +26,4 @@ the Compile.txt is opened in the default text editor.
 See https://www.youtube.com/watch?v=kF_jfE7mAvg how to setup for 
 Windows. 
 
-<img src="https://github.com/em00k/NextBuild/blob/master/demo.gif" width="300">
+<img src="https://github.com/em00k/NextBuild/blob/master/demo.gif">
