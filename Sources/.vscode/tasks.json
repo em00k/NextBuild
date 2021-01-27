@@ -1,57 +1,64 @@
 {
-    
-  // See https://go.microsoft.com/fwlink/?LinkId=733558
-        // for the documentation about the tasks.json format
-        "version": "2.0.0",
-        "tasks": [
-            {
-                "label": "Boriel Compile Current",
-                "type": "shell",
-                "windows": {
-                    "command": "c:\\temp\\Nexbuildfixes\\NextBuild\\Scripts\\compile.bat"
-                },
-                "args": [
-                    "\"${fileDirname}\\temp.bas\"",
-                    "-S",
-                    "${input:startaddress}",
-                    "-o",
-                    "output.bin",
-                    "-O",
-                    "2",
-                    "--heap-size=1000",
-                    "--emmit-backend",
-                    "--explicit"
-                ],
-                "problemMatcher": []
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile ZXbasic",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "./../Scripts/nextbuild.py",
+                "${file}"
+            ],           
+            "windows": {
+            "command": "./../zxbasic/python/python.exe",
+            "args": [
+                "./../Scripts/nextbuild.py",
+                "${file}"
+            ]
             },
-            {
-                "label": "Boriel Create Temp",
-                "type": "shell",
-                "windows": {
-                    "command": "copy-item"
-                },
-                "args": [
-                    "-path",
-                    "${file}",
-                    "-destination",
-                    "${fileDirname}\\temp.bas"
-                ]
+            "presentation": {
+                "echo": false,
+                "reveal": "always",
+               // "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
             },
-            {
-                "label": "Boriel Compile And Run",
-                "dependsOn": [
-                    "Boriel Create Temp",
-                    "Boriel Compile Current"
-                ],
-                "problemMatcher": []
+            "problemMatcher": []
+        },
+        {
+            "label": "Run in Cspect",
+            "type": "shell",
+            "command": "mono ./../Emu/Cspect/Cspect.exe -16bit -nojoy -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.NEX",
+            "windows":{
+            "command": "./../Emu/Cspect/Cspect.exe -w3 -16bit -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.NEX",
+            },
+            "dependsOn": [
+                "Compile ZXbasic"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+               // "focus": true,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
             }
-        ],
-        "inputs": [
-            {
-                "type": "promptString",
-                "id": "startaddress",
-                "description": "Start Address : ",
-                "default": "24576"
-            }
-        ]
-    }
+        }
+    ],
+    "inputs": [
+        {
+            "type": "promptString",
+            "id": "startaddress",
+            "description": "Start Address : ",
+            "default": "24576"
+        }
+    ]
+}

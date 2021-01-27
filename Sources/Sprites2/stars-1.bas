@@ -9,18 +9,6 @@ dim mx,my,yy,xx,count,f,starx,stary,starsp,stars as ubyte
 dim offset,frame as fixed 
 DIM add as fixed=1
 DIM add2 as fixed=1
- 
-poke 23607,60					' for cspect to set the font correctly
-
-#DEFINE NextReg(REG,VAL)\
-	ASM\
-	DW $91ED\
-	DB REG\
-	DB VAL\
-	END ASM 
-
-#DEFINE OUTINB\
-	Dw $ED90
 
 ' Setup some 
 
@@ -30,22 +18,19 @@ for stars=0 to 5
 	starsp=rnd*3
 	print at 0,0;@starbuff+stars*3
 	poke @starbuff+stars,starx
-	'poke(@starbuff+cast(uinteger,1+stars*3),stary)
-	'poke(@starbuff+cast(uinteger,2+stars*3),starsp)
-	'pause 0 
 next 
 	
-
 'Initalize the sprite to sprite ram
 
 InitSprites()
 
 ' http://devnext.referata.com/wiki/Board_feature_control
-NextReg($14,$e3)  					' glbal transparency 
-NextReg($40,$18)    				' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper etc? 	' 24 = paper bright 0 
-NextReg($41,$e3)  					' $41
-NextReg($7,$1)  					' go 7mhz 
-
+asm 
+	NextReg $14,$e3  					;' glbal transparency 
+	NextReg $40,$18    					;' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper etc? 	' 24 = paper bright 0 
+	NextReg $41,$e3  					;' $41
+	NextReg $7,$1   					;' go 7mhz 
+end asm 
 ' Bit	Function
 ' 7	Enable Lores Layer
 ' 6-5	Reserved
@@ -103,19 +88,7 @@ do
 		'pause 10
 	endif 
 	count=count+1
-' 	if count=50
-' 		count = 0
-' 		if f=0
-' 			add=2.79
-' 			f=1
-' 			'border 1
-' 		else
-' 			f=0
-' 			add=3.09
-' 			'border 2
-' 		endif
-' 	endif 
-	
+
 loop
 
 starbuff:

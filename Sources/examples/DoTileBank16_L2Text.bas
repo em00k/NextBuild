@@ -1,11 +1,16 @@
 '!ORG=24576
+'!bmp=amiga3.bmp 
+'
 
-border 0 		
+border 0 	
+#define NEX 
 #include <nextlib.bas>
 
- 
-NextReg($7,2)				' 28mhz 
-NextReg($14,0)				' global trans black
+asm 
+	nextreg 7,3
+	nextreg $22,0
+	nextreg $14,0
+end asm 
 
 ' LoadSDBank   =  filename, address (0 - 8192), lenght, offset in file, bank 
 ' if you leave length as 0 then length will automaticall be detected
@@ -29,33 +34,38 @@ LoadSDBank("font15.spr",0,0,0,40) ' load our font to bank 40
 ' more than 64 tiles
 
 ShowLayer2(1)
+
+dim runs as ulong 
 do 
 
-CLS256(1)
+	CLS256(1)
 
-L2Text(0,0,"THE FOLLOWING SCREEN IS ",40)
-L2Text(0,1,"MADE UP OF 192 16X16",40)
-L2Text(0,2,"TILES LOADED CONSECUTIVELY",40)
-L2Text(0,3,"IN RAM",40)
-L2Text(0,7,"A DELAY IS ADDED FOR EFFECT",40)
-L2Text(0,8,"BETWEEN DRAWING TILES.",40)
-L2Text(0,10,"PRESS SPACE TO DRAW",40)
+	L2Text(0,0,"THE FOLLOWING SCREEN IS ",40,0)
+	L2Text(0,1,"MADE UP OF 192 16X16",40,0)
+	L2Text(0,2,"TILES LOADED CONSECUTIVELY",40,0)
+	L2Text(0,3,"IN RAM",40,0)
+	L2Text(0,7,"A DELAY IS ADDED FOR EFFECT",40,0)
+	L2Text(0,8,"BETWEEN DRAWING TILES.",40,0)
+	L2Text(0,10,"PRESS SPACE TO DRAW",40,0)
 
+	WaitKey()
 
-PAUSE 0 
+	L2Text(0,23,str(runs),40,0)
+	x=1 : y = 1 : tt=0
 
-x=1 : y = 1 : tt=0
+	for y = 0 to 11
+		for x = 0 to 15 
+		DoTileBank16(x,y,tt,34)			' draw tile = 0 to 191
+		tt=tt+1 						' increase tile number
+		WaitRetrace(1)
+		next x
+	next y 
 
-for y = 0 to 11
-	for x = 0 to 15 
-	DoTileBank16(x,y,tt,34)			' draw tile = 0 to 191
-	tt=tt+1 						' increase tile number
-	pause 2
-	next x
-next y 
+	runs = runs + 1 
 
-L2Text(13,4,"DEMO OVER",40)
-
-pause 0 
-
+	L2Text(13,4,"DEMO OVER",40,0)
+	
+	WaitKey()
+	WaitRetrace(100)
+	
 loop 

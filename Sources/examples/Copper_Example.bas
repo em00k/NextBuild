@@ -1,5 +1,4 @@
 '!ORG=32768
-'#!sna "h:\para.snx" 
 ' quick example for parallax scrolling using the copper 
 ' emk20
 

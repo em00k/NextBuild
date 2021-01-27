@@ -1,9 +1,6 @@
 ' palette upload and cycling example 0.1
 ' NextBuild emook2018
 ' music youko by Ch41ns4w
-'!v
-'!sna "H:\demos\PaletteCycle\test.sna"
-'!#noemu
 
 paper 0 : ink 7 : BRIGHT 0 : border 0
  : cls

@@ -5,7 +5,9 @@
 asm 
 	  di 					;' I recommend ALWAYS disabling interrupts 
 end asm 
-		
+#define NEX 				' This tells nextbuild we are making a final NEX and do not Load from SD 
+							' with out you would need eachfile that is used with LoadSDBank
+							' and must be before include <nextlib.bas>
 #include <nextlib.bas>
 
 border 0 
@@ -30,7 +32,6 @@ dim py, pcol as ubyte
 do 
 	for py = 0 to 254 step 2 
 		for px = 0 to 319 step 2 
-			'pcol=int(rnd*255)
 			FPlotL2(py,px,50) 
 		next px 
 	next py 

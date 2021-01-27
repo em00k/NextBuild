@@ -25,5 +25,7 @@ LoadSD("output.scr",16384,6912,0)
 
 border 1 : pause 0 
 
-end 
+do 
+
+loop 
     

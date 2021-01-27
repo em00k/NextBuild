@@ -1,9 +1,6 @@
-'#!v
-'!sna "h:\egg.snx" -a
-'#!bin "h:\temp.bin" -a 
-'#!bin "h:\egg.bin" -a
-'#!noemu
-'
+'!ORG=32768
+' Just a little play around, requries mouse
+' 
 
 #include <nextlib.bas>
 
@@ -26,9 +23,13 @@ paper 7 : ink 0: border 7 : cls
 'POKE UINTEGER 23675,@guiblocks
 
 'MMU8(7,34)
-LoadSD("egg.SPR",49152,15*256,0)
+LoadSDBank("egg.SPR",0,0,0,32)
 'zx7Unpack(@mousecur,$c000)
+asm : nextreg $56,32 :  nextreg $57,33 : end asm 
 InitSprites(15,49152)
+asm : nextreg $56,00 :  nextreg $57,01 : end asm 
+LoadSDBank("clock.wav",0,0,0,40)
+LoadSDBank("minig.wav",0,0,0,41)
 'MMU8(7,1)
 CLS256(255) : ShowLayer2(1)
 NextReg($15,%00000001)
@@ -38,13 +39,13 @@ dim scaler,dmaloop,bx,by,bt,samplebank  as ubyte
 dim off as uinteger
 dim tlen as uinteger
 
-tlen = @sampleend-@sample-44
-dmaloop=1 : eggfucker = 2 : crackone = 6 : cracktwo = 7 : eggdead = 8 : eggpower = 2
-eggframe = eggfucker : samplebank = 0 
-CopyToBanks()
+tlen = 1024
+dmaloop=1 : eggsprite = 2 : crackone = 6 : cracktwo = 7 : eggdead = 8 : eggpower = 2
+eggframe = eggsprite : samplebank = 0 
+
 
 MMU8(7,40)
-DMAPlay($e000,@sampleend-@sample-64,100,0)
+DMAPlay($e000,1024,100,0)
 
 UpdateSprite(100,100,1,eggframe,0,0)
 
@@ -106,7 +107,7 @@ sub newbaddie()
 	paper 6 : cls 
 	bx = rnd *220 : by = rnd *180 : bt = int(rnd*3)
 	if bt = 0 
-		eggframe = eggfucker : flip = 0 
+		eggframe = eggsprite : flip = 0 
 	elseif bt=1 
 		eggframe = 4 : flip = %00001000 : bx  = 0
 	elseif bt=2 
@@ -145,10 +146,10 @@ Sub updatebaddies()
 		if moy>by-4 and moy<by+4
 		border 6
 		if firspr=1
-		for sp= 0 to 10 
-			px = bx + rnd*16 : py = by + rnd*16
+		for sp= 0 to 30
+			px = bx + rnd*16 : py = by + rnd*(sp>>1)
 			PlotL2((px),(py),224+fr)
-			'PlotL2((px+1),(py+1),223+fr)
+			';'PlotL2((px+1),(py+1),223+fr)
 		next sp 
 
 			if bt = 1
@@ -171,6 +172,7 @@ Sub updatebaddies()
 		endif
 	endif 
 end sub 
+
 
 
 sub newmouse()
@@ -366,44 +368,4 @@ DMAEND:
 	end asm 
 
 end sub 
-
-sample:
-ASM 
-sample:
-	incbin "data/clock.wav"
-	;incbin "data/minig.wav"
-end asm 
-sampleend:
-
-mgunsample:
-ASM 
-mgunsample:
-	;incbin "data/clock.wav"
-	incbin "data/minig.wav"
-	
-end asm 
-mgunsampleend:
-
-Sub CopyToBanks()
-asm 
-	
-	ld a,40
-	dw $92ed : DB $57			; sample 1 in bank 40
-	ld hl,sample
-	ld de,$e000
-	ld bc,.__LABEL__sampleend-.__LABEL__sample
-	ldir 
-
-	ld a,41
-	dw $92ed : DB $57			; sample 2 in bank 41
-  
-	ld hl,mgunsample
-	ld de,$e000
-	ld bc,.__LABEL__mgunsampleend-.__LABEL__mgunsample
-	ldir 
-	
-	ld a,1
-	dw $92ed : DB $57	
-
-end asm  
-end sub     
+    

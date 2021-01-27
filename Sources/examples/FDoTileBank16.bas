@@ -5,7 +5,7 @@
 asm 
 	  di 					;' I recommend ALWAYS disabling interrupts 
 end asm 
-		
+#define NEX 		
 #include <nextlib.bas>
 
 border 0 
@@ -32,7 +32,8 @@ FL2Text(0,2,"192 16X16 TILES LOADED CONSECUTIVELY IN",40)
 FL2Text(0,3,"RAM WITH LOADSDBANK",40)
 FL2Text(0,4,"PRESS SPACE TO START",40)
 
-pause 0 	
+WaitKey()
+
 
 dim tx,ty,sx,sy, tile  as ubyte 
 
@@ -45,7 +46,9 @@ do
 		next tx 
 	next ty 
 
-	pause 10 
+	while inkey$=""
+	WaitRetrace(1)
+	wend 
 	
 	if l = 0 	
 		sx = 0 : sy = 0 : l=l+1 

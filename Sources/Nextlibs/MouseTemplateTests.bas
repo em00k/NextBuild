@@ -1,9 +1,5 @@
-'#!v
-'#!sna "h:\mouse2.snx" -a
-'#!bin "h:\temp.bin" -a 
-'!bin "h:\dot\menu.bin"
-'#!noemu
-'
+'!org=33000
+
 
 #include <nextlib.bas>
 #include <print42.bas>

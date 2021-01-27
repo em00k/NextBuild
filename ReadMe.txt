@@ -1,4 +1,33 @@
-NextBuild v0.7 9/12/2020 em00k / David Saphier
+
+NextBuild v0.7 27/01/21	em00k / David Saphier
+
+Thanks to Jose & Jari 
+
+v.7 on has been engineered to work best with VSCode, please do 
+take the time to try it out, nextbuild can work on Windows, Linux
+and Mac. You can still use BorIDE but this now offers the least 
+amount of features. 
+
+When you install VScode, choose Open Folder and point to the "Sources"
+folder inside \Nextbuild. VSCode will ask to install all the required
+extensions for code completion and snippets. 
+
+See https://www.youtube.com/watch?v=kF_jfE7mAvg how to setup for Win.
+
+Now produces NEX & BIN files. Please see examples
+Reworked for Visual Studio Code, extension for syntax and code snippets 
+Lots of bugs fixed 
+New interrupt AYFX & Music Player routines
+
+InitSFX(bank)		bank with ayfx afb in 
+InitMusic(playerbank,musicbank,offset in music bank)
+SetUpIM2()
+EnableSFX
+EnableMusic
+
+Build scripts replaced with python script
+
+NextBuild v0.7 9/12/2020b em00k / David Saphier
 
 LoadSDBank(fname,add,len,off,bank)
 DoTileBank16(x,y,tile,bank b)

@@ -1,6 +1,9 @@
 '!ORG=24576
 ' FDoTile8 example, same as FDoTile16
 ' em00k dec20
+'
+
+#define NEX
 
 asm 
 	  di 					;' I recommend ALWAYS disabling interrupts 
@@ -25,11 +28,19 @@ LoadSDBank("sonic.spr",0,0,0,34) 	' file is 16kb, so load into banks 34/35
 
 dim tx,ty,sx,sy, tile  as ubyte 
 
+	
+	for ty = 0 to 31 
+		for tx = 0 to 39
+			' note order of arguments tile, x, y, bank 
+			FDoTile8(66,tx,ty,34)
+		next tx 
+	next ty 
+
 do 
 
 	for it = 0 to 16 step 4 
 	tile = 0 
-	for ty = 0 to 7 
+	for ty = 0 to 7
 		for tx = 0 to 31
 			' note order of arguments tile, x, y, bank 
 			FDoTile8(tile,tx,it+ty,34)
@@ -37,8 +48,9 @@ do
 		next tx 
 	next ty 
 
-	pause 10 
+	WaitRetrace(100)
 
 	next it
 
 loop 
+ 
