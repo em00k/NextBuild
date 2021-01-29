@@ -23,11 +23,19 @@ a keyboard shortcut in your prefs.
 This should compile and launch in CSpect if there is an error 
 the Compile.txt is opened in the default text editor. 
 
-See https://www.youtube.com/watch?v=kF_jfE7mAvg how to setup for 
-Windows. 
+[![THIS VIDEO HERE](https://img.youtube.com/vi/kF_jfE7mAvg/0.jpg)](https://www.youtube.com/watch?v=kF_jfE7mAvg)
 
-Snippets
+See the video below on how to setup for Windows & VSCode 
+
+[![THIS VIDEO HERE](https://img.youtube.com/vi/kF_jfE7mAvg/0.jpg)](https://www.youtube.com/watch?v=kF_jfE7mAvg)
+
+Snippets & Code hints 
 <img src="https://github.com/em00k/src-gifs/blob/main/demo.gif">
 
 Inline help for keywords and links to https://zxbasic.readthedocs.io/en/doc/
+
+<img src="https://github.com/em00k/src-gifs/blob/main/demo2.gif?raw=true">
+
+Compiling one of the examples and running with CSpect
+
 <img src="https://github.com/em00k/src-gifs/blob/main/demo3.gif?raw=true">
