@@ -12,6 +12,8 @@ Latest ZXBasic Compiler included v15.1.0
 Now generates NEX & bin files 
 Scripts rewritten in python so will work on Win, Mac & Linux
 
+**VSCode will install the NextBuild VSCode extension**
+
 Download the archive and extract to a folder, launch VScode
 and choose "Open Folder", select the "Sources" folder inside
 of \NextBuildv7 
