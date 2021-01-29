@@ -39,3 +39,11 @@ Inline help for keywords and links to https://zxbasic.readthedocs.io/en/doc/
 Compiling one of the examples and running with CSpect
 
 <img src="https://github.com/em00k/src-gifs/blob/main/demo3.gif?raw=true">
+
+Thanks to :
+
+Jose Rogridguez aka Boriel for ZXBasic
+JSJ for his ZXBasic vscode extenstion
+Remy Sharp for his hover helper code
+Mike Dailly for CSpect
+And all others who have helped!
