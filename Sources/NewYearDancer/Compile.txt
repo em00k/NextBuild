@@ -1,0 +1,9 @@
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:1657: warning: [W100] Using default implicit type 'uinteger' for 'tlen'
+C:\Users\em22\Documents\GitHub\NextBuild\Sources\NewYearDancer\dancer.bas:54: warning: [W100] Using default implicit type 'ubyte' for 'sc'
+C:\Users\em22\Documents\GitHub\NextBuild\Sources\NewYearDancer\dancer.bas:89: warning: [W100] Using default implicit type 'ubyte' for 'ch'
+C:\Users\em22\Documents\GitHub\NextBuild\Sources\NewYearDancer\dancer.bas:165: warning: [W100] Using default implicit type 'ubyte' for 'v'
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:519: warning: [W190] Function 'GetMMU' should return a value
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:530: warning: [W190] Function 'checkints' should return a value
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:553: warning: [W190] Function 'GetReg' should return a value
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:1322: warning: [W190] Function 'ReserveBank' should return a value
+/Users/em22/Documents/GitHub/NextBuild/Scripts/nextlib.bas:3342: warning: [W190] Function 'WaitKey' should return a value
