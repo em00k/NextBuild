@@ -30,4 +30,4 @@ Snippets
 <img src="https://github.com/em00k/src-gifs/blob/main/demo.gif">
 
 Inline help for keywords and links to https://zxbasic.readthedocs.io/en/doc/
-<img src="https://github.com/em00k/src-gifs/blob/main/demo2.gif?raw=true">
+<img src="https://github.com/em00k/src-gifs/blob/main/demo3.gif?raw=true">
