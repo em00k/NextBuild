@@ -42,7 +42,7 @@ Compiling one of the examples and running with CSpect
 
 Thanks to :
 
-- Jose Rogridguez aka Boriel for ZXBasic
+- Jose Rodgriguez aka Boriel for ZXBasic
 - JSJ for his ZXBasic vscode extenstion
 - Remy Sharp for his hover helper code
 - Mike Dailly for CSpect
