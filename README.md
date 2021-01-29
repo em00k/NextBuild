@@ -27,7 +27,7 @@ See https://www.youtube.com/watch?v=kF_jfE7mAvg how to setup for
 Windows. 
 
 Snippets
-<img src="http://zxbasic.uk/uploads/demo.gif">
+<img src="https://github.com/em00k/src-gifs/blob/main/demo.gif">
 
 Inline help for keywords and links to https://zxbasic.readthedocs.io/en/doc/
 <img src="http://zxbasic.uk/uploads/demo2.gif">
