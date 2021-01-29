@@ -23,8 +23,6 @@ a keyboard shortcut in your prefs.
 This should compile and launch in CSpect if there is an error 
 the Compile.txt is opened in the default text editor. 
 
-[![THIS VIDEO HERE](https://img.youtube.com/vi/kF_jfE7mAvg/0.jpg)](https://www.youtube.com/watch?v=kF_jfE7mAvg)
-
 See the video below on how to setup for Windows & VSCode 
 
 [![THIS VIDEO HERE](https://img.youtube.com/vi/kF_jfE7mAvg/0.jpg)](https://www.youtube.com/watch?v=kF_jfE7mAvg)
