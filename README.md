@@ -44,7 +44,7 @@ Compiling one of the examples and running with CSpect
 
 Useful information in VSCodes terminal: 
 
-<img src="hhttps://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_02_52-Snip%20&%20Sketch.png?raw=true">
+<img src="https://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_02_52-Snip%20&%20Sketch.png?raw=true">
 
 Thanks to :
 
