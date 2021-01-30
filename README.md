@@ -44,7 +44,11 @@ Compiling one of the examples and running with CSpect
 
 Useful information in VSCodes terminal: 
 
-<img src="https://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_02_52-Snip%20&%20Sketch.png?raw=true">
+<img src="https://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_02_52-Snip%20&%20Sketch.png">
+
+You can easily output to ASM to view the actucal source code that gets assembled
+
+<img src="https://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_11_47-Greenshot.png">
 
 Thanks to :
 
