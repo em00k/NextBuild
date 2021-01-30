@@ -50,6 +50,10 @@ You can easily output to ASM to view the actucal source code that gets assembled
 
 <img src="https://raw.githubusercontent.com/em00k/src-gifs/main/2021-01-30%2002_11_47-Greenshot.png">
 
+Copy finalised NEX file to another location: 
+
+<img src="https://raw.githubusercontent.com/em00k/src-gifs/main/2021-01-30%2002_47_45-Greenshot.png">
+
 Thanks to :
 
 - Jose Rodgriguez aka Boriel for ZXBasic
