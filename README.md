@@ -14,7 +14,7 @@ Scripts rewritten in python so will work on Win, Mac & Linux
 
 **VSCode will install the NextBuild VSCode extension**
 
-***When you start Vscode, choose "Open Folder" and point to "Sources" in the Nextbuild folder.***
+****When you start Vscode, choose "Open Folder" and point to "Sources" in the Nextbuild folder.****
 
 Download the archive and extract to a folder, launch VScode
 and choose "Open Folder", select the "Sources" folder inside
