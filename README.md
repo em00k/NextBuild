@@ -48,7 +48,7 @@ Useful information in VSCodes terminal:
 
 You can easily output to ASM to view the actucal source code that gets assembled
 
-<img src="https://github.com/em00k/src-gifs/blob/main/2021-01-30%2002_11_47-Greenshot.png">
+<img src="https://raw.githubusercontent.com/em00k/src-gifs/main/2021-01-30%2002_11_47-Greenshot.png">
 
 Thanks to :
 
