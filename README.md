@@ -31,6 +31,14 @@ See the video below on how to setup for Windows & VSCode
 
 [![THIS VIDEO HERE](https://img.youtube.com/vi/kF_jfE7mAvg/0.jpg)](https://www.youtube.com/watch?v=kF_jfE7mAvg)
 
+**TROUBLESHOOTING**
+
+- I dont see snippets or hover help!
+
+Make sure you have NextBuild set as the language 
+
+<img src="https://raw.githubusercontent.com/em00k/src-gifs/main/help1.png">
+
 Snippets & Code hints 
 <img src="https://github.com/em00k/src-gifs/blob/main/demo.gif">
 
