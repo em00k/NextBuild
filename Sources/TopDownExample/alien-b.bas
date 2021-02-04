@@ -28,10 +28,10 @@ end asm
 ' -- Load block is where we load all out data files 
 LoadSDBank("tiles.spr",0,0,0,32)				' sprites bank 32
 LoadSDBank("player.spr",0,0,0,34)				' sprites bank 32
-LoadSDBank("game.afb",0,0,0,36) 				' load music.pt3 into bank 34
-LoadSDBank("vt24000.bin",0,0,0,38) 				' load the music replayer into bank 33
-LoadSDBank("thunder.pt3",0,0,0,39) 				' load music.pt3 into bank 34
-LoadSDBank("font4.spr",0,0,0,40)
+LoadSDBank("game.afb",0,0,0,36) 				' load game.afb into bank 36
+LoadSDBank("vt24000.bin",0,0,0,38) 				' load the music replayer into bank 38
+LoadSDBank("thunder.pt3",0,0,0,39) 				' load music.pt3 into bank 39
+LoadSDBank("font4.spr",0,0,0,40)				' load font into bank 40
 ' -- 
 
 asm : nextreg $50,34 : nextreg $51,35 : end asm 		
