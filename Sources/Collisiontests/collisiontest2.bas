@@ -49,7 +49,8 @@ WaitKey()
 
 do 
 
-	WaitRetrace(10)
+	WaitRetrace(1)
+	
 	ReadKeys()
 	CheckCollision()
 	UpdatePlayer()
@@ -65,37 +66,47 @@ Sub CheckCollision()
 	
 	mapbuffer = @map			' point to the map 	
 	
+
 	oldpx = plx 
-	oldpy = ply-1
+	oldpy = ply
 
 	if pldx = MLEFT 
 		plx = plx - 1 
 	elseif pldx = MRIGHT
 		plx = plx + 1
 	endif 
+ 	
+	' if pldy = MUP
+	' 	ply = ply - 1 
+	' else 
+	' 	pldy = MDOWN
+	' 	ply = ply + 1
+	' endif 
 
-
-	plxc = (plx)+8
-	plyc = (ply)-16
+    plxc = (plx)                            ' take a copy of plx ply 
+    plyc = (ply)
+    	
+	lefttile = (plxc+2) >> 4                ' / 16 to get current map co-ords
+	righttile = (plxc+14) >> 4              ' +2 & +14 for soft edges 
 	
-	lefttile = (plxc-8) >> 4 
-	righttile = (plxc+8) >> 4 
-	toptile = (plyc-16) >> 4 
-	bottile = (plyc) >> 4
+	toptile = (plyc+2) >> 4
+	bottile = (plyc+14) >> 4
 	
-	if lefttile>16 : lefttile = 0 : endif 
+	if lefttile>16 : lefttile = 0 : endif   ' make sure our tile positions dont overflow from whats on screen
 	if righttile>16 : righttile = 15 : endif 
-	if toptile>12 : toptile = 0 : endif 
-	if bottile>12 : bottile = 12 : endif 
-	
+	if toptile>16 : toptile = 0 : endif 
+	if bottile>16 : bottile = 16 : endif 
+
 	tile = 0 
 	
 	if pldx = MLEFT 
-		for yy= toptile to toptile+1
+		for yy= toptile to bottile
 				tile = tile + peek(mapbuffer+(cast(uinteger,yy)<<4)+cast(uinteger,lefttile))
 				if tile > 0 
 					print at 4,0;"bop"
 					plsp = 3
+					plx = oldpx
+					pldx = MSTILL
 				else 
 					print at 4,0;"   "
 					plsp = 2
@@ -107,80 +118,73 @@ Sub CheckCollision()
 				if tile > 0 
 					print at 4,0;"hit"
 					plsp = 3
+					plx = oldpx
+					pldx = MSTILL
 				else 
 					print at 4,0;"   "
 					plsp = 2
 				endif 
 		next	
 	endif 
-	if tile > 0 
-	'	if pldx <>MSTILL
-			plx = oldpx
-	'	endif 
-	endif 	
+
 	if pldy = MUP
 		ply = ply - 1 
-	elseif pldy = MDOWN
+	else 
+		pldy = MDOWN
 		ply = ply + 1
 	endif 
+
+    plxc = (plx)                            ' take a copy of plx ply 
+    plyc = (ply)
+    	
+	lefttile = (plxc+2) >> 4                ' / 16 to get current map co-ords
+	righttile = (plxc+14) >> 4              ' +2 & +14 for soft edges 
+	
+	toptile = (plyc+2) >> 4
+	bottile = (plyc+14) >> 4
+	
+	if lefttile>16 : lefttile = 0 : endif 
+	if righttile>16 : righttile = 15 : endif 
+	if toptile>12 : toptile = 0 : endif 
+	if bottile>12 : bottile = 12 : endif 
+	
 	tile = 0 
+
 	if pldy = MUP 
 		for xx= lefttile to righttile
 				tile = tile + peek(mapbuffer+(cast(uinteger,toptile)<<4)+cast(uinteger,xx))
 				if tile > 0 
-					print at 4,0;"hit"
-					plsp = 3
+						print at 4,0;"hit"
+						plsp = 3
+						ply=oldpy
+						pldy = MSTILL
 				else 
 					print at 4,0;"   "
 					plsp = 2
 				endif 
 		next	
-	elseif pldy = MDOWN
+		endif
+	'elseif pldy = MDOWN
 		for xx= lefttile to righttile
 				tile = tile + peek(mapbuffer+(cast(uinteger,bottile)<<4)+cast(uinteger,xx))
 				if tile > 0 
-					print at 4,0;"hit"
-					plsp = 3
+				'	while peek(mapbuffer+(cast(uinteger,(ply-16))+cast(uinteger,xx)))>0		
+						print at 4,0;"hit"
+						plsp = 3
+						ply=oldpy
+						'pldy = MUP
+				'	wend 
 				else 
 					print at 4,0;"   "
 					plsp = 2
-				endif 
+					'pldy = MDOWN
+					endif 
 		next	
-	endif 
-	
-
-	if tile > 0 
-	'	if pldy <> MSTILL
-			ply = oldpy
-			'pldy = MSTILL
-	'	endif 
-	endif 
-
+	'endif 
 	
 	oldpx = plx 
 	oldpy = ply	
-	' tileleft  	= peek(mapbuffer+(cast(uinteger,plyc)<<4)+cast(uinteger,lefttile))
-	' colright		= peek(mapbuffer+(cast(uinteger,plyc)<<4)+cast(uinteger,leftright))
-	' tileup		= peek(mapbuffer+(cast(uinteger,toptile)<<4)+cast(uinteger,plxc))
-	' tiledown		= peek(mapbuffer+(cast(uinteger,bottile)<<4)+cast(uinteger,plxc))
 
-	
-	' tile = peek(mapbuffer+(cast(uinteger,plyc)<<4)+cast(uinteger,plxc))
-	
-	' x1 = plx
-	' y1 = ply 
-	' x2 = plxc
-	' xy = plyc
-	' size = 16
-	
-	' if (x1+size<x2+4) BOR (x1+4>=x2+size) Bor (y1+size<y2+4) BOR (y1+4>=y2+size)=0
-	 	' tilehit = 1 
-		' print at 1,0;"hit"
-	' else 
-		' print at 2,0;"   "
-	' endif 
-		
-	'tilehit = peek(mapbuffer+(cast(uinteger,plyc)<<4)+cast(uinteger,plxc))
 	border 0 
 	print at 0,0;plxc;"   ";plyc ;"   ";tile ;"   "
 	print at 1,0;lefttile;"   ";righttile ;"   ";toptile ;"   ";bottile ;"   "
@@ -188,10 +192,16 @@ Sub CheckCollision()
 	
 end sub 
 
+
+asm
+	nextreg SPRITE_CONTROL_NR_15,%00000000
+end asm
+
+
 sub ReadKeys()
 
 	pldx = MSTILL 
-	pldy = MDOWN
+	pldy = MSTILL 
 
 	if MultiKeys(KEYD)
 		pldx = MRIGHT 
@@ -210,7 +220,7 @@ sub UpdatePlayer()
 
 	
 
-	UpdateSprite(cast(uinteger,plx)+32,ply,0,plsp,0,0)
+	UpdateSprite(cast(uinteger,plx)+32,32+ply,0,plsp,0,0)
 	
 end sub 
 
@@ -251,6 +261,6 @@ asm
 	db 0,0,0,0,1,0,0,0,1,1,1,0,0,0,0,0
 	db 0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0
 	db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
-	db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+	db 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 	
 end asm 
