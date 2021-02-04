@@ -39,7 +39,7 @@ InitSprites(64,$0000)									' init all sprites
 asm : nextreg $50,$ff : nextreg $51,$ff : end asm   	' pop back default banks 
 
 InitSFX(36)							            ' init the SFX engine, sfx are in bank 36
-InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 34
+InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 39
 SetUpIM()							            ' init the IM2 code 
 
 ' DEFINE variables 
