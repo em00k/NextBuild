@@ -154,7 +154,7 @@ do
     dim scale as ubyte
     dim attrib4 as ubyte = relative bor relativepattern
     ' set base sprite 
-    UpdateSprite(x,y,0,plane1,0,bigsprite BOR sprX2 BOR sprY2)                   ' we can now move both sprites by moving the base
+    UpdateSprite(x,y,0,plane1,0,bigsprite BOR sprX2 BOR sprY2)                   ' we can now move all 3 sprites by moving the base
 
     ' a loop to iterate through various combinations 
     planea = plane2
