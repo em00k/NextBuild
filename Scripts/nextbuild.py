@@ -237,33 +237,42 @@ try:
                     partname = x.split('"')[2-1]
                     filename = "./data/" + partname
 
-                    # and load address in bank 
-                    offset = x.split(',')[3-1]
-                    offset = offset.replace("$", "0x")
-                    offval = int(offset,16) & 0x1fff
-                    if offset.find("0x") == -1: 
-                        offval = int(offset,10) & 0x1fff
+                    try:
+                        f = open(filename)
+                        f.close()
+                        # and load address in bank 
+                        offset = x.split(',')[3-1]
+                        offset = offset.replace("$", "0x")
+                        offval = int(offset,16) & 0x1fff
+                        if offset.find("0x") == -1: 
+                            offval = int(offset,10) & 0x1fff
 
-                    #offset from start of file 
-                    fileoffset = x.split(',')[5-1] 
-                    #creates a trimmed copy of the bank
-                    if int(fileoffset) > 0:
-                        floffset = int(fileoffset)
-                        print("File "+partname+" has an offset of : "+str(floffset))
-                        orig_file_content = open(filename, 'rb').read()
-                        new_file_content = orig_file_content[floffset:]
-                        with open('./data/tr_'+partname[:-4]+str(trimmed)+'.bnk', 'wb') as f:
-                            f.write(new_file_content)                          
-                            filename = './data/tr_'+partname[:-4]+str(trimmed)+'.bnk'
-                            print("Trimmed as :"+filename)
-                            trimmed+1
-                    
-                    # get the bank 
-                    bank = x.split(',')[6-1]   
+                        #offset from start of file 
+                        fileoffset = x.split(',')[5-1]
+                        #creates a trimmed copy of the bank
+                        if int(fileoffset) > 0:
+                            floffset = int(fileoffset)
+                            print("File "+partname+" has an offset of : "+str(floffset))
+                            orig_file_content = open(filename, 'rb').read()
+                            new_file_content = orig_file_content[floffset:]
+                            with open('./data/tr_'+partname[:-4]+str(trimmed)+'.bnk', 'wb') as f:
+                                f.write(new_file_content)                          
+                                filename = './data/tr_'+partname[:-4]+str(trimmed)+'.bnk'
+                                print("Trimmed as :"+filename)
+                                trimmed+1
+                        
+                        # get the bank 
+                        bank = x.split(',')[6-1]   
 
-                    # add to our outstring 
-                    outstring += "; " + x + CRLF
-                    outstring += "!MMU" + filename + "," + bank + ",$"+("000" + hex(offval)[2:])[-4:] + CRLF
+                        # add to our outstring 
+                        outstring += "; " + x + CRLF
+                        outstring += "!MMU" + filename + "," + bank + ",$"+("000" + hex(offval)[2:])[-4:] + CRLF
+
+                    except IOError:
+                        print("##ERROR - Failed to find file :"+filename)
+                        print("Please make sure this file exist!")
+                        print("")
+                        sys.exit(1) 
 
     # generate PC and SP for cfg 
 
@@ -311,7 +320,7 @@ try:
 except:
     print("ERROR creating NEX file!")
     raise 
-    quit()
+    sys.exit(1) 
     
 if copy == 0:
     if noemu == 0:

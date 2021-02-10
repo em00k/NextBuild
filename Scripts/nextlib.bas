@@ -380,10 +380,12 @@ end asm
 		halt\
 		end asm 
 
-#DEFINE nextregnn reg value \
-		dw $91ed \
-		db reg \
-		db value 
+#DEFINE nnextreg reg,value\
+		ASM\
+		dw $92ed\
+		db reg\
+		db value\
+		end asm\
 
 #DEFINE nextregna reg \
 		dw $92ed \
@@ -1046,7 +1048,7 @@ sub RemoveSprite(spriteid AS UBYTE, visible as ubyte)
 end sub 	      
 
 sub UpdateSprite(ByVal x AS uinteger,ByVal y AS UBYTE,ByVal spriteid AS UBYTE,ByVal pattern AS UBYTE,ByVal mflip as ubyte,ByVal anchor as ubyte)
-	'                  5            7          9                  11              13
+	'                  5                    7              9                     11                   13				   15						17			
 	'  http://devnext.referata.com/wiki/Sprite_Attribute_Upload
 	'  Uploads attributes of the sprite slot selected by Sprite Status/Slot Select ($303B). 
 	' Attributes are in 4 byte blocks sent in the following order; after sending 4 bytes the address auto-increments to the next sprite. 
@@ -1079,25 +1081,29 @@ sub UpdateSprite(ByVal x AS uinteger,ByVal y AS UBYTE,ByVal spriteid AS UBYTE,By
 		ld bc, $303b		;10						; selct sprite slot 
 		; sprite 
 		out (c), a			;12
+		
 		ld bc, $57			;10						; sprite control port 
 		ld a,(IX+4) 		;19						; attr 0 = x  (msb in byte 3)
 		out (c), a          ;12			
+		
 		ld a,(IX+7)			;19						; attr 1 = y  (msb in optional byte 5)
 		out (c), a 			;12
+		
 		ld d,(IX+13)		;19						; attr 2 = now palette offset and no rotate and mirrors flags send  byte 3 and the MSB of X 
 		;or (IX+5)			;19	
 		
 		ld a,(IX+5)			;19						; msb of x 
 		and 1				;7
 		or d 				;4
-
-		out (c), a 			;12	
-		ld a,(IX+11)		;19						; attr 3 = Sprite visible and show pattern
+		out (c), a 			;12					; attr 3 
+		
+		
+		ld a,(IX+11)		;19						; attr 4 = Sprite visible and show pattern
 		or 192 				;7						; bit 7 for visibility bit 6 for 4 bit 	
 
 		out (c), a			;12
-		ld a,(IX+15)		;19						; attr 4 the sub-pattern displayed is selected by "N6" bit in 5th sprite-attribute byte.
-		out (c), a			;12 
+		ld a,(IX+15)		;19						; attr 5 the sub-pattern displayed is selected by "N6" bit in 5th sprite-attribute byte.
+		out (c), a			;12 					; att 
 		; 243 T 	
 	END ASM 
 end sub
@@ -2875,7 +2881,7 @@ sub WaitRetrace(byval repeats as uinteger)
 	LOCAL readline
 	;BREAK
 	readline:	
-		ld a,$1f : ld bc,$243b : out (c),a : inc b : in a,(c) : cp 192
+		ld a,$1f : ld bc,$243b : out (c),a : inc b : in a,(c) : cp 190
 		jr nz,readline
 		dec hl 
 		ld a,h
