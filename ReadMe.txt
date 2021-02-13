@@ -1,5 +1,5 @@
 
-NextBuild v0.7 27/01/21	em00k / David Saphier
+NextBuild v0.7.2  13/02/21	em00k / David Saphier
 
 Thanks to Jose & Jari 
 
@@ -188,6 +188,8 @@ If you tick "Launch Fuse" on the left hand side, it will launch in Fuse rather t
 
 
 Changlog
+
+0.7	Now using VSCode
 
 0.6	28/09/18
 
