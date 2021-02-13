@@ -174,7 +174,7 @@
             "windows": {
                 "command": [
                 "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Scripts/nextlib.bas -outfile ./../Scripts/nextlib.bas;",
-                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Scripts/nextbuild.py -outfile ./../Scripts/nextlib.py;",
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Scripts/nextbuild.py -outfile ./../Scripts/nextbuild.py;",
                 "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/tasks.json -outfile ./../Sources/.vscode/tasks.json;",
                 "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/settings.json -outfile ./../Sources/.vscode/settings.json;",
                 "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/extensions.json -outfile ./../Sources/.vscode/extensions.json;",
