@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# v7 NextBuild / NextLib by David Saphier (c) 2021 / em00k 18-Jan-21
+# v7.2 NextBuild / NextLib by David Saphier (c) 2021 / em00k 13-Feb-2021
 # ZX Basic Compiler by (c) Jose Rodriguez
 # Thanks to Jari Komppa for help with the cfg parser 
 # Extra thanks to Jose for help integrating into the zxb python modules and nextcreator.py 
@@ -45,6 +45,13 @@ print("Input File : " + sys.argv[1])
 print("")
 
 inputfile = sys.argv[1]                         # get filename from commandline arg
+
+try:
+    maketap = sys.argv[2]                           # are we making a tap?
+    gentape = 1 
+except:
+    gentape = 0 
+    
 head_tail = os.path.split(inputfile)            # get the path of the file 
 sys.path.append(head_tail[0])                   # add to paths 
 os.chdir(head_tail[0])                          # make sure we're in the working source folder 
@@ -58,6 +65,8 @@ optimize = '4'
 bmpfile = None
 noemu = 0
 
+
+ 
 # need to get the fname and splice off extension 
 filenamenoext = head_tail[1].split('.')[1-1]
       
@@ -140,7 +149,11 @@ if createasm == 0:
     if headerless == 1: 
         test=zxbc.main([inputfile,'--headerless','-W','160','-W','140','-W','150','-W','170','-S', org,'-O',optimize,'-H',heap,'-M','Memory.txt','-e','Compile.txt','-o',head_tail[0]+'/'+filenamenoext+'.bin','-I', LIB_DIR,'-I', SCRIPTS_DIR])
     else: 
-        test=zxbc.main([inputfile,'-W','160','-W','140','-W','150','-W','170','-S', org,'-O',optimize,'-H',heap,'-M','Memory.txt','-e','Compile.txt','-o',head_tail[0]+'/'+filenamenoext+'.bin','-I', LIB_DIR,'-I', SCRIPTS_DIR])
+        # '-e','Compile.txt'
+        if gentape  == 1: 
+            test=zxbc.main([inputfile,'-W','160','-W','140','-W','150','-W','170','-W','190','-S', org,'-O',optimize,'-H',heap,'-M','Memory.txt','-t','-B','-a','-o',head_tail[0]+'/'+filenamenoext+'.tap','-I', LIB_DIR,'-I', SCRIPTS_DIR])
+        else: 
+            test=zxbc.main([inputfile,'-W','160','-W','140','-W','150','-W','170','-W','190','-S', org,'-O',optimize,'-H',heap,'-M','Memory.txt','-o',head_tail[0]+'/'+filenamenoext+'.bin','-I', LIB_DIR,'-I', SCRIPTS_DIR])
 
 else:
     test=zxbc.main([inputfile,'-S', org,'-O',optimize,'-H',heap,'-e','Compile.txt','-A','-o',head_tail[0]+'/'+filenamenoext+'.asm','-I', LIB_DIR,'-I', SCRIPTS_DIR])
@@ -148,18 +161,27 @@ else:
     copy = 0   
 if test == 0:
     print("YAY! Compiled OK! ")
+    if gentape  == 1: 
+        print("")
+        print("Compile Log  :  "+head_tail[0]+"\\Compile.txt")
+        print("Memory Log   :  "+head_tail[0]+"\\Memory.txt")
+        print("")
+        print("TAP created OK! All done.")
+        timetaken = str(datetime.now()-start)
+        print('Overall build time : '+timetaken[:-5]+'s')
+        sys.exit(0)
 else:
-# if compilation fails open the compile output as a system textfile
-    print("Compile FAILED :( "+str(test))
-    #os.system('start notepad compile.txt')
-    if platform.system() == 'Darwin':       # macOS
-        subprocess.call(('open', 'compile.txt'))
-    elif platform.system() == 'Windows':    # Windows
-        os.startfile('compile.txt')
-    else:                                   # linux variants
-        subprocess.call(('xdg-open', 'compile.txt'))
-    print("Compile Log  :  "+head_tail[0]+"\\Compile.txt")
-    sys.exit(test)
+# # # if compilation fails open the compile output as a system textfile
+# #     print("Compile FAILED :( "+str(test))
+# #     #os.system('start notepad compile.txt')
+# #     if platform.system() == 'Darwin':       # macOS
+# #         subprocess.call(('open', 'compile.txt'))
+# #     elif platform.system() == 'Windows':    # Windows
+# #         os.startfile('compile.txt')
+# #     else:                                   # linux variants
+# #         subprocess.call(('xdg-open', 'compile.txt'))
+# #     print("Compile Log  :  "+head_tail[0]+"\\Compile.txt")
+    sys.exit(-1)
 
 if createasm == 1:
     # display this massive message so you dont get confused when code isn't changing in your nex..... ;)

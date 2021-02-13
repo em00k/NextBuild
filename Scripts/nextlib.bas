@@ -1,6 +1,6 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v7.0 - David Saphier / em00k 2020
+' NextLib v7.2 - David Saphier / em00k 2021
 ' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Daily 
 ' Matt Davies for help on the fastPLotL2 
 ' ---------------------------------------------------------
@@ -1658,7 +1658,7 @@ Sub SaveSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 	' 
 	' saves to SD filen=filename address=start address to save lenght=number of bytes to save  
 	'
-	
+	dim tlen as uinteger
 	filen = filen + chr(0)
 	tlen=len(filen)+1
 	'dim cco as ubyte=0
