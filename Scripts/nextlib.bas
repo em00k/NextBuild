@@ -1,6 +1,6 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v7.2 - David Saphier / em00k 2021
+' NextLib v7.3 - David Saphier / em00k 2021
 ' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Daily 
 ' Matt Davies for help on the fastPLotL2 
 ' ---------------------------------------------------------
@@ -12,7 +12,7 @@
 #pragma case_insensitive = TRUE
 #pragma zxnext = TRUE
 
-' the following consts are curtesy of ped7g  https://github.com/ped7g/SpecBong/blob/master/constants.i.asm
+' the following consts are courtesy of ped7g  https://github.com/ped7g/SpecBong/blob/master/constants.i.asm
 asm 
 BIT_UP			equ 4	; 16
 BIT_DOWN		equ 5	; 32
@@ -1785,7 +1785,9 @@ SUB DoTileBank16(byVal X as ubyte, byval Y as ubyte, byval T as ubyte, byval B a
 	' X 0 -15 Y 0 -11 T tile 0 - 255 B = bank tiles are loaded in  
 	ASM 
 		;PUSH IX 
-		; Grab xyt		
+		; Grab xyt	
+		PROC 
+		LOCAL tbanks	
 		#ifndef IM2 
 			call _checkints
 			di 
@@ -1862,6 +1864,7 @@ tbanks:
 	#endif
 		;ret
 		;POP IX 
+		ENDP
 	END ASM 
 end sub
 
@@ -1934,6 +1937,111 @@ plotTilesLoop2:
 		out (c),a      ; 21			; select bank
 	END ASM 
 end sub
+
+SUB DoTileBank8(byVal X as ubyte, byval Y as ubyte, byval T as ubyte, byval b as ubyte)
+
+	ASM 
+		; Draws a tile from bank b. Total tile size can be 16kb
+		; required bank is auto paged into $4000-$5FFF
+		; 256x192 L2 8x8 256 colour tile
+
+		PUSH de 
+		push hl
+		PROC
+		LOCAL tbanks,noinc
+		#ifndef IM2 
+			call _checkints
+			di 
+		#endif 
+		ld a,$52 : ld bc,$243B : out(c),a : inc b : in a,(c)	
+		ld (tbanks+3),a 
+		
+		ld a,(IX+11)		; bank 
+		ld h,(IX+9)			; tile
+
+	;	swapnib				; 8						; tile / 32 
+	; 	rrca				; 4		12					; rotate right 
+	;	rrca				; 4 	16						; rotate right 
+	;	rrca				; 4		20					; rotate right 
+	;	and %1				; 7		27				; and with %1
+	;	add a,h 			; 4 	31t
+		
+		bit 7,h			; 8 t 		
+		jr z,noinc	 	; 12 / 7t 	20
+		inc a 			; 4 		24
+		noinc: 
+
+		nextreg $52,a 		; set correct bank 
+
+		; Grab xyt
+		ld l,(IX+5)			; x
+		ld h,(IX+7)			; y
+		ld a,(IX+9)			; tile
+		and 127
+
+		;----------------
+		; Original code by Michael Ware adjustd to work with ZXB
+		; Plot tile to layer 2 (needs to accept > 256 tiles)
+		; in - hl = y/x tile coordinate (0-17, 0-31)
+		; in - a = number of tile to display
+		;----------------
+PlotTile8:
+		ld d,64
+		ld e,a					; 11
+		mul d,e 
+
+		ld a,%01000000			; tiles at $4000
+		or d		 				; 8
+		ex de,hl					; 4			; cannot avoid an ex (de now = yx)
+		ld h,a					; 4
+		ld a,e
+		rlca
+		rlca
+		rlca
+		ld e,a					; 4+4+4+4+4 = 20	; mul x,8
+		ld a,d
+		rlca
+		rlca
+		rlca
+		ld d,a					; 4+4+4+4+4 = 20	; mul y,8
+		and 192
+		or 3						; or 3 to keep layer on				; 8
+		ld bc,LAYER2_ACCESS_PORT
+		out (c),a      			; 21			; select bank
+
+		ld a,d
+		and 63
+		ld d,a					; clear top bits of y (dest) (4+4+4 = 12)
+		; T96 here
+		ld a,8					; 7
+plotTilesLoop2:
+		push de					; 11
+		ldi
+		ldi
+		ldi
+		ldi
+		ldi
+		ldi
+		ldi
+		ldi		; 8 * 16 = 128
+		
+		pop de					; 11
+		inc d					; 4 add 256 for next line down
+		dec a					; 4
+		jr nz,plotTilesLoop2			; 12/7
+
+tbanks:		
+		nextreg $52,0			
+		ld a,2
+		ld bc,LAYER2_ACCESS_PORT
+		out (c),a      ; 21			; select bank
+		#ifndef IM2 
+			ReenableInts
+		#endif
+		ENDP
+	END ASM 
+end sub
+
 
 sub fastcall FDoTile16(tile as ubyte, x as ubyte ,y as ubyte, bank as ubyte)
 	' y 0  to 15
@@ -2088,7 +2196,6 @@ sub fastcall FDoTile8(tile as ubyte, x as ubyte ,y as ubyte, bank as ubyte)
 	' y 0  to 31
 	' x 0  to 39
 	' bank as start bank 
-	' now we dont care about x being a word haha 
 	' draws tile on layer 2 320x240. tile data at $c000 
 	asm 
 	; a = y 
@@ -3031,17 +3138,24 @@ Sub fastcall ISR()
 	end asm 
 	
 	' you *CAN* call a sub from here, but you will need to be careful that it doesnt use ROM calls that 
-	' can cause a crash	
-	'MyCustomIM()
-	
+	' can cause a crash, 
+	#ifdef CUSTOMISR 
+		
+		MyCustomISR()
+		
+	#endif 
+	#ifndef NOAYFX 
+		asm 
+			ld a,(sfxenablednl)					;' are the fx enabled?
+			or a : jr z,skipfxplayernl
+			call _CallbackSFX						;' if so call the SFX callback 
+		skipfxplayernl:		
+			ld a,(sfxenablednl+1) 							;' is music enabled?
+			or a : jr z,skipmusicplayer
+			call playmusicnl						;' if so player frame of music 
+		end asm 
+	#endif 
 	asm 
-		ld a,(sfxenablednl)					;' are the fx enabled?
-		or a : jr z,skipfxplayernl
-        call _CallbackSFX						;' if so call the SFX callback 
-	skipfxplayernl:		
-		ld a,(sfxenablednl+1) 							;' is music enabled?
-		or a : jr z,skipmusicplayer
-		call playmusicnl						;' if so player frame of music 
 	skipmusicplayer:		
 		;ld a,0 : out ($fe),a
 		exx 
@@ -3391,15 +3505,16 @@ Function fastcall WaitKey() as ubyte
 			ALIGN 256
 			IMvect:
 			defs 257,0
-
+		#ifndef NOAYFX
 		afxBankAd:
 			dw 0,0,0,0 
 			
 		afxChDesc:
 			DS 6*3
 			db 0
-			
+		#endif
 		end asm 
+
 	#endif 
 	filename:
 
