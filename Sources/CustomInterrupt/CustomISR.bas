@@ -1,10 +1,11 @@
 '!ORG=24576
-' em00k 2021 part of Nextbuild 
+'!COPY=H:\custisr.nex
+'em00k 2021 part of Nextbuild 
 ' Custom ISR
 
 asm : di : end asm 
 									' These must be set before including the nextlib
-#define NEX 						' If we want to produce a file NEX, LoadSDBank commands will be disabled and all data included
+#define NEX 						' If we want to produce a NEX, LoadSDBank commands will be disabled and all data included
 #define CUSTOMISR					' This to call your custome isr 
 #define NOAYFX						' We wont be using MUSIC/AYFX in the ISR 
 #define IM2							' Still required
@@ -22,7 +23,7 @@ dim ci,tt as ubyte 		            ' define some global bytes
 SetUpIM()                           ' Call the interrupt setup, which will call MyCustomISR()
 ISR()                               ' Call the ISR once 
 
-Print at 0,0;"The following var is incremeted" : print "with the custom ISR"
+Print at 0,0;"The following var is incremented" : print "with the custom ISR"
 
 do 
 
