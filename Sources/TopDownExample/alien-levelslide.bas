@@ -68,8 +68,8 @@ const MRIGHT as ubyte = 1
 const MUP	as ubyte = 2 
 const MDOWN	as ubyte = 3 
 const MSTILL	as ubyte = 4
-WaitKey()
-'intro()											' show intro screen 
+
+intro()											' show intro screen 
 
 plx = 14<<4 : ply = 9<<4 : playerattrib3 = 0		' set some variables 
 worldpoint=39 : playerframbase = 0 
