@@ -1,5 +1,5 @@
 '!ORG=24576
-'!COPY=H:\custisr.nex
+'
 'em00k 2021 part of Nextbuild 
 ' Custom ISR
 
