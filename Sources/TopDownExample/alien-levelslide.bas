@@ -72,7 +72,7 @@ const MSTILL	as ubyte = 4
 intro()											' show intro screen 
 
 plx = 14<<4 : ply = 9<<4 : playerattrib3 = 0		' set some variables 
-worldpoint=39 : playerframbase = 0 
+worldpoint=37 : playerframbase = 0 
 
 DrawMap()										' draw inital map 
 
