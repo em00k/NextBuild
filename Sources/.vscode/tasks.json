@@ -41,9 +41,9 @@
         {
             "label": "Run in Cspect",
             "type": "shell",
-            "command": "mono ./../Emu/Cspect/Cspect.exe -16bit -nojoy -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.NEX",
+            "command": "mono ./../Emu/CSpect/CSpect.exe -16bit -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.nex",
             "windows": {
-                "command": "./../Emu/Cspect/Cspect.exe -w3 -16bit -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.NEX"
+                "command": "./../Emu/CSpect/CSpect.exe -w3 -16bit -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.nex"
             },
             "dependsOn": [
                 "Compile ZXbasic"
