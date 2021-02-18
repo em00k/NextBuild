@@ -329,7 +329,7 @@ def load_slr(filename: str):
             loading_ULA[:] = f.read(6144 + 768)
             palette_LoRes = bytearray([x for int16 in [
                 get_palette_value(temp_palette[i * 4], temp_palette[i * 4 + 1], temp_palette[i * 4 + 2])
-                for i in range(256)] for x in (int16 & 0xFF, int16 >> 8)])
+                for i in range(256)] for x in (int16 & 0xFF, int16 >> 48)])
 
             i = make_num(*temp_header[10:12])
             f.seek(i)
