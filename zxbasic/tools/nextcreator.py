@@ -329,7 +329,7 @@ def load_slr(filename: str):
             loading_ULA[:] = f.read(6144 + 768)
             palette_LoRes = bytearray([x for int16 in [
                 get_palette_value(temp_palette[i * 4], temp_palette[i * 4 + 1], temp_palette[i * 4 + 2])
-                for i in range(256)] for x in (int16 & 0xFF, int16 >> 48)])
+                for i in range(256)] for x in (int16 & 0xFF, int16 >> 8)])
 
             i = make_num(*temp_header[10:12])
             f.seek(i)
@@ -490,7 +490,7 @@ def generate_file(filename: str):
 
     print(f"Generating NEX file in {HEADER512.version_number.decode('utf-8')} format")
     HEADER512.num_banks_to_load = sum(int(HEADER512.banks[i] > 0) for i in range(112))
-    HEADER512.RAM_required = int(HEADER512.num_banks_to_load >= 8)
+    HEADER512.RAM_required = int(HEADER512.num_banks_to_load >= 48)
     print(f"Generating NEX file for {HEADER512.RAM_required + 1}MB machine")
 
     filename_path = normalize_path_name(filename)
