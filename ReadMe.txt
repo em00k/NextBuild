@@ -1,7 +1,7 @@
 
-NextBuild v0.7.2  13/02/21	em00k / David Saphier
+NextBuild v0.7.3.1  18/02/21	em00k / David Saphier
 
-Thanks to Jose & Jari 
+Thanks to Jose & Jari & ped
 
 v.7 on has been engineered to work best with VSCode, please do 
 take the time to try it out, nextbuild can work on Windows, Linux
@@ -188,6 +188,8 @@ If you tick "Launch Fuse" on the left hand side, it will launch in Fuse rather t
 
 
 Changlog
+
+0.7.3.1	Fixed 1MB / 2MB NEX generation
 
 0.7	Now using VSCode
 
