@@ -1,8 +1,8 @@
 Sub fastcall LoadMenu()
 	CLS
 	asm 
-	;ld hl,__LABEL__ScreenData
-	;ld de,__LABEL__ScreenData+1
+	;ld hl,.LABEL._ScreenData
+	;ld de,.LABEL._ScreenData+1
 	;ld bc,1048 
 	;ld (hl),0
 	;ldir	
@@ -145,7 +145,7 @@ dounderscore:
 		ld (23560),a			; clear last key
 		
 		ld b,9
-		ld hl,.__LABEL__namebuff
+		ld hl,.LABEL._namebuff
 checkkey:		
 		;halt 
 		ld a,(23560)			; last key
