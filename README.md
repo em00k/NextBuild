@@ -65,6 +65,7 @@ Copy finalised NEX file to another location:
 Thanks to :
 
 - Jose Rodgriguez aka Boriel for ZXBasic
+- Kounch for Text to NextBASIC File Converter for ZX Spectrum Next
 - JSJ for his ZXBasic vscode extenstion
 - Remy Sharp for his hover helper code
 - Mike Dailly for CSpect
