@@ -11,8 +11,12 @@ from typing import Dict
 from typing import List
 from typing import Set
 
+from src.api import global_
+
 from . import errors
 from .errors import InvalidICError as InvalidIC
+
+from .runtime.namespace import NAMESPACE
 
 
 # 8 bit arithmetic functions
@@ -91,11 +95,13 @@ from .__parray import _paaddr
 # External functions
 from ..optimizer.helpers import HI16, LO16
 from src.arch.zx48k.optimizer.asm import Asm
-from src.api.config import OPTIONS
+from src.api.config import OPTIONS, Action
 from src.arch.zx48k.peephole import engine
 
 import src.api.fp
 
+from .__common import runtime_call
+from src.arch.zx48k.backend.runtime import Labels as RuntimeLabel
 
 __all__ = [
     '_fpop',
@@ -114,28 +120,36 @@ RE_LABEL = re.compile(r'^[ \t]*[a-zA-Z_][_a-zA-Z\d]*:')
 RE_IX_IDX = re.compile(r'^\([ \t]*ix[ \t]*[-+][ \t]*.+\)$')
 
 # Label for the program START end EXIT
-START_LABEL = '__START_PROGRAM'
-END_LABEL = '__END_PROGRAM'
-CALL_BACK = '__CALL_BACK__'
-MAIN_LABEL = '__MAIN_PROGRAM__'
-DATA_LABEL = 'ZXBASIC_USER_DATA'
-DATA_END_LABEL = 'ZXBASIC_USER_DATA_END'
+START_LABEL = f'{NAMESPACE}.__START_PROGRAM'
+END_LABEL = f'{NAMESPACE}.__END_PROGRAM'
+CALL_BACK = f'{NAMESPACE}.__CALL_BACK__'
+MAIN_LABEL = f'{NAMESPACE}.__MAIN_PROGRAM__'
+DATA_LABEL = global_.ZXBASIC_USER_DATA
+DATA_END_LABEL = f'{DATA_LABEL}_END'
 
 # Whether to use the FunctionExit scheme
 FLAG_use_function_exit = False
 
-# Whether an 'end' has already been emmitted
+# Whether an 'end' has already been emitted
 FLAG_end_emitted = False
 
 # Default code ORG
-OPTIONS.add_option_if_not_defined('org', int, 32768)
+OPTIONS(Action.ADD_IF_NOT_DEFINED, name='org', type=int, default=32768)
 
 # Default HEAP SIZE (Dynamic memory) in bytes
-OPTIONS.add_option_if_not_defined('heap_size', int, 4768)  # A bit more than 4K
+OPTIONS(Action.ADD_IF_NOT_DEFINED, name='heap_size', type=int, default=4768)  # A bit more than 4K
 
-# List of modules that, if included, should call MEM_INIT
-MEMINITS = ['alloc.asm', 'loadstr.asm', 'storestr2.asm', 'storestr.asm', 'strcpy.asm',
-            'string.asm', 'strslice.asm', 'strcat.asm']
+# List of modules (in alphabetical order) that, if included, should call MEM_INIT
+MEMINITS = {
+    'alloc.asm',
+    'loadstr.asm',
+    'storestr2.asm',
+    'storestr.asm',
+    'strcat.asm',
+    'strcpy.asm',
+    'string.asm',
+    'strslice.asm',
+}
 
 # Internal data types definition, with its size in bytes, or -1 if it is variable (string)
 # Compound types are only arrays, and have the t
@@ -150,7 +164,7 @@ YY_TYPES = {
     'f': 5,  # Floating point
 }
 
-RE_BOOL = re.compile(r'^(eq|ne|lt|le|gt|ge|and|or|xor|not)(((u|i)(8|16|32))|(f16|f|str))$')
+RE_BOOL = re.compile(r'^(eq|ne|lt|le|gt|ge|and|or|xor|not)(([ui](8|16|32))|(f16|f|str))$')
 RE_HEXA = re.compile(r'^[0-9A-F]+$')
 
 # CONSTANT LN(2)
@@ -182,15 +196,15 @@ def init():
     FLAG_end_emitted = False
 
     # Default code ORG
-    OPTIONS.add_option('org', int, 32768)
+    OPTIONS(Action.ADD, name='org', type=int, default=32768)
     # Default HEAP SIZE (Dynamic memory) in bytes
-    OPTIONS.add_option('heap_size', int, 4768)  # A bit more than 4K
+    OPTIONS(Action.ADD, name='heap_size', type=int, default=4768, ignore_none=True)  # A bit more than 4K
     # Labels for HEAP START (might not be used if not needed)
-    OPTIONS.add_option('heap_start_label', str, 'ZXBASIC_MEM_HEAP')
+    OPTIONS(Action.ADD, name='heap_start_label', type=str, default=f'{NAMESPACE}.ZXBASIC_MEM_HEAP')
     # Labels for HEAP SIZE (might not be used if not needed)
-    OPTIONS.add_option('heap_size_label', str, 'ZXBASIC_HEAP_SIZE')
+    OPTIONS(Action.ADD, name='heap_size_label', type=str, default=f'{NAMESPACE}.ZXBASIC_HEAP_SIZE')
     # Flag for headerless mode (No prologue / epilogue)
-    OPTIONS.add_option('headerless', bool, False)
+    OPTIONS(Action.ADD, name='headerless', type=bool, default=False, ignore_none=True)
 
     engine.main()  # inits the optimizer
 
@@ -285,9 +299,8 @@ def to_byte(stype):
     elif stype == 'f16':
         output.append('ld a, e')
     elif stype == 'f':  # Converts C ED LH to byte
-        output.append('call __FTOU32REG')
+        output.append(runtime_call(RuntimeLabel.FTOU32REG))
         output.append('ld a, l')
-        REQUIRES.add('ftou32reg.asm')
 
     return output
 
@@ -312,8 +325,7 @@ def to_word(stype):
         output.append('ex de, hl')
 
     elif stype == 'f':
-        output.append('call __FTOU32REG')
-        REQUIRES.add('ftou32reg.asm')
+        output.append(runtime_call(RuntimeLabel.FTOU32REG))
 
     return output
 
@@ -342,8 +354,7 @@ def to_long(stype):
         output.append('ld de, 0')
 
     elif stype == 'f':
-        output.append('call __FTOU32REG')
-        REQUIRES.add('ftou32reg.asm')
+        output.append(runtime_call(RuntimeLabel.FTOU32REG))
 
     return output
 
@@ -359,39 +370,35 @@ def to_fixed(stype):
         output.append('ex de, hl')
         output.append('ld hl, 0')  # 'Truncate' the fixed point
     elif stype == 'f':
-        output.append('call __FTOF16REG')
-        REQUIRES.add('ftof16reg.asm')
+        output.append(runtime_call(RuntimeLabel.FTOF16REG))
 
     return output
 
 
-def to_float(stype):
+def to_float(stype) -> List[str]:
     """ Returns the instruction sequence for converting the given
     type stored in DE,HL to fixed DE,HL.
     """
     output = []  # List of instructions
 
     if stype == 'f':
-        return []  # Nothing to do
+        return output  # Nothing to do
 
     if stype == 'f16':
-        output.append('call __F16TOFREG')
-        REQUIRES.add('f16tofreg.asm')
+        output.append(runtime_call(RuntimeLabel.F16TOFREG))
         return output
 
     # If we reach this point, it's an integer type
     if stype == 'u8':
-        output.append('call __U8TOFREG')
+        output.append(runtime_call(RuntimeLabel.U8TOFREG))
     elif stype == 'i8':
-        output.append('call __I8TOFREG')
+        output.append(runtime_call(RuntimeLabel.I8TOFREG))
     else:
         output = to_long(stype)
         if stype in ('i16', 'i32'):
-            output.append('call __I32TOFREG')
+            output.append(runtime_call(RuntimeLabel.I32TOFREG))
         else:
-            output.append('call __U32TOFREG')
-
-    REQUIRES.add('u32tofreg.asm')
+            output.append(runtime_call(RuntimeLabel.U32TOFREG))
 
     return output
 
@@ -416,9 +423,10 @@ def _exchg(ins):
     does not support this, it must be implemented saving registers in a memory
     location.
     """
-    output = []
-    output.append('ex af, af\'')
-    output.append('exx')
+    output = [
+        "ex af, af'",
+        'exx'
+    ]
     return output
 
 
@@ -667,13 +675,17 @@ def _larrd(ins):
         'ld bc, %s' % elements_size,
     ])
 
-    suffix = '_WITH_BOUNDS' if bounds else ''
     if must_initialize:
-        output.append('call __ALLOC_INITIALIZED_LOCAL_ARRAY' + suffix)
+        if not bounds:
+            output.append(runtime_call(RuntimeLabel.ALLOC_INITIALIZED_LOCAL_ARRAY))
+        else:
+            output.append(runtime_call(RuntimeLabel.ALLOC_INITIALIZED_LOCAL_ARRAY_WITH_BOUNDS))
     else:
-        output.append('call __ALLOC_LOCAL_ARRAY' + suffix)
+        if not bounds:
+            output.append(runtime_call(RuntimeLabel.ALLOC_LOCAL_ARRAY))
+        else:
+            output.append(runtime_call(RuntimeLabel.ALLOC_LOCAL_ARRAY_WITH_BOUNDS))
 
-    REQUIRES.add('arrayalloc.asm')
     return output
 
 
@@ -759,8 +771,7 @@ def _loadstr(ins):
     temporal, output = _str_oper(ins.quad[2], no_exaf=True)
 
     if not temporal:
-        output.append('call __LOADSTR')
-        REQUIRES.add('loadstr.asm')
+        output.append(runtime_call(RuntimeLabel.LOADSTR))
 
     output.append('push hl')
     return output
@@ -824,7 +835,6 @@ def _store16(ins):
     store16 a, x =>  *(&a) = x
     Use '*' for indirect store on 1st operand.
     """
-    output = []
     output = _16bit_oper(ins.quad[2])
 
     try:
@@ -903,9 +913,7 @@ def _store32(ins):
 
         if indirect:
             output.append('ld hl, (%s)' % op)
-            output.append('call __STORE32')
-            REQUIRES.add('store32.asm')
-
+            output.append(runtime_call(RuntimeLabel.STORE32))  # TODO: is this ever used?
             return output
 
         output.append('ld (%s), hl' % op)
@@ -917,14 +925,11 @@ def _store32(ins):
     output.append('pop hl')
 
     if indirect:
-        output.append('call __ISTORE32')
-        REQUIRES.add('store32.asm')
+        output.append(runtime_call(RuntimeLabel.ISTORE32))  # TODO: is this ever used?
 
         return output
 
-    output.append('call __STORE32')
-    REQUIRES.add('store32.asm')
-
+    output.append(runtime_call(RuntimeLabel.STORE32))
     return output
 
 
@@ -969,13 +974,11 @@ def _storef(ins):
     else:
         output.append('pop hl')
         if indirect:
-            output.append('call __ISTOREF')
-            REQUIRES.add('storef.asm')
-
+            output.append(runtime_call(RuntimeLabel.ISTOREF))
+            # TODO: Check if this is ever used
             return output
 
-    output.append('call __STOREF')
-    REQUIRES.add('storef.asm')
+    output.append(runtime_call(RuntimeLabel.STOREF))
 
     return output
 
@@ -984,7 +987,7 @@ def _storestr(ins):
     """ Stores a string value into a memory address.
     It copies content of 2nd operand (string), into 1st, reallocating
     dynamic memory for the 1st str. These instruction DOES ALLOW
-    inmediate strings for the 2nd parameter, starting with '#'.
+    immediate strings for the 2nd parameter, starting with '#'.
 
     Must prepend '#' (immediate sigil) to 1st operand, as we need
     the & address of the destination.
@@ -1004,11 +1007,9 @@ def _storestr(ins):
     tmp1, tmp2, output = _str_oper(op1, ins.quad[2], no_exaf=True)
 
     if not tmp2:
-        output.append('call __STORE_STR')
-        REQUIRES.add('storestr.asm')
+        output.append(runtime_call(RuntimeLabel.STORE_STR))
     else:
-        output.append('call __STORE_STR2')
-        REQUIRES.add('storestr2.asm')
+        output.append(runtime_call(RuntimeLabel.STORE_STR2))
 
     return output
 
@@ -1020,7 +1021,6 @@ def _cast(ins):
     tA = ins.quad[2]  # From TypeA
     tB = ins.quad[3]  # To TypeB
 
-    YY_TYPES[tA]  # Type sizes
     xsB = sB = YY_TYPES[tB]  # Type sizes
 
     output = []
@@ -1169,6 +1169,7 @@ def _jzerostr(ins):
     """ Jumps if top of the stack contains a NULL pointer
         or its len is Zero
     """
+    # TODO: Check if this is ever used?
     output = []
     disposable = False  # True if string must be freed from memory
 
@@ -1179,18 +1180,16 @@ def _jzerostr(ins):
         output.append('push hl')  # Saves it for later
         disposable = True
 
-    output.append('call __STRLEN')
+    output.append(runtime_call(RuntimeLabel.STRLEN))
 
     if disposable:
         output.append('ex (sp), hl')
-        output.append('call __MEM_FREE')
+        output.append(runtime_call(RuntimeLabel.MEM_FREE))
         output.append('pop hl')
-        REQUIRES.add('alloc.asm')
 
     output.append('ld a, h')
     output.append('or l')
     output.append('jp z, %s' % str(ins.quad[2]))
-    REQUIRES.add('strlen.asm')
     return output
 
 
@@ -1290,6 +1289,7 @@ def _jnzerostr(ins):
     """ Jumps if top of the stack contains a string with
         at less 1 char
     """
+    # TODO: Check if this is ever used?
     output = []
     disposable = False  # True if string must be freed from memory
 
@@ -1300,20 +1300,16 @@ def _jnzerostr(ins):
         output.append('push hl')  # Saves it for later
         disposable = True
 
-    output.append('call __STRLEN')
+    output.append(runtime_call(RuntimeLabel.STRLEN))
 
     if disposable:
         output.append('ex (sp), hl')
-        output.append('call __MEM_FREE')
+        output.append(runtime_call(RuntimeLabel.MEM_FREE))
         output.append('pop hl')
-        REQUIRES.add('alloc.asm')
 
     output.append('ld a, h')
     output.append('or l')
     output.append('jp nz, %s' % str(ins.quad[2]))
-
-    REQUIRES.add('strlen.asm')
-
     return output
 
 
@@ -1492,8 +1488,7 @@ def _retstr(ins):
     tmp, output = _str_oper(ins.quad[1], no_exaf=True)
 
     if not tmp:
-        output.append('call __LOADSTR')
-        REQUIRES.add('loadstr.asm')
+        output.append(runtime_call(RuntimeLabel.LOADSTR))
 
     output.append('#pragma opt require hl')
     output.append('jp %s' % str(ins.quad[2]))
@@ -1685,8 +1680,7 @@ def _paramstr(ins):
     tmp = ins.quad[1][0] in ('#', '_')  # Determine if the string must be duplicated
 
     if tmp:
-        output.append('call __LOADSTR')  # Must be duplicated
-        REQUIRES.add('loadstr.asm')
+        output.append(runtime_call(RuntimeLabel.LOADSTR))  # Must be duplicated
 
     output.append('push hl')
     return output
@@ -2232,16 +2226,16 @@ def emit_start():
     heap_init = ['%s:' % DATA_LABEL]
     output.append('org %s' % OPTIONS.org)
 
-    if REQUIRES.intersection(MEMINITS) or '__MEM_INIT' in INITS:
+    if REQUIRES.intersection(MEMINITS) or f'{NAMESPACE}.__MEM_INIT' in INITS:
         heap_init.append('; Defines HEAP SIZE\n' + OPTIONS.heap_size_label + ' EQU ' +
                          str(OPTIONS.heap_size))
         heap_init.append(OPTIONS.heap_start_label + ':')
         heap_init.append('DEFS %s' % str(OPTIONS.heap_size))
 
     heap_init.append('; Defines USER DATA Length in bytes\n' +
-                     'ZXBASIC_USER_DATA_LEN EQU ZXBASIC_USER_DATA_END - ZXBASIC_USER_DATA')
-    heap_init.append('.__LABEL__.ZXBASIC_USER_DATA_LEN EQU ZXBASIC_USER_DATA_LEN')
-    heap_init.append('.__LABEL__.ZXBASIC_USER_DATA EQU ZXBASIC_USER_DATA')
+                     f'{NAMESPACE}.ZXBASIC_USER_DATA_LEN EQU {DATA_END_LABEL} - {DATA_LABEL}')
+    heap_init.append(f'{NAMESPACE}.__LABEL__.ZXBASIC_USER_DATA_LEN EQU {NAMESPACE}.ZXBASIC_USER_DATA_LEN')
+    heap_init.append(f'{NAMESPACE}.__LABEL__.ZXBASIC_USER_DATA EQU {DATA_LABEL}')
 
     output.append('%s:' % START_LABEL)
     if OPTIONS.headerless:
@@ -2274,17 +2268,14 @@ def convertToBool():
     """ Convert a byte value to boolean (0 or 1) if
     the global flag strictBool is True
     """
-    if not OPTIONS.strictBool:
+    if not OPTIONS.strict_bool:
         return []
 
-    REQUIRES.add('strictbool.asm')
-
-    result = list()
-    result.append('pop af')
-    result.append('call __NORMALIZE_BOOLEAN')
-    result.append('push af')
-
-    return result
+    return [
+        'pop af',
+        runtime_call(RuntimeLabel.NORMALIZE_BOOLEAN),
+        'push af'
+    ]
 
 
 def emit_end():
@@ -2342,7 +2333,7 @@ def remove_unused_labels(output: List[str]):
                 labels_to_delete.pop(new_label, None)
 
                 if new_label != op:
-                    output[i] = re.sub(r'\b' + op + r'\b', new_label, ins)
+                    output[i] = re.sub(f"((?<![.a-zA-Z0-9_])){op.replace('.', '[.]')}(?=$|\\s)", new_label, ins)
 
     for i in sorted(labels_to_delete.values(), reverse=True):
         output.pop(i)
@@ -2356,7 +2347,7 @@ def emit(mem: List[Quad], optimize=True):
     'output' array
     """
     # Optimization patterns: at this point no more than -O2
-    patterns = [x for x in engine.PATTERNS if x.level <= min(OPTIONS.optimization, 2)]
+    patterns = [x for x in engine.PATTERNS if x.level <= min(OPTIONS.optimization_level, 2)]
 
     def output_join(output: List[str], new_chunk: List[str], optimize: bool = True):
         """ Extends output instruction list
@@ -2382,7 +2373,7 @@ def emit(mem: List[Quad], optimize=True):
         if RE_BOOL.match(i.quad[0]):  # If it is a boolean operation convert it to 0/1 if the STRICT_BOOL flag is True
             output_join(output, convertToBool(), optimize=optimize)
 
-    if optimize and OPTIONS.optimization > 1:
+    if optimize and OPTIONS.optimization_level > 1:
         remove_unused_labels(output)
         tmp = output
         output = []

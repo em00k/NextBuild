@@ -9,68 +9,212 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
+import os
 import sys
+import configparser
+
+from src import api
 
 # The options container
 from . import options
 from . import global_
-from .options import ANYTYPE
+
+from .options import ANYTYPE, Action
+
 
 # ------------------------------------------------------
 # Common setup and configuration for all tools
 # ------------------------------------------------------
+class ConfigSections:
+    ZXBC = 'zxbc'
+    ZXBASM = 'zxbasm'
+    ZXBPP = 'zxbpp'
+
+
+class OPTION:
+    OUTPUT_FILENAME = 'output_filename'
+    INPUT_FILENAME = 'input_filename'
+    STDERR_FILENAME = 'stderr_filename'
+    DEBUG = 'debug_level'
+    PROJECT_FILENAME = 'project_filename'
+
+    # File IO
+    STDIN = 'stdin'
+    STDOUT = 'stdout'
+    STDERR = 'stderr'
+
+    O_LEVEL = 'optimization_level'
+    CASE_INS = 'case_insensitive'
+    ARRAY_BASE = 'array_base'
+    STR_BASE = 'string_base'
+    DEFAULT_BYREF = 'default_byref'
+    MAX_SYN_ERRORS = 'max_syntax_errors'
+
+    MEMORY_MAP = 'memory_map'
+
+    USE_BASIC_LOADER = 'use_basic_loader'
+    AUTORUN = 'autorun'
+    OUTPUT_FILE_TYPE = 'output_file_type'
+    INCLUDE_PATH = 'include_path'
+
+    CHECK_MEMORY = 'memory_check'
+    CHECK_ARRAYS = 'array_check'
+
+    STRICT_BOOL = 'strict_bool'
+
+    ENABLE_BREAK = 'enable_break'
+    EMIT_BACKEND = 'emit_backend'
+
+    EXPLICIT = 'explicit'
+    STRICT = 'strict'
+
+    ARCH = 'architecture'
+    EXPECTED_WARNINGS = 'expected_warnings'
+    HIDE_WARNING_CODES = 'hide_warning_codes'
+
+    # ASM Options
+    ASM_ZXNEXT = 'zxnext'
+    FORCE_ASM_BRACKET = 'force_asm_brackets'
+
 
 OPTIONS = options.Options()
+OPTIONS_NOT_SAVED = {
+    OPTION.STDERR, OPTION.STDIN, OPTION.STDOUT, 'sinclair', OPTION.INPUT_FILENAME, OPTION.OUTPUT_FILENAME,
+    OPTION.PROJECT_FILENAME, 'heap_start_label', 'heap_size_label'
+}
+
+
+def load_config_from_file(filename: str, section: str, options_: options.Options = None, stop_on_error=True) -> bool:
+    """ Opens file and read options from the given section. If stop_on_error is set,
+    the program stop if any error is found. Otherwise the result of the operation will be
+    returned (True on success, False on failure)
+    """
+    if options_ is None:
+        options_ = OPTIONS
+
+    try:
+        cfg = configparser.ConfigParser()
+        cfg.read(filename, encoding='utf-8')
+    except (configparser.DuplicateSectionError, configparser.DuplicateOptionError):
+        api.errmsg.msg_output(f"Invalid config file '{filename}': it has duplicated fields")
+        if stop_on_error:
+            sys.exit(1)
+        return False
+    except FileNotFoundError:
+        api.errmsg.msg_output(f"Config file '{filename}' not found")
+        if stop_on_error:
+            sys.exit(1)
+        return False
+
+    if section not in cfg.sections():
+        api.errmsg.msg_output(f"Section '{section}' not found in config file '{filename}'")
+        if stop_on_error:
+            sys.exit(1)
+        return False
+
+    parsing = {
+        int: cfg.getint,
+        float: cfg.getfloat,
+        bool: cfg.getboolean
+    }
+
+    for opt in cfg.options(section):
+        options_[opt].value = parsing.get(options_[opt].type, cfg.get)(section=section, option=opt)
+
+    return True
+
+
+def save_config_into_file(filename: str, section: str, options_: options.Options = None, stop_on_error=True) -> bool:
+    """ Save config into config ini file into the given section. If stop_on_error is set,
+    the program stop. Otherwise the result of the operation will be
+    returned (True on success, False on failure)
+    """
+    if options_ is None:
+        options_ = OPTIONS
+
+    cfg = configparser.ConfigParser()
+    if os.path.exists(filename):
+        try:
+            cfg.read(filename, encoding='utf-8')
+        except (configparser.DuplicateSectionError, configparser.DuplicateOptionError):
+            api.errmsg.msg_output(f"Invalid config file '{filename}': it has duplicated fields")
+            if stop_on_error:
+                sys.exit(1)
+            return False
+
+    cfg[section] = {}
+    for opt_name, opt in options_().items():
+        if opt_name.startswith('__') or opt.value is None or opt_name in OPTIONS_NOT_SAVED:
+            continue
+
+        if opt.type == bool:
+            cfg[section][opt_name] = str(opt.value).lower()
+            continue
+
+        cfg[section][opt_name] = str(opt.value)
+
+    try:
+        with open(filename, 'wt', encoding='utf-8') as f:
+            cfg.write(f)
+    except IOError:
+        api.errmsg.msg_output(f"Can't write config file '{filename}'")
+        if stop_on_error:
+            sys.exit(1)
+        return False
+
+    return True
 
 
 def init():
-    OPTIONS.reset()
-    OPTIONS.add_option('outputFileName', str)
-    OPTIONS.add_option('inputFileName', str)
-    OPTIONS.add_option('StdErrFileName', str)
-    OPTIONS.add_option('Debug', int, 0)
+    """ Default Options and Compilation Flags
+    """
+    OPTIONS(Action.CLEAR)
+
+    OPTIONS(Action.ADD, name=OPTION.OUTPUT_FILENAME, type=str)
+    OPTIONS(Action.ADD, name=OPTION.INPUT_FILENAME, type=str)
+    OPTIONS(Action.ADD, name=OPTION.STDERR_FILENAME, type=str, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.DEBUG, type=int, default=0, ignore_none=True)
 
     # Default console redirections
-    OPTIONS.add_option('stdin', ANYTYPE, sys.stdin)
-    OPTIONS.add_option('stdout', ANYTYPE, sys.stdout)
-    OPTIONS.add_option('stderr', ANYTYPE, sys.stderr)
+    OPTIONS(Action.ADD, name=OPTION.STDIN, type=ANYTYPE, default=sys.stdin)
+    OPTIONS(Action.ADD, name=OPTION.STDOUT, type=ANYTYPE, default=sys.stdout)
+    OPTIONS(Action.ADD, name=OPTION.STDERR, type=ANYTYPE, default=sys.stderr)
 
-    # ----------------------------------------------------------------------
-    # Default Options and Compilation Flags
-    #
-    # optimization -- Optimization level. Use -O flag to change.
-    # case_insensitive -- Whether user identifiers are case insensitive
-    #                          or not
-    # array_base -- Default array lower bound
-    # param_byref --Default parameter passing. TRUE => By Reference
-    # ----------------------------------------------------------------------
-    OPTIONS.add_option('optimization', int, global_.DEFAULT_OPTIMIZATION_LEVEL)
-    OPTIONS.add_option('case_insensitive', bool, False)
-    OPTIONS.add_option('array_base', int, 0)
-    OPTIONS.add_option('byref', bool, False)
-    OPTIONS.add_option('max_syntax_errors', int, global_.DEFAULT_MAX_SYNTAX_ERRORS)
-    OPTIONS.add_option('string_base', int, 0)
-    OPTIONS.add_option('memory_map', str, None)
-    OPTIONS.add_option('bracket', bool, False)
+    OPTIONS(Action.ADD, name=OPTION.O_LEVEL, type=int, default=global_.DEFAULT_OPTIMIZATION_LEVEL, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.CASE_INS, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.ARRAY_BASE, type=int, default=0, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.DEFAULT_BYREF, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.MAX_SYN_ERRORS, type=int, default=global_.DEFAULT_MAX_SYNTAX_ERRORS)
+    OPTIONS(Action.ADD, name=OPTION.STR_BASE, type=int, default=0, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.MEMORY_MAP, type=str, default=None, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.FORCE_ASM_BRACKET, type=bool, default=False, ignore_none=True)
 
-    OPTIONS.add_option('use_loader', bool, False)  # Whether to use a loader
-    OPTIONS.add_option('autorun', bool, False)  # Whether to add autostart code (needs basic loader = true)
-    OPTIONS.add_option('output_file_type', str, 'bin')  # bin, tap, tzx etc...
-    OPTIONS.add_option('include_path', str, '')  # Include path, like '/var/lib:/var/include'
+    OPTIONS(Action.ADD, name=OPTION.USE_BASIC_LOADER, type=bool, default=False)  # Whether to use a loader
 
-    OPTIONS.add_option('memoryCheck', bool, False)
-    OPTIONS.add_option('strictBool', bool, False)
-    OPTIONS.add_option('arrayCheck', bool, False)
-    OPTIONS.add_option('enableBreak', bool, False)
-    OPTIONS.add_option('emitBackend', bool, False)
-    OPTIONS.add_option('__DEFINES', dict, {})
-    OPTIONS.add_option('explicit', bool, False)
-    OPTIONS.add_option('Sinclair', bool, False)
-    OPTIONS.add_option('strict', bool, False)  # True to force type checking
-    OPTIONS.add_option('zxnext', bool, False)  # True to enable ZX Next ASM opcodes
-    OPTIONS.add_option('architecture', str, None)  # Architecture
-    OPTIONS.add_option('expect_warnings', int, 0)  # Expected Warnings that will be silenced
-    OPTIONS.add_option('hide_warning_codes', bool, False)  # Whether to show WXXX warning codes or not
+    # Whether to add autostart code (needs basic loader = true)
+    OPTIONS(Action.ADD, name=OPTION.AUTORUN, type=bool, default=False)
+    OPTIONS(Action.ADD, name=OPTION.OUTPUT_FILE_TYPE, type=str, default='bin')  # bin, tap, tzx etc...
+    OPTIONS(Action.ADD, name=OPTION.INCLUDE_PATH, type=str, default='')  # Include path, like '/var/lib:/var/include'
+
+    OPTIONS(Action.ADD, name=OPTION.CHECK_MEMORY, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.STRICT_BOOL, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.CHECK_ARRAYS, type=bool, default=False, ignore_none=True)
+
+    OPTIONS(Action.ADD, name=OPTION.ENABLE_BREAK, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name=OPTION.EMIT_BACKEND, type=bool, default=False)
+    OPTIONS(Action.ADD, name='__DEFINES', type=dict, default={})
+    OPTIONS(Action.ADD, name=OPTION.EXPLICIT, type=bool, default=False, ignore_none=True)
+    OPTIONS(Action.ADD, name='sinclair', type=bool, default=False)
+    OPTIONS(Action.ADD, name=OPTION.STRICT, type=bool, default=False, ignore_none=True)  # True to force type checking
+    OPTIONS(Action.ADD, name=OPTION.ASM_ZXNEXT, type=bool, default=False, ignore_none=True)  # Enable ZX Next ASM
+    OPTIONS(Action.ADD, name=OPTION.ARCH, type=str, default=None, ignore_none=True)  # Architecture
+    OPTIONS(Action.ADD, name=OPTION.EXPECTED_WARNINGS, type=int, default=0, ignore_none=True)
+
+    # Whether to show WXXX warning codes or not
+    OPTIONS(Action.ADD, name=OPTION.HIDE_WARNING_CODES, type=bool, default=False, ignore_none=True)
+
+    OPTIONS(Action.ADD, name=OPTION.PROJECT_FILENAME, type=str, default=os.path.join(os.path.abspath(os.path.curdir),
+                                                                                     'project.ini'))
 
 
 init()

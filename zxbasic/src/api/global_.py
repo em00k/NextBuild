@@ -118,6 +118,28 @@ BOUND_TYPE = None  # Set to None, so if not set will raise error
 SIZE_TYPE = None
 
 # ----------------------------------------------------------------------
+# CORE namespace (for core runtime library, like FP Calc)
+# ----------------------------------------------------------------------
+CORE_NAMESPACE = '.core'
+
+# ----------------------------------------------------------------------
+# DATA Labels namespace
+# ----------------------------------------------------------------------
+DATAS_NAMESPACE = '.DATA'
+
+# ----------------------------------------------------------------------
+# LABEL Labels namespace
+# ----------------------------------------------------------------------
+LABELS_NAMESPACE = '.LABEL'
+
+# ----------------------------------------------------------------------
+# USER DATA LABELS
+# ----------------------------------------------------------------------
+ZXBASIC_USER_DATA = f"{CORE_NAMESPACE}.ZXBASIC_USER_DATA"
+ZXBASIC_USER_DATA_LEN = f"{CORE_NAMESPACE}.ZXBASIC_USER_DATA_LEN"
+
+
+# ----------------------------------------------------------------------
 # Data Type used for string chars index. Must be an integral
 # ----------------------------------------------------------------------
 STR_INDEX_TYPE = None
@@ -137,6 +159,7 @@ PTR_TYPE = None
 # Character used for name mangling. Usually '_' or '.'
 # ----------------------------------------------------------------------
 MANGLE_CHR = '_'
+NAMESPACE_SEPARATOR = '.'
 
 # ----------------------------------------------------------------------
 # Prefix used in labels to mark the beginning of array data

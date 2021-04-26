@@ -39,6 +39,8 @@
 
 
 ;; Updates restore point to the given HL mem. address
+    push namespace core
+
 __RESTORE:
     PROC
     LOCAL __DATA_ADDR
@@ -66,7 +68,7 @@ read_restart:
     jr nz, cont
     ;; Signals out of data
 
-    ld hl, __DATA__0
+    ld hl, .DATA.__DATA__0
     ld (__DATA_ADDR), hl
     jr read_restart  ; Start again
 cont:
@@ -219,6 +221,7 @@ dynamic_cast4:
 before_to_int:
     ld a, b ;; read type
     cp _f16 ;;
+    jr c, coerce_to_int2
     jr nz, coerce_to_int  ;; From float to int
     ld a, c ;; user type
     exx
@@ -298,14 +301,14 @@ __01_decode_string:
     ld (__DATA_ADDR), hl  ;; Store address of next DATA
     ex de, hl
     jp __LOADSTR
-    
+
 __02_decode_byte:
 __03_decode_ubyte:
     ld a, (hl)
     inc hl
     ld (__DATA_ADDR), hl
     ret
-        
+
 __04_decode_integer:
 __05_decode_uinteger:
     ld e, (hl)
@@ -315,7 +318,7 @@ __05_decode_uinteger:
     ld (__DATA_ADDR), hl
     ex de, hl
     ret
-    
+
 __06_decode_long:
 __07_decode_ulong:
 __08_decode_fixed:
@@ -336,7 +339,7 @@ __09_decode_float:
     ret
 
 __DATA_ADDR:  ;; Stores current DATA ptr
-    dw __DATA__0
+    dw .DATA.__DATA__0
     ENDP
 
 #undef _str
@@ -348,3 +351,5 @@ __DATA_ADDR:  ;; Stores current DATA ptr
 #undef _u32
 #undef _f16
 #undef _flt
+
+    pop namespace

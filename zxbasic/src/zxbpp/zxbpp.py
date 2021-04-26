@@ -15,19 +15,23 @@ import sys
 import os
 import argparse
 
+from dataclasses import dataclass
+
 from typing import Any
+from typing import Dict
 from typing import List
 from typing import NamedTuple
 from typing import Optional
+from typing import Union
 
 from .zxbpplex import tokens  # noqa
 from src.zxbpp import zxbpplex
 from src.zxbpp import zxbasmpplex
 from src.ply import yacc
 
-from src.api.config import OPTIONS
+from src.api import config
 from src.api import global_
-import src.api.utils
+from src.api import utils
 
 from .prepro import output
 from .prepro.output import warning
@@ -39,13 +43,17 @@ from .prepro.operators import Stringizing
 
 from src import arch
 
+
+# Generated output
 OUTPUT = ''
-INCLUDED = {}  # Already included files (with lines)
+
+# Global macro (#defines) table
+ID_TABLE = DefinesTable()
 
 # Set to BASIC or ASM depending on the Lexer context
 # e.g. for .ASM files should be set to zxbasmpplex.Lexer()
 # Use setMode('ASM' or 'BASIC') to change this FLAG
-LEXER = zxbpplex.Lexer()
+LEXER: Union[zxbasmpplex.Lexer, zxbpplex.Lexer] = zxbpplex.Lexer(defines_table=ID_TABLE)
 
 # CURRENT working directory for this cpp
 CURRENT_DIR = None
@@ -61,6 +69,21 @@ class IfDef(NamedTuple):
     enabled: bool
     line: int
 
+
+class ParentIncludingFile(NamedTuple):
+    file_name: str
+    lineno: int
+
+
+@dataclass
+class IncludedFileInfo:
+    once: bool  # whether this file is
+    parents: List[ParentIncludingFile]
+
+
+# Files already includes, with a list of file, line where they were
+# included sinc a file can be included more than once.
+INCLUDED: Dict[str, IncludedFileInfo] = {}
 
 # IFDEFS array
 IFDEFS: List[IfDef] = []  # Push (Line, state here)
@@ -88,9 +111,8 @@ def init():
     global CURRENT_DIR
     global ENABLED
     global IFDEFS
-    global ID_TABLE
 
-    OPTIONS.add_option_if_not_defined('debug_zxbpp', bool, False)
+    config.OPTIONS(config.Action.ADD_IF_NOT_DEFINED, name='debug_zxbpp', type=bool, default=False)
     global_.FILENAME = '(stdin)'
     OUTPUT = ''
     INCLUDED = {}
@@ -100,7 +122,7 @@ def init():
     global_.has_errors = 0
     global_.error_msg_cache.clear()
     parser.defaulted_states = {}
-    ID_TABLE = DefinesTable()
+    ID_TABLE.clear()
     del output.CURRENT_FILE[:]
 
 
@@ -111,7 +133,7 @@ def get_include_path() -> str:
         os.path.dirname(__file__),
         os.path.pardir,
         'arch',
-        OPTIONS.architecture or '')
+        config.OPTIONS.architecture or '')
     )
 
 
@@ -129,9 +151,9 @@ def setMode(mode: str) -> None:
         raise PreprocError('Invalid mode "%s"' % mode, lineno=LEXER.lineno)
 
     if mode == 'ASM':
-        LEXER = zxbasmpplex.Lexer()
+        LEXER = zxbasmpplex.Lexer(defines_table=ID_TABLE)
     else:
-        LEXER = zxbpplex.Lexer()
+        LEXER = zxbpplex.Lexer(defines_table=ID_TABLE)
 
 
 def search_filename(fname: str, lineno: int, local_first: bool) -> str:
@@ -139,18 +161,18 @@ def search_filename(fname: str, lineno: int, local_first: bool) -> str:
     If local_first is true, it will try first in the current directory of
     the file being analyzed.
     """
-    fname = src.api.utils.sanitize_filename(fname)
+    fname = utils.sanitize_filename(fname)
 
     assert CURRENT_DIR is not None
     i_path: List[str] = [CURRENT_DIR] + INCLUDEPATH if local_first else list(INCLUDEPATH)
-    i_path.extend(OPTIONS.include_path.split(':') if OPTIONS.include_path else [])
+    i_path.extend(config.OPTIONS.include_path.split(':') if config.OPTIONS.include_path else [])
 
     if os.path.isabs(fname):
         if os.path.isfile(fname):
             return fname
     else:
         for dir_ in i_path:
-            path = src.api.utils.sanitize_filename(os.path.join(dir_, fname))
+            path = utils.sanitize_filename(os.path.join(dir_, fname))
             if os.path.exists(path):
                 return path
 
@@ -170,11 +192,16 @@ def include_file(filename: str, lineno: int, local_first: bool) -> str:
     global CURRENT_DIR
 
     filename = search_filename(filename, lineno, local_first)
-    if filename not in INCLUDED.keys():
-        INCLUDED[filename] = []
+    abs_filename = utils.get_absolute_filename_path(filename)
+    if abs_filename not in INCLUDED:
+        INCLUDED[abs_filename] = IncludedFileInfo(once=False, parents=[])
+    elif INCLUDED[abs_filename].once:
+        # Empty file (already included)
+        LEXER.next_token = '_ENDFILE_'
+        return ''
 
-    if len(output.CURRENT_FILE) > 0:  # Added from which file, line
-        INCLUDED[filename].append((output.CURRENT_FILE[-1], lineno))
+    if output.CURRENT_FILE:  # Added from which file, line
+        INCLUDED[abs_filename].parents.append(ParentIncludingFile(output.CURRENT_FILE[-1], lineno))
 
     output.CURRENT_FILE.append(filename)
     CURRENT_DIR = os.path.dirname(filename)
@@ -194,14 +221,15 @@ def include_once(filename: str, lineno: int, local_first: bool) -> str:
     This is used when doing a #include "filename".
     """
     filename = search_filename(filename, lineno, local_first)
-    if filename not in INCLUDED.keys():  # If not already included
+    abs_filename = utils.get_absolute_filename_path(filename)
+    if abs_filename not in INCLUDED:  # If not already included
         return include_file(filename, lineno, local_first)  # include it and return
 
     # Now checks if the file has been included more than once
-    if len(INCLUDED[filename]) > 1:
-        warning(lineno, "file '%s' already included more than once, in file "
-                        "'%s' at line %i" %
-                (filename, INCLUDED[filename][0][0], INCLUDED[filename][0][1]))
+    if len(INCLUDED[abs_filename].parents) > 1:
+        parent_file, lineno = INCLUDED[abs_filename].parents[0]
+        warning(lineno, "file '%s' already included more than once, in file '%s' at line %i" %
+                (filename, parent_file, lineno))
 
     # Empty file (already included)
     LEXER.next_token = '_ENDFILE_'
@@ -401,14 +429,14 @@ def p_line_file(p):
 def p_require_file(p):
     """ require : REQUIRE STRING NEWLINE
     """
-    p[0] = ['#%s "%s"\n' % (p[1], src.api.utils.sanitize_filename(p[2]))]
+    p[0] = ['#%s "%s"\n' % (p[1], utils.sanitize_filename(p[2]))]
 
 
 def p_init(p):
     """ init : INIT ID NEWLINE
              | INIT STRING NEWLINE
     """
-    p[0] = ['#%s %s\n' % (p[1], p[2])]
+    p[0] = ['#%s "%s"\n' % (p[1], p[2])]
 
 
 def p_undef(p):
@@ -448,7 +476,7 @@ def p_define(p):
             if isinstance(defs[0], str) and defs[0] in ' \t':  # remove leading whitespaces
                 defs[0] = defs[0].lstrip(' \t')
             else:
-                warning(p.lineno(1), "missing whitespace after macro name")
+                output.warning_missing_whitespace_after_macro(p.lineno(1), p.lexer.current_file)
 
         ID_TABLE.define(id_, args=params, value=defs, lineno=p.lineno(2),
                         fname=output.CURRENT_FILE[-1])
@@ -522,6 +550,17 @@ def p_pragma_push(p):
                | PRAGMA POP LP ID RP
     """
     p[0] = ['#%s %s%s%s%s' % (p[1], p[2], p[3], p[4], p[5])]
+
+
+def p_pragma_once(p):
+    """ pragma : PRAGMA ONCE
+    """
+    abs_filename = utils.get_absolute_filename_path(output.CURRENT_FILE[-1])
+    if abs_filename not in INCLUDED:
+        INCLUDED[abs_filename] = IncludedFileInfo(once=False, parents=[])
+
+    INCLUDED[abs_filename].once = True
+    p[0] = []
 
 
 def p_ifdef(p):
@@ -697,25 +736,25 @@ def p_def_macrocall(p):
 def p_macrocall(p):
     """ macrocall : ID
     """
-    p[0] = MacroCall(p.lineno(1), ID_TABLE, p[1], None)
+    p[0] = MacroCall(p.lexer.current_file, p.lineno(1), ID_TABLE, p[1], None)
 
 
 def p_macrocall_args(p):
     """ macrocall : macrocall args
     """
-    p[0] = MacroCall(p[2].end_lineno, ID_TABLE, p[1], p[2])
+    p[0] = MacroCall(p.lexer.current_file, p[2].end_lineno, ID_TABLE, p[1], p[2])
 
 
 def p_macrocall_paste(p):
     """ macrocall : macrocall PASTE macrocall
     """
-    p[0] = Concatenation(p[1].lineno, ID_TABLE, p[1], p[3])
+    p[0] = Concatenation(p.lexer.current_file, p[1].lineno, ID_TABLE, p[1], p[3])
 
 
 def p_macrocall_stringizing(p):
     """ macrocall : STRINGIZING macrocall
     """
-    p[0] = Stringizing(p[2].lineno, ID_TABLE, p[2])
+    p[0] = Stringizing(p.lexer.current_file, p[2].lineno, ID_TABLE, p[2])
 
 
 def p_args(p):
@@ -793,8 +832,8 @@ def p_error(p):
             value = ''.join(['|%s|' % hex(ord(x)) if x < ' ' else x for x in value])
             error(p.lineno, "Syntax error. Unexpected token '%s' [%s]" % (value, p.type), output.CURRENT_FILE[-1])
     else:
-        OPTIONS.stderr.write("General syntax error at preprocessor "
-                             "(unexpected End of File?)")
+        config.OPTIONS.stderr.write("General syntax error at preprocessor "
+                                    "(unexpected End of File?)")
     global_.has_errors += 1
 
 
@@ -809,7 +848,7 @@ def filter_(input_, filename='<internal>', state='INITIAL'):
     CURRENT_DIR = os.path.dirname(output.CURRENT_FILE[-1])
     LEXER.input(input_, filename)
     LEXER.lex.begin(state)
-    parser.parse(lexer=LEXER, debug=OPTIONS.debug_zxbpp)
+    parser.parse(lexer=LEXER, debug=config.OPTIONS.debug_zxbpp)
     output.CURRENT_FILE.pop()
     CURRENT_DIR = prev_dir
 
@@ -827,7 +866,7 @@ def main(argv):
         output.CURRENT_FILE.append(global_.FILENAME)
     CURRENT_DIR = os.path.dirname(output.CURRENT_FILE[-1])
 
-    if OPTIONS.Sinclair:
+    if config.OPTIONS.sinclair:
         included_file = search_filename('sinclair.bas', 0, local_first=False)
         if not included_file:
             return
@@ -836,7 +875,7 @@ def main(argv):
         if OUTPUT and OUTPUT[-1] != '\n':
             OUTPUT += '\n'
 
-        parser.parse(lexer=LEXER, debug=OPTIONS.debug_zxbpp)
+        parser.parse(lexer=LEXER, debug=config.OPTIONS.debug_zxbpp)
         output.CURRENT_FILE.pop()
         CURRENT_DIR = os.path.dirname(output.CURRENT_FILE[-1])
 
@@ -846,16 +885,14 @@ def main(argv):
     if OUTPUT and OUTPUT[-1] != '\n':
         OUTPUT += '\n'
 
-    parser.parse(lexer=LEXER, debug=OPTIONS.debug_zxbpp)
+    parser.parse(lexer=LEXER, debug=config.OPTIONS.debug_zxbpp)
     output.CURRENT_FILE.pop()
     global_.FILENAME = prev_file
     return global_.has_errors
 
 
-parser = src.api.utils.get_or_create('zxbpp', lambda: yacc.yacc(debug=True))
-
+parser = utils.get_or_create('zxbpp', lambda: yacc.yacc(debug=True))
 parser.defaulted_states = {}
-ID_TABLE = DefinesTable()
 
 
 # ------- ERROR And Warning messages ----------------
@@ -864,14 +901,14 @@ def entry_point(args=None):
     if args is None:
         args = sys.argv[1:]
 
-    src.api.config.init()
+    config.init()
     init()
     setMode('BASIC')
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-o', '--output', type=str, dest='output_file', default=None,
                         help='Sets output file. Default is to output to console (STDOUT)')
-    parser.add_argument('-d', '--debug', dest='debug', default=OPTIONS.Debug, action='count',
+    parser.add_argument('-d', '--debug', dest='debug', default=config.OPTIONS.debug_level, action='count',
                         help='Enable verbosity/debugging output. Additional -d increases verbosity/debug level')
     parser.add_argument('-e', '--errmsg', type=str, dest='stderr', default=None,
                         help='Error messages file. Standard error console by default (STDERR)')
@@ -880,30 +917,30 @@ def entry_point(args=None):
     parser.add_argument('--arch', type=str, default=arch.AVAILABLE_ARCHITECTURES[0],
                         help=f"Target architecture (defaults is'{arch.AVAILABLE_ARCHITECTURES[0]}'). "
                              f"Available architectures: {','.join(arch.AVAILABLE_ARCHITECTURES)}")
-    parser.add_argument('--expect-warnings', default=OPTIONS.expect_warnings, type=int,
+    parser.add_argument('--expect-warnings', default=config.OPTIONS.expected_warnings, type=int,
                         help='Expects N warnings: first N warnings will be silenced')
 
     options = parser.parse_args(args=args)
-    OPTIONS.Debug = options.debug
-    OPTIONS.debug_zxbpp = OPTIONS.Debug > 0
-    OPTIONS.expect_warnings = options.expect_warnings
+    config.OPTIONS.debug_level = options.debug
+    config.OPTIONS.debug_zxbpp = config.OPTIONS.debug_level > 0
+    config.OPTIONS.expected_warnings = options.expect_warnings
 
     if options.arch not in arch.AVAILABLE_ARCHITECTURES:
         parser.error(f"Invalid architecture '{options.arch}'")
         return 2
-    OPTIONS.architecture = options.arch
+    config.OPTIONS.architecture = options.arch
 
     if options.stderr:
-        OPTIONS.StdErrFileName = options.stderr
-        OPTIONS.stderr = src.api.utils.open_file(OPTIONS.StdErrFileName, 'wt', 'utf-8')
+        config.OPTIONS.stderr_filename = options.stderr
+        config.OPTIONS.stderr = utils.open_file(config.OPTIONS.stderr_filename, 'wt', 'utf-8')
 
     result = main([options.input_file] if options.input_file else [])
     if not global_.has_errors:  # ok?
         if options.output_file:
-            with src.api.utils.open_file(options.output_file, 'wt', 'utf-8') as output_file:
+            with utils.open_file(options.output_file, 'wt', 'utf-8') as output_file:
                 output_file.write(OUTPUT)
         else:
-            OPTIONS.stdout.write(OUTPUT)
+            config.OPTIONS.stdout.write(OUTPUT)
     return result
 
 

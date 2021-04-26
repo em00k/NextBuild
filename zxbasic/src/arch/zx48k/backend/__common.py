@@ -7,7 +7,11 @@ import math
 from typing import List
 from typing import Set
 
+import src.api.global_ as gl
 import src.api.errors
+
+from .runtime import RUNTIME_LABELS
+from .runtime import LABEL_REQUIRED_MODULES
 
 
 MEMORY = []  # Must be initialized by with init()
@@ -46,44 +50,30 @@ def init():
     TMP_LABELS.clear()
 
 
-def log2(x) -> float:
+def log2(x: float) -> float:
     """ Returns log2(x)
     """
     return math.log(x) / __LN2
 
 
-def is_2n(x) -> bool:
+def is_2n(x: float) -> bool:
     """ Returns true if x is an exact
     power of 2
     """
-    l = log2(x)
-    return l == int(l)
+    if x < 1 or x != int(x):
+        return False
+
+    n = log2(x)
+    return n == int(n)
 
 
 def tmp_label() -> str:
     global LABEL_COUNTER
     global TMP_LABELS
 
-    result = '__LABEL%i' % LABEL_COUNTER
+    result = f'{gl.LABELS_NAMESPACE}.__LABEL{LABEL_COUNTER}'
     TMP_LABELS.add(result)
     LABEL_COUNTER += 1
-
-    return result
-
-
-def tmp_temp() -> str:
-    global TMP_COUNTER
-
-    for i in range(TMP_COUNTER):
-        result = '__TEMP%i' % i
-
-        if result not in TMP_STORAGES:
-            TMP_STORAGES.append(result)
-            return result
-
-    result = '__TEMP%i' % TMP_COUNTER
-    TMP_STORAGES.append(result)
-    TMP_COUNTER += 1
 
     return result
 
@@ -93,6 +83,14 @@ def tmp_remove(label: str):
         raise src.api.errors.TempAlreadyFreedError(label)
 
     TMP_STORAGES.pop(TMP_STORAGES.index(label))
+
+
+def runtime_call(label):
+    assert label in RUNTIME_LABELS, f"Invalid runtime label '{label}'"
+    if label in LABEL_REQUIRED_MODULES:
+        REQUIRES.add(LABEL_REQUIRED_MODULES[label])
+
+    return f'call {label}'
 
 
 # ------------------------------------------------------------------

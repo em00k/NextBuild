@@ -24,7 +24,8 @@ __all__ = [
     'error',
     'is_valid_warning_code',
     'warning',
-    'warning_not_used'
+    'warning_not_used',
+    'register_warning'
 ]
 
 
@@ -41,7 +42,7 @@ def msg_output(msg: str) -> None:
 
 
 def info(msg: str) -> None:
-    if OPTIONS.Debug < 1:
+    if OPTIONS.debug_level < 1:
         return
     OPTIONS.stderr.write("info: %s\n" % msg)
 
@@ -68,7 +69,7 @@ def warning(lineno: int, msg: str, fname: Optional[str] = None) -> None:
     """ Generic warning error routine
     """
     global_.has_warnings += 1
-    if global_.has_warnings <= OPTIONS.expect_warnings:
+    if global_.has_warnings <= OPTIONS.expected_warnings:
         return
 
     if fname is None:
@@ -161,7 +162,7 @@ def warning_empty_if(lineno: int):
 def warning_not_used(lineno: int, id_: str, kind: str = 'Variable', fname: Optional[str] = None):
     """ Emits an optimization warning
     """
-    if OPTIONS.optimization > 0:
+    if OPTIONS.optimization_level > 0:
         warning(lineno, "%s '%s' is never used" % (kind, id_), fname=fname)
 
 
@@ -190,6 +191,11 @@ def warning_function_should_return_a_value(lineno: int, func_name: str, fname: O
 @register_warning('200')
 def warning_value_will_be_truncated(lineno: int, fname: Optional[str] = None):
     warning(lineno, "Value will be truncated", fname=fname)
+
+
+@register_warning('300')
+def warning_ignoring_unknown_pragma(lineno: int, pragma_name: str):
+    warning(lineno, f"Ignoring unknown pragma '{pragma_name}'")
 
 # endregion
 
@@ -293,5 +299,20 @@ def syntax_error_address_must_be_constant(lineno: int):
 # ----------------------------------------
 def syntax_error_cannot_pass_array_by_value(lineno: int, id_: str):
     error(lineno, "Array parameter '%s' must be passed ByRef" % id_)
+
+
+# ----------------------------------------
+#  Cannot pass an array by value
+# ----------------------------------------
+def syntax_error_no_data_defined(lineno: int):
+    error(lineno, "No DATA defined")
+
+
+# ----------------------------------------
+#  Cannot pass an array by value
+# ----------------------------------------
+def syntax_error_cannot_initialize_array_of_type(lineno: int, type_name: str):
+    error(lineno, f"Cannot initialize array of type {type_name}")
+
 
 # endregion

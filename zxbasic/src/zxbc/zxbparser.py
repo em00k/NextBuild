@@ -37,6 +37,7 @@ from src.api.check import is_numeric
 from src.api.check import is_unsigned
 from src.api.check import is_static
 from src.api.check import is_string
+from src.api.check import is_ender
 
 from src.api.constants import CLASS
 from src.api.constants import SCOPE
@@ -47,6 +48,7 @@ import src.api.errmsg
 import src.api.symboltable
 import src.api.config
 import src.api.utils
+import src.api.options
 
 # Symbol Classes
 from src import symbols, arch
@@ -302,7 +304,7 @@ def make_argument(expr, lineno, byref=None):
         return  # There were a syntax / semantic error
 
     if byref is None:
-        byref = OPTIONS.byref
+        byref = OPTIONS.default_byref
     return symbols.ARGUMENT(expr, lineno=lineno, byref=byref)
 
 
@@ -472,7 +474,7 @@ def make_break(lineno: int, p):
     checked """
     global last_brk_linenum
 
-    if not OPTIONS.enableBreak or lineno == last_brk_linenum or is_null(p):
+    if not OPTIONS.enable_break or lineno == last_brk_linenum or is_null(p):
         return None
 
     last_brk_linenum = lineno
@@ -514,8 +516,8 @@ def p_start(p):
     """
     global ast, data_ast
 
-    make_label('.ZXBASIC_USER_DATA', 0)
-    make_label('.ZXBASIC_USER_DATA_LEN', 0)
+    make_label(gl.ZXBASIC_USER_DATA, 0)
+    make_label(gl.ZXBASIC_USER_DATA_LEN, 0)
 
     if PRINT_IS_USED:
         zxbpp.ID_TABLE.define('___PRINT_IS_USED___', 1)
@@ -529,7 +531,8 @@ def p_start(p):
     __end = make_sentence(p.lexer.lineno, 'END', make_number(0, lineno=p.lexer.lineno), sentinel=True)
 
     if not is_null(ast):
-        ast.appendChild(__end)
+        if isinstance(ast, symbols.BLOCK) and not is_ender(ast[-1]):
+            ast.appendChild(__end)
     else:
         ast = __end
 
@@ -815,8 +818,8 @@ def p_decl_arr(p):
 
 
 def p_arr_decl_initialized(p):
-    """ var_arr_decl : DIM idlist LP bound_list RP typedef RIGHTARROW const_vector
-                     | DIM idlist LP bound_list RP typedef EQ const_vector
+    """ var_decl : DIM idlist LP bound_list RP typedef RIGHTARROW const_vector
+                 | DIM idlist LP bound_list RP typedef EQ const_vector
     """
 
     def check_bound(boundlist, remaining):
@@ -844,15 +847,23 @@ def p_arr_decl_initialized(p):
 
         return True
 
-    if p[8] is None:
-        p[0] = None
+    p[0] = None
+    if p[4] is None or p[6] is None or p[8] is None:
         return
 
-    if check_bound(p[4].children, p[8]):
-        id_, lineno = p[2][0]
-        SYMBOL_TABLE.declare_array(id_, lineno, p[6], p[4], default_value=p[8])
+    if not check_bound(p[4].children, p[8]):
+        return
 
-    p[0] = None
+    id_, lineno = p[2][0]
+    SYMBOL_TABLE.declare_array(id_, lineno, p[6], p[4], default_value=p[8])
+
+    entry = SYMBOL_TABLE.get_entry(id_)
+    if entry is None:
+        return
+
+    if p[6] == TYPE.string or entry.type_ == TYPE.string:
+        src.api.errmsg.syntax_error_cannot_initialize_array_of_type(p.lineno(1), TYPE.string)
+        return
 
 
 def p_bound_list(p):
@@ -1718,7 +1729,7 @@ def p_data(p):
         func = entry.entry
         func.convention = CONVENTION.fastcall
         SYMBOL_TABLE.enter_scope(new_lbl)
-        func.local_symbol_table = SYMBOL_TABLE.table[SYMBOL_TABLE.current_scope]
+        func.local_symbol_table = SYMBOL_TABLE.current_scope
         func.locals_size = SYMBOL_TABLE.leave_scope()
 
         gl.DATA_FUNCTIONS.append(func)
@@ -1738,11 +1749,10 @@ def p_restore(p):
                   | RESTORE NUMBER
     """
     if len(p) == 2:
-        id_ = '__DATA__{0}'.format(len(gl.DATAS))
+        lbl = None
     else:
-        id_ = p[2]
+        lbl = check_and_make_label(p[2], p.lineno(1))
 
-    lbl = check_and_make_label(id_, p.lineno(1))
     p[0] = make_sentence(p.lineno(1), 'RESTORE', lbl)
 
 
@@ -2231,10 +2241,10 @@ def p_save_data(p):
         else:
             length = make_number(entry.type_.size, lineno=p.lineno(4))
     else:
-        access = SYMBOL_TABLE.access_label('.ZXBASIC_USER_DATA', p.lineno(3), 0)
+        access = SYMBOL_TABLE.access_label(gl.ZXBASIC_USER_DATA, p.lineno(3), SYMBOL_TABLE.global_scope)
         start = make_unary(p.lineno(3), 'ADDRESS', access, type_=TYPE.uinteger)
 
-        access = SYMBOL_TABLE.access_label('.ZXBASIC_USER_DATA_LEN', p.lineno(3), 0)
+        access = SYMBOL_TABLE.access_label(gl.ZXBASIC_USER_DATA_LEN, p.lineno(3), SYMBOL_TABLE.global_scope)
         length = make_unary(p.lineno(3), 'ADDRESS', access, type_=TYPE.uinteger)
 
     p[0] = make_sentence(p.lineno(1), p[1], p[2], start, length)
@@ -2300,10 +2310,10 @@ def p_load_data(p):
         else:
             length = make_number(entry.type_.size, lineno=p.lineno(4))
     else:
-        entry = SYMBOL_TABLE.access_label('.ZXBASIC_USER_DATA', p.lineno(3), 0)
+        entry = SYMBOL_TABLE.access_label(gl.ZXBASIC_USER_DATA, p.lineno(3), SYMBOL_TABLE.global_scope)
         start = make_unary(p.lineno(3), 'ADDRESS', entry, type_=TYPE.uinteger)
 
-        entry = SYMBOL_TABLE.access_label('.ZXBASIC_USER_DATA_LEN', p.lineno(3), 0)
+        entry = SYMBOL_TABLE.access_label(gl.ZXBASIC_USER_DATA_LEN, p.lineno(3), SYMBOL_TABLE.global_scope)
         length = make_unary(p.lineno(3), 'ADDRESS', entry, type_=TYPE.uinteger)
 
     p[0] = make_sentence(p.lineno(3), p[1], p[2], start, length)
@@ -2505,12 +2515,6 @@ def p_expr_PI(p):
     p[0] = make_number(PI, lineno=p.lineno(1), type_=TYPE.float_)
 
 
-def p_number_line(p):
-    """ bexpr : __LINE__
-    """
-    p[0] = make_number(p.lineno(1), lineno=p.lineno(1))
-
-
 def p_expr_string(p):
     """ bexpr : string %prec ID
     """
@@ -2612,12 +2616,6 @@ def p_subind_TO(p):
                           p.lineno(2)))
 
 
-def p_exprstr_file(p):
-    """ bexpr : __FILE__
-    """
-    p[0] = symbols.STRING(gl.FILENAME, p.lineno(1))
-
-
 def p_id_expr(p):
     """ bexpr : ID
     """
@@ -2648,7 +2646,8 @@ def p_addr_of_id(p):
     """ bexpr : ADDRESSOF singleid
     """
     id_: Id = p[2]
-    entry = SYMBOL_TABLE.access_id(id_.name, id_.lineno)
+    # Access id. For @ operator we ignore the explicit flag
+    entry = SYMBOL_TABLE.access_id(id_.name, id_.lineno, ignore_explicit_flag=True)
     if entry is None:
         p[0] = None
         return
@@ -2896,7 +2895,7 @@ def p_funcdecl(p):
         return
 
     p[0] = p[1]
-    p[0].local_symbol_table = SYMBOL_TABLE.table[SYMBOL_TABLE.current_scope]
+    p[0].local_symbol_table = SYMBOL_TABLE.current_scope
     p[0].locals_size = SYMBOL_TABLE.leave_scope()
     FUNCTION_LEVEL.pop()
     p[0].entry.body = p[2]
@@ -2916,7 +2915,7 @@ def p_funcdeclforward(p):
         error(p.lineno(1), "duplicated declaration for function '%s'" % p[2].name)
 
     p[2].entry.forwarded = True
-    SYMBOL_TABLE.leave_scope()
+    SYMBOL_TABLE.leave_scope(show_warnings=False)
     FUNCTION_LEVEL.pop()
 
 
@@ -3090,7 +3089,7 @@ def p_param_definition(p):
         if param_def.class_ == CLASS.array:
             param_def.byref = True
         else:
-            param_def.byref = OPTIONS.byref
+            param_def.byref = OPTIONS.default_byref
 
 
 def p_param_def_array(p):
@@ -3199,32 +3198,41 @@ def p_preproc_line_require(p):
     arch.target.backend.REQUIRES.add(p[2])
 
 
-def p_preproc_line_option(p):
+def p_preproc_line_pragma_option(p):
     """ preproc_line : _PRAGMA ID EQ ID
                      | _PRAGMA ID EQ STRING
                      | _PRAGMA ID EQ INTEGER
     """
-    setattr(OPTIONS, p[2], p[4])
+    try:
+        setattr(OPTIONS, p[2], p[4])
+    except src.api.options.UndefinedOptionError:
+        src.api.errmsg.warning_ignoring_unknown_pragma(p.lineno(2), p[2])
 
 
-def p_preproc_line_push(p):
+def p_preproc_pragma_push(p):
     """ preproc_line : _PRAGMA _PUSH LP ID RP
     """
-    OPTIONS[p[4]].push()
+    try:
+        OPTIONS[p[4]].push()
+    except src.api.options.UndefinedOptionError:
+        src.api.errmsg.warning_ignoring_unknown_pragma(p.lineno(4), p[4])
 
 
-def p_preproc_line_pop(p):
+def p_preproc_pragma_pop(p):
     """ preproc_line : _PRAGMA _POP LP ID RP
     """
-    OPTIONS[p[4]].pop()
+    try:
+        OPTIONS[p[4]].pop()
+    except src.api.options.UndefinedOptionError:
+        src.api.errmsg.warning_ignoring_unknown_pragma(p.lineno(4), p[4])
 
 
 # region INTERNAL FUNCTIONS
-# ----------------------------------------
+# -------------------------------------------
 # INTERNAL BASIC Functions
-# These will be implemented in the TRADuctor
+# These will be implemented in the translator
 # module as a CALL to an ASM function
-# ----------------------------------------
+# -------------------------------------------
 
 def p_expr_usr(p):
     """ bexpr : USR bexpr %prec UMINUS

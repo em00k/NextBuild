@@ -15,11 +15,16 @@ from src.symbols.symbol_ import Symbol
 from src.symbols.type_ import Type
 
 from . import backend
+from .backend.runtime import Labels as RuntimeLabel
+
 from src import symbols
 
 from src.api.errors import InvalidOperatorError
 
 from .translatorinstvisitor import TranslatorInstVisitor
+
+from .backend.runtime import RUNTIME_LABELS
+from .backend.runtime import LABEL_REQUIRED_MODULES
 
 
 class TranslatorVisitor(TranslatorInstVisitor):
@@ -78,7 +83,7 @@ class TranslatorVisitor(TranslatorInstVisitor):
 
     @property
     def O_LEVEL(self):
-        return OPTIONS.optimization
+        return OPTIONS.optimization_level
 
     @staticmethod
     def TYPE(type_):
@@ -110,10 +115,24 @@ class TranslatorVisitor(TranslatorInstVisitor):
     def visit_ATTR_TMP(self, node):
         yield node.children[0]
         self.ic_fparam(node.children[0].type_, node.children[0].t)
-        self.ic_call(node.token, 0)  # Procedure call. Discard return
-        ifile = node.token.lower()
-        ifile = ifile[:ifile.index('_')]
-        backend.REQUIRES.add(ifile + '.asm')
+
+        label = {
+            'INK_TMP': RuntimeLabel.INK_TMP,
+            'PAPER_TMP': RuntimeLabel.PAPER_TMP,
+            'FLASH_TMP': RuntimeLabel.FLASH_TMP,
+            'BRIGHT_TMP': RuntimeLabel.BRIGHT_TMP,
+            'INVERSE_TMP': RuntimeLabel.INVERSE_TMP,
+            'OVER_TMP': RuntimeLabel.OVER_TMP,
+            'BOLD_TMP': RuntimeLabel.BOLD_TMP,
+            'ITALIC_TMP': RuntimeLabel.ITALIC_TMP
+        }[node.token]
+        self.runtime_call(label, 0)  # Procedure call. Discard return
+
+    def runtime_call(self, label: str, num: int):
+        assert label in RUNTIME_LABELS, f"Unknown label {label}"
+        super().ic_call(label, num)
+        if label in LABEL_REQUIRED_MODULES:
+            backend.REQUIRES.add(LABEL_REQUIRED_MODULES[label])
 
     # This function must be called before emit_strings
     def emit_data_blocks(self):
@@ -158,11 +177,13 @@ class TranslatorVisitor(TranslatorInstVisitor):
             self.ic_vard(table_.label, [str(len(table_.addresses))] + ['##' + x.mangled for x in table_.addresses])
 
     def _visit(self, node):
-        self.norm_attr()
         if isinstance(node, Symbol):
             __DEBUG__('Visiting {}'.format(node.token), 1)
             if node.token in self.ATTR_TMP:
                 return self.visit_ATTR_TMP(node)
+
+            if node.token not in self.ATTR and isinstance(node, symbols.SENTENCE):
+                self.norm_attr()
 
         return TranslatorInstVisitor._visit(self, node)
 
@@ -173,8 +194,7 @@ class TranslatorVisitor(TranslatorInstVisitor):
             return
 
         self.HAS_ATTR = False
-        self.ic_call('COPY_ATTR', 0)
-        backend.REQUIRES.add('copy_attr.asm')
+        self.runtime_call(RuntimeLabel.COPY_ATTR, 0)
 
     @staticmethod
     def traverse_const(node):

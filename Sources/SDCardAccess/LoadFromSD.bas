@@ -14,6 +14,7 @@ do
 	border 0
 	pause 100
 	
+	' this will show the debug error as the file does not exist
 	LoadSD("escreen.scr",16384,6912,0)
 	pause 100
 	border 2

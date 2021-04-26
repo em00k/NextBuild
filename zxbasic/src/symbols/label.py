@@ -9,24 +9,21 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
+from src.api import global_
+
 from src.api.constants import CLASS
 from .var import SymbolVAR
 from .symbol_ import Symbol
 
 
 class SymbolLABEL(SymbolVAR):
-    prefix = '__LABEL__'
+    prefix = '_'
 
     def __init__(self, name, lineno):
-        super(SymbolLABEL, self).__init__(name, lineno)
+        super().__init__(name, lineno)
+        self.mangled = f"{global_.LABELS_NAMESPACE}.{self.prefix}{name}"
         self.class_ = CLASS.label
         self._scope_owner = []  # list of nested functions containing this label (scope)
-
-    @property
-    def t(self):
-        """ t property is constant for labels
-        """
-        return self.prefix + self.name
 
     @property
     def accessed(self):
