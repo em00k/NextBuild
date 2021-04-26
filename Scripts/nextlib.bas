@@ -1,6 +1,6 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v7.3 - David Saphier / em00k 2021
+' NextLib v7.5 - David Saphier / em00k 2021
 ' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Daily 
 ' Matt Davies for help on the fastPLotL2 
 ' ---------------------------------------------------------
@@ -414,6 +414,9 @@ end asm
 #Define DisableMusic \
 	asm : ld a,2 : ld (sfxenablednl+1),a : end asm 
 
+
+
+
 asm 
 	M_GETSETDRV	equ $89
 	F_OPEN     	equ $9a
@@ -422,6 +425,7 @@ asm
 	F_WRITE    	equ $9e
 	F_SEEK     	equ $9f
 	F_STAT		equ $a1 
+	F_SIZE		equ $ac
 	FA_READ     	equ $01
 	FA_APPEND   	equ $06
 	FA_OVERWRITE	equ $0C
@@ -1537,7 +1541,8 @@ Sub LoadSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 		 ld de,.LABEL._filename
 		 ld a,(hl) : ld b,a : add hl,2 
  fnloop:		
-		 ldi :  djnz fnloop :  ldi :  xor a  :  ld (de),a 
+		 ldi :  djnz fnloop : ldi : 
+		 xor a: ld (de),a
 carryon:		 
 		
 		push ix	
@@ -1562,18 +1567,18 @@ carryon:
 		db M_GETSETDRV			; M_GETSETDRV equ $89
 		ld (filehandle),a
 
-		ld ix,.LABEL._filename
+		ld ix,.LABEL._filename 
 		call fileopen
 		ld a,(filehandle) 
-		or a
+		; or a
 		; bug in divmmc requries us to read a byte first 
 		; at thie point stack = offset 
 		; stack +2 = address 
 		; stack +4 = length to load 
 		
-		
+		ld a,(filehandle) 
 divfix:	
-		ld bc,1
+		ld bc,1					; FMODE_READ = #01
 		ld ix,0					
 		ESXDOS					; read a byte 
 		db F_READ				; read bytes 
@@ -1695,7 +1700,7 @@ Sub SaveSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 		db $89						; M_GETSETDRV = $89
 		ld (filehandle),a			; store filehandle from a to filehandle buffer 
 
-		ld ix,.LABEL._filename 	; load ix with filename buffer address
+		ld ix,.LABEL._filename 	; load ix with filename buffer address 
 		call fileopen				; open 
 		ld a,(filehandle) 			; make sure a had filehandel again 
 		;or a
@@ -2056,8 +2061,10 @@ sub fastcall FDoTile16(tile as ubyte, x as ubyte ,y as ubyte, bank as ubyte)
 	; en00k 2020 / David Saphier
 	PROC 
 	LOCAL notbank67,bigtiles, tbanks, smctilnum, outstack, l2320on, l2on
-		call _checkints
-		di 
+		#ifndef IM2 
+			call _checkints
+			di 
+		#endif 
 		exx 						;4 				; swap regs 
 		pop hl 						;10				; save ret address
 		exx							;4				; back to data  
@@ -2184,8 +2191,9 @@ outstack:
 		exx 						;4
 		push hl 					;11
 		exx 						;4 
-		ReenableInts
-		
+		#ifndef IM2
+			ReenableInts 
+		#endif 	
 	ENDP 
 	end asm 
 
@@ -3535,6 +3543,211 @@ Function fastcall WaitKey() as ubyte
 		shadowlayerbit:
 		db 0
 	end asm 
+	
+const BIT_UP as ubyte =4
+const BIT_DOWN as ubyte =5
+const BIT_LEFT as ubyte =6
+const BIT_RIGHT as ubyte =7
+const DIR_NONE as ubyte =%00000000
+const DIR_UP as ubyte =%00010000
+const DIR_DOWN as ubyte =%00100000
+const DIR_LEFT as ubyte =%01000000
+const DIR_RIGHT as ubyte =%10000000
+const DIR_UP_I as ubyte =%11101111
+const DIR_DOWN_I as ubyte =%11011111
+const DIR_LEFT_I as ubyte =%10111111
+const DIR_RIGHT_I as ubyte =%01111111
+const ULA_P_FE as ubyte =$FE
+const TIMEX_P_FF as ubyte =$FF
+const ZX128_MEMORY_P_7FFD as uinteger =$7FFD
+const ZX128_MEMORY_P_DFFD as uinteger =$DFFD
+const ZX128P3_MEMORY_P_1FFD as uinteger =$1FFD
+const AY_REG_P_FFFD as uinteger =$FFFD
+const AY_DATA_P_BFFD as uinteger =$BFFD
+const Z80_DMA_PORT_DATAGEAR as ubyte =$6B
+const Z80_DMA_PORT_MB02 as ubyte =$0B
+const DIVMMC_CONTROL_P_E3 as ubyte =$E3
+const SPI_CS_P_E7 as ubyte =$E7
+const SPI_DATA_P_EB as ubyte =$EB
+const KEMPSTON_MOUSE_X_P_FBDF as uinteger =$FBDF
+const KEMPSTON_MOUSE_Y_P_FFDF as uinteger =$FFDF
+const KEMPSTON_MOUSE_B_P_FADF as uinteger =$FADF
+const KEMPSTON_JOY1_P_1F as ubyte =$1F
+const KEMPSTON_JOY2_P_37 as ubyte =$37
+const TBBLUE_REGISTER_SELECT_P_243B as uinteger =$243B
+const TBBLUE_REGISTER_ACCESS_P_253B as uinteger =$253B
+const DAC_GS_COVOX_INDEX as ubyte =1
+const DAC_PENTAGON_ATM_INDEX as ubyte =2
+const DAC_SPECDRUM_INDEX as ubyte =3
+const DAC_SOUNDRIVE1_INDEX as ubyte =4
+const DAC_SOUNDRIVE2_INDEX as ubyte =5
+const DAC_COVOX_INDEX as ubyte =6
+const DAC_PROFI_COVOX_INDEX as ubyte =7
+const I2C_SCL_P_103B as uinteger =$103B
+const I2C_SDA_P_113B as uinteger =$113B
+const UART_TX_P_133B as uinteger =$133B
+const UART_RX_P_143B as uinteger =$143B
+const UART_CTRL_P_153B as uinteger =$153B
+const ZILOG_DMA_P_0B as ubyte =$0B
+const ZXN_DMA_P_6B as ubyte =$6B
+const LAYER2_ACCESS_P_123B as uinteger =$123B
+const LAYER2_ACCESS_WRITE_OVER_ROM as ubyte =$01
+const LAYER2_ACCESS_L2_ENABLED as ubyte =$02
+const LAYER2_ACCESS_READ_OVER_ROM as ubyte =$04
+const LAYER2_ACCESS_SHADOW_OVER_ROM as ubyte =$08
+const LAYER2_ACCESS_BANK_OFFSET as ubyte =$10
+const LAYER2_ACCESS_OVER_ROM_BANK_M as ubyte =$C0
+const LAYER2_ACCESS_OVER_ROM_BANK_0 as ubyte =$00
+const LAYER2_ACCESS_OVER_ROM_BANK_1 as ubyte =$40
+const LAYER2_ACCESS_OVER_ROM_BANK_2 as ubyte =$80
+const LAYER2_ACCESS_OVER_ROM_48K as ubyte =$C0
+const SPRITE_STATUS_SLOT_SELECT_P_303B as uinteger =$303B
+const SPRITE_STATUS_MAXIMUM_SPRITES as ubyte =$02
+const SPRITE_STATUS_COLLISION as ubyte =$01
+const SPRITE_SLOT_SELECT_PATTERN_HALF as ubyte =128
+const SPRITE_ATTRIBUTE_P_57 as ubyte =$57
+const SPRITE_PATTERN_P_5B as ubyte =$5B
+const TURBO_SOUND_CONTROL_P_FFFD as uinteger =$FFFD
+const MACHINE_ID_NR_00 as ubyte =$00
+const NEXT_VERSION_NR_01 as ubyte =$01
+const NEXT_RESET_NR_02 as ubyte =$02
+const MACHINE_TYPE_NR_03 as ubyte =$03
+const ROM_MAPPING_NR_04 as ubyte =$04
+const PERIPHERAL_1_NR_05 as ubyte =$05
+const PERIPHERAL_2_NR_06 as ubyte =$06
+const TURBO_CONTROL_NR_07 as ubyte =$07
+const PERIPHERAL_3_NR_08 as ubyte =$08
+const PERIPHERAL_4_NR_09 as ubyte =$09
+const PERIPHERAL_5_NR_0A as ubyte =$0A
+const NEXT_VERSION_MINOR_NR_0E as ubyte =$0E
+const ANTI_BRICK_NR_10 as ubyte =$10
+const VIDEO_TIMING_NR_11 as ubyte =$11
+const LAYER2_RAM_BANK_NR_12 as ubyte =$12
+const LAYER2_RAM_SHADOW_BANK_NR_13 as ubyte =$13
+const GLOBAL_TRANSPARENCY_NR_14 as ubyte =$14
+const SPRITE_CONTROL_NR_15 as ubyte =$15
+const LAYER2_XOFFSET_NR_16 as ubyte =$16
+const LAYER2_YOFFSET_NR_17 as ubyte =$17
+const CLIP_LAYER2_NR_18 as ubyte =$18
+const CLIP_SPRITE_NR_19 as ubyte =$19
+const CLIP_ULA_LORES_NR_1A as ubyte =$1A
+const CLIP_TILEMAP_NR_1B as ubyte =$1B
+const CLIP_WINDOW_CONTROL_NR_1C as ubyte =$1C
+const VIDEO_LINE_MSB_NR_1E as ubyte =$1E
+const VIDEO_LINE_LSB_NR_1F as ubyte =$1F
+const VIDEO_INTERUPT_CONTROL_NR_22 as ubyte =$22
+const VIDEO_INTERUPT_VALUE_NR_23 as ubyte =$23
+const ULA_XOFFSET_NR_26 as ubyte =$26
+const ULA_YOFFSET_NR_27 as ubyte =$27
+const HIGH_ADRESS_KEYMAP_NR_28 as ubyte =$28
+const LOW_ADRESS_KEYMAP_NR_29 as ubyte =$29
+const HIGH_DATA_TO_KEYMAP_NR_2A as ubyte =$2A
+const LOW_DATA_TO_KEYMAP_NR_2B as ubyte =$2B
+const DAC_B_MIRROR_NR_2C as ubyte =$2C
+const DAC_AD_MIRROR_NR_2D as ubyte =$2D
+const SOUNDDRIVE_DF_MIRROR_NR_2D as ubyte =$2D
+const DAC_C_MIRROR_NR_2E as ubyte =$2E
+const TILEMAP_XOFFSET_MSB_NR_2F as ubyte =$2F
+const TILEMAP_XOFFSET_LSB_NR_30 as ubyte =$30
+const TILEMAP_YOFFSET_NR_31 as ubyte =$31
+const LORES_XOFFSET_NR_32 as ubyte =$32
+const LORES_YOFFSET_NR_33 as ubyte =$33
+const SPRITE_ATTR_SLOT_SEL_NR_34 as ubyte =$34
+const SPRITE_ATTR0_NR_35 as ubyte =$35
+const SPRITE_ATTR1_NR_36 as ubyte =$36
+const SPRITE_ATTR2_NR_37 as ubyte =$37
+const SPRITE_ATTR3_NR_38 as ubyte =$38
+const SPRITE_ATTR4_NR_39 as ubyte =$39
+const PALETTE_INDEX_NR_40 as ubyte =$40
+const PALETTE_VALUE_NR_41 as ubyte =$41
+const PALETTE_FORMAT_NR_42 as ubyte =$42
+const PALETTE_CONTROL_NR_43 as ubyte =$43
+const PALETTE_VALUE_9BIT_NR_44 as ubyte =$44
+const TRANSPARENCY_FALLBACK_COL_NR_4A as ubyte =$4A
+const SPRITE_TRANSPARENCY_I_NR_4B as ubyte =$4B
+const TILEMAP_TRANSPARENCY_I_NR_4C as ubyte =$4C
+const MMU0_0000_NR_50 as ubyte =$50
+const MMU1_2000_NR_51 as ubyte =$51
+const MMU2_4000_NR_52 as ubyte =$52
+const MMU3_6000_NR_53 as ubyte =$53
+const MMU4_8000_NR_54 as ubyte =$54
+const MMU5_A000_NR_55 as ubyte =$55
+const MMU6_C000_NR_56 as ubyte =$56
+const MMU7_E000_NR_57 as ubyte =$57
+const COPPER_DATA_NR_60 as ubyte =$60
+const COPPER_CONTROL_LO_NR_61 as ubyte =$61
+const COPPER_CONTROL_HI_NR_62 as ubyte =$62
+const COPPER_DATA_16B_NR_63 as ubyte =$63
+const VIDEO_LINE_OFFSET_NR_64 as ubyte =$64
+const ULA_CONTROL_NR_68 as ubyte =$68
+const DISPLAY_CONTROL_NR_69 as ubyte =$69
+const LORES_CONTROL_NR_6A as ubyte =$6A
+const TILEMAP_CONTROL_NR_6B as ubyte =$6B
+const TILEMAP_DEFAULT_ATTR_NR_6C as ubyte =$6C
+const TILEMAP_BASE_ADR_NR_6E as ubyte =$6E
+const TILEMAP_GFX_ADR_NR_6F as ubyte =$6F
+const LAYER2_CONTROL_NR_70 as ubyte =$70
+const LAYER2_XOFFSET_MSB_NR_71 as ubyte =$71
+const SPRITE_ATTR0_INC_NR_75 as ubyte =$75
+const SPRITE_ATTR1_INC_NR_76 as ubyte =$76
+const SPRITE_ATTR2_INC_NR_77 as ubyte =$77
+const SPRITE_ATTR3_INC_NR_78 as ubyte =$78
+const SPRITE_ATTR4_INC_NR_79 as ubyte =$79
+const USER_STORAGE_0_NR_7F as ubyte =$7F
+const EXPANSION_BUS_ENABLE_NR_80 as ubyte =$80
+const EXPANSION_BUS_CONTROL_NR_81 as ubyte =$81
+const INTERNAL_PORT_DECODING_0_NR_82 as ubyte =$82
+const INTERNAL_PORT_DECODING_1_NR_83 as ubyte =$83
+const INTERNAL_PORT_DECODING_2_NR_84 as ubyte =$84
+const INTERNAL_PORT_DECODING_3_NR_85 as ubyte =$85
+const EXPANSION_BUS_DECODING_0_NR_86 as ubyte =$86
+const EXPANSION_BUS_DECODING_1_NR_87 as ubyte =$87
+const EXPANSION_BUS_DECODING_2_NR_88 as ubyte =$88
+const EXPANSION_BUS_DECODING_3_NR_89 as ubyte =$89
+const EXPANSION_BUS_PROPAGATE_NR_8A as ubyte =$8A
+const ALTERNATE_ROM_NR_8C as ubyte =$8C
+const ZX_MEM_MAPPING_NR_8E as ubyte =$8E
+const PI_GPIO_OUT_ENABLE_0_NR_90 as ubyte =$90
+const PI_GPIO_OUT_ENABLE_1_NR_91 as ubyte =$91
+const PI_GPIO_OUT_ENABLE_2_NR_92 as ubyte =$92
+const PI_GPIO_OUT_ENABLE_3_NR_93 as ubyte =$93
+const PI_GPIO_0_NR_98 as ubyte =$98
+const PI_GPIO_1_NR_99 as ubyte =$99
+const PI_GPIO_2_NR_9A as ubyte =$9A
+const PI_GPIO_3_NR_9B as ubyte =$9B
+const PI_PERIPHERALS_ENABLE_NR_A0 as ubyte =$A0
+const PI_I2S_AUDIO_CONTROL_NR_A2 as ubyte =$A2
+const ESP_WIFI_GPIO_OUTPUT_NR_A8 as ubyte =$A8
+const ESP_WIFI_GPIO_NR_A9 as ubyte =$A9
+const EXTENDED_KEYS_0_NR_B0 as ubyte =$B0
+const EXTENDED_KEYS_1_NR_B1 as ubyte =$B1
+const DEBUG_LED_CONTROL_NR_FF as ubyte =$FF
+const MEM_ROM_CHARS_3C00 as uinteger =$3C00
+const MEM_ZX_SCREEN_4000 as uinteger =$4000
+const MEM_ZX_ATTRIB_5800 as uinteger =$5800
+const MEM_LORES0_4000 as uinteger =$4000
+const MEM_LORES1_6000 as uinteger =$6000
+const MEM_TIMEX_SCR0_4000 as uinteger =$4000
+const MEM_TIMEX_SCR1_6000 as uinteger =$6000
+const COPPER_NOOP as ubyte =%00000000
+const COPPER_WAIT_H as ubyte =%10000000
+const COPPER_HALT_B as ubyte =$FF
+const DMA_RESET as ubyte =$C3
+const DMA_RESET_PORT_A_TIMING as ubyte =$C7
+const DMA_RESET_PORT_B_TIMING as ubyte =$CB
+const DMA_LOAD as ubyte =$CF
+const DMA_CONTINUE as ubyte =$D3
+const DMA_DISABLE_INTERUPTS as ubyte =$AF
+const DMA_ENABLE_INTERUPTS as ubyte =$AB
+const DMA_RESET_DISABLE_INTERUPTS as ubyte =$A3
+const DMA_ENABLE_AFTER_RETI as ubyte =$B7
+const DMA_READ_STATUS_BYTE as ubyte =$BF
+const DMA_REINIT_STATUS_BYTE as ubyte =$8B
+const DMA_START_READ_SEQUENCE as ubyte =$A7
+const DMA_FORCE_READY as ubyte =$B3
+const DMA_DISABLE as ubyte =$83
+const DMA_ENABLE as ubyte =$87
+const DMA_READ_MASK_FOLLOWS as ubyte =$BB
 
 #pragma pop(case_insensitive)
 
