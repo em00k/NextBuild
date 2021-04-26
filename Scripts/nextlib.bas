@@ -1425,7 +1425,7 @@ ldadd:	ld c,(ix+6) : ld b,(ix+7) 				; address
 		nextreg $52,a
 		
 		push hl : pop ix 
-		;ld ix,__LABEL__filename
+		;ld ix,.LABEL._filename
 		ld (nameaddressfname+2),hl 
 		
 initdrive:
@@ -1497,7 +1497,7 @@ nameaddress:
 		ld b,60
 		ld ix,failed : call printrst
 nameaddressfname:		
-		ld ix,__LABEL__filename : call printrst
+		ld ix,.LABEL._filename : call printrst
 	mloop:
 		ld a,0 : out (254),a : ld a,2 : out (254),a  : djnz mloop : jp mloop
 printrst:
@@ -1534,7 +1534,7 @@ Sub LoadSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 		LOCAL initdrive, filehandle,error, fileopen, divfix, fileseek, fileread, loadsdout
 		LOCAL fnloop
 		 ld h,(IX+5) : ld l,(IX+4)
-		 ld de,__LABEL__filename
+		 ld de,.LABEL._filename
 		 ld a,(hl) : ld b,a : add hl,2 
  fnloop:		
 		 ldi :  djnz fnloop :  ldi :  xor a  :  ld (de),a 
@@ -1562,7 +1562,7 @@ carryon:
 		db M_GETSETDRV			; M_GETSETDRV equ $89
 		ld (filehandle),a
 
-		ld ix,.__LABEL__filename 
+		ld ix,.LABEL._filename
 		call fileopen
 		ld a,(filehandle) 
 		or a
@@ -1613,7 +1613,7 @@ filesize:
 		ld b,60
 		ld ix,failed
 		call printrst
-		ld ix,__LABEL__filename
+		ld ix,.LABEL._filename
 		call printrst
 	mloop:
 		ld a,0
@@ -1695,7 +1695,7 @@ Sub SaveSD(byval filen as String,ByVal address as uinteger,ByVal length as uinte
 		db $89						; M_GETSETDRV = $89
 		ld (filehandle),a			; store filehandle from a to filehandle buffer 
 
-		ld ix,.__LABEL__filename 	; load ix with filename buffer address 
+		ld ix,.LABEL._filename 	; load ix with filename buffer address
 		call fileopen				; open 
 		ld a,(filehandle) 			; make sure a had filehandel again 
 		;or a

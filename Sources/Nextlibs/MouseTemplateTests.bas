@@ -103,9 +103,9 @@ end sub
 Sub RightClickTwo()
 	asm 
 		;BREAK 
-		ld hl,.__LABEL__ScreenData
+		ld hl,.LABEL._ScreenData
 		ld (hl),0
-		ld de,__LABEL__ScreenData+1
+		ld de,.LABEL._ScreenData+1
 		ld bc,42*24
 		ldir 
 	end asm 
