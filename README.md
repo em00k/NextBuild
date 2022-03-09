@@ -6,9 +6,9 @@ Please report any bugs and I will try to fix them.
 
 http://zxbasic.uk/nextbuild/
 
-Latest ZXBasic Compiler included v15.1.0
-Now generates NEX & bin files 
-Scripts rewritten in python so will work on Win, Mac & Linux
+- Latest ZXBasic Compiler included v1.6.4
+- Now generates NEX & bin files 
+- Scripts rewritten in python so will work on Win, Mac & Linux
 
 **VSCode will install the NextBuild VSCode extension**
 
