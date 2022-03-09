@@ -2,8 +2,6 @@
 
 NextBuild : A suite of tools based on Boriel's ZX Basic Compiler targetting the ZX Spectrum Next
 
-## Since January release of VSCode the syntax hover help does not work correctly - use a release from before JAN22 ##
-
 Please report any bugs and I will try to fix them.
 
 http://zxbasic.uk/nextbuild/
