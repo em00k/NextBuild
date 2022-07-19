@@ -3531,11 +3531,13 @@ Function fastcall WaitKey() as ubyte
 		DEFS 255,0
 	endfilename:	
 	end asm 
-
-	asm 
-	nbtempstackstart:
-		ld sp,nbtempstackstart
-	end asm 
+	
+	#ifndef NOSP 
+		asm 
+		nbtempstackstart:
+			ld sp,endfilename-2
+		end asm 
+	#endif 
 
 	asm 
 		sfxenablednl:
