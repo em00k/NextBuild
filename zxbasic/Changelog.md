@@ -1,3 +1,82 @@
+[v1.17.1](https://github.com/boriel/zxbasic/tree/v1.17.1)
+===
++ ! Fixed a bug when saving config files for the 1st time
++ ! Fixed a bug with MUL in ZX Next
++ Code refacts and optimizations
++ Little updates to NextCreator tool
++ Allow declaring CONST strings
++ Fixes WindowPaint listing in the Wiki
+
+[v1.17.0](https://github.com/boriel/zxbasic/tree/v1.17.0)
+===
++ ! Fixed some bugs and improved stability
++ ! Fixed and improved the peep hole optimizer
++ Compiling speed increased
++ Fixes bug with SAVE and USR
++ Internal code refacts
++ All routines using the screen (PLOT, DRAW, PRINT, SCROLL...)</br>
+  now use the screen back buffer! So you can draw in other address of RAM.
++ Requires Python 3.10+
++ Allow setting the HEAP address with --heap-address=0xNNNN
++ Fixes bugs with zxbpp (preprocessor) and zxbasm (assembler)
++ Updated documentation and README.md (thx to @Chronomantic)
++ Add PutChars() library function
++ Add ClearBox() library function
++ Add PutTile() library function
+
+[v1.16.4](https://github.com/boriel/zxbasic/tree/v1.16.4)
+===
++ ! Fixed some bugs and improved stability
+
+[v1.16.3](https://github.com/boriel/zxbasic/tree/v1.16.3)
+===
++ ! Fixed some bugs in the compiler
++ ZXBPP (preprocessor) now allows boolean conditions
++ ZXBPP (preprocessor) now allows numeric conditions
+
+[v1.16.2](https://github.com/boriel/zxbasic/tree/v1.16.2)
+===
++ ! Fixed bug with assembler and temporary labels
++ ! Fixed bug with drawing primitives (PLOT, DRAW, CIRCLE)
+* Improved optimization for binary operators (*, +)
+
+[v1.16.1](https://github.com/boriel/zxbasic/tree/v1.16.1)
+===
++ minor bugfixes in the assembler and the testing suite
++ optimize PRINT routine (faster, smaller)
+
+[v1.16.0](https://github.com/boriel/zxbasic/tree/v1.16.0)
+===
++ Added optional parameters
++ Added keyword args
++ Allow temporary labels (1b, 1f) in the assembler
++ ! Fixed several bugs in the assembler and compiler
++ Produces better code for multiplications in ZX Next
++ zx0 compression library updated (thx to Einar Saukas)
+
+[v1.15.2](https://github.com/boriel/zxbasic/tree/v1.15.2)
+===
++ ! Fixed a bug with command line options
++ ! Fixed a bug with some saved options being ignored
+
+
+[v1.15.1](https://github.com/boriel/zxbasic/tree/v1.15.1)
+===
++ ! Fixed a bug in the peephole optimizer (-O4)
++ Implemented #include MACRO
++ Added functions ltrim/trim/rtrim to <string.bas>
++ Some libraries rearranged.
+
+
+[v1.15.0](https://github.com/boriel/zxbasic/tree/v1.15.0)
+===
++ ! Fixed bugs and improved stability, specially with the optimizer
++ Variables and functions now allow underscore character
+* Peephole optimizer is now smarter
+* Compiler now allows config files to avoid repearing cmdline flags
+* Added #pragma once
+
+
 [v1.14.1](https://github.com/boriel/zxbasic/tree/v1.14.1)
 ===
 + Fixed bugs and improved stability
@@ -11,7 +90,7 @@
   preprocessor
 + Warnings and error messages improved with codes
 + Warnings can now be silenced with -Wxxx (i.e. -W150)
-+ Improved error reporting (files and line numbers)  
++ Improved error reporting (files and line numbers)
 + Improved code generation and optimization
 + Speed compilation increased by 100%!
 + ! Fixed many bugs and improved stability
@@ -154,7 +233,7 @@
 + ! Bugfix: Setting multiple `ORG` within ASM blocks crashed the compiler. Fixed.
 + Change code style to pass more flake8 tests
 + Add `--append-binary` command line flag to append binaries to tape file
-+ Add `--append-headless-binary` cmdlie flag to do like the above, but headless. 
++ Add `--append-headless-binary` cmdlie flag to do like the above, but headless.
 
 [v1.8.9](https://github.com/boriel/zxbasic/tree/v1.8.9)
 ===
@@ -258,7 +337,7 @@
 ===
 + Added many more drawing primitives for Radastan Mode
 + Added instructions `ON .. GOTO` and `ON .. GOSUB`
-+ Added UART library (by yomboprime) for serial communication 
++ Added UART library (by yomboprime) for serial communication
 + ! Several bugfixes and minor errors and better stability
 + Better code generation
 + Allows array initialization with @label references

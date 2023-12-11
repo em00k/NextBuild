@@ -1,0 +1,29 @@
+Current known issues/bugs
+-------------------------
+F3 reset broken in NEXT rom mode...
+DMA PreScaler not working right
+Trigger NMI on key not working right (control+f2) needs "enNextMf.rom"
+
+
+Wishlist
+---------
+Tilemap FALLBACK colour....
+ULA+Tilemap Stencil mode
+You will only ever see CYAN when ULA is ON and STENCIL is OFF ... STENCIL kills border color defaulting to 0x4A
+(CYAN comes from ld a,5 : out (254),a)
+
+Smooth scroll timex (hires/colour) screen
+ULA off means lowres/times is also off (Bit 7 disabled all TIMEX modes, 128K shadow, LoRes, ULA but not the BORDER)
+core id is out of date too, should be 3.01.03
+
+Default INI file for options
+Save memory from debugger
+Realtime Clock
+Fix mouse on OS under Mono (*OSX OpenTK has a bug in it, stopping this for now)
+Assosiate .NEX files with #CSpect on windows
+"Step Out" in the debugger (break on RET)
+Source level debugging
+Next register display/Change
+Sprite register display/change
+AY Register display/change
+640x256x4bpp still to be added

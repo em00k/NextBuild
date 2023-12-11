@@ -1,38 +1,32 @@
 #!/usr/bin/env python3
+from __future__ import annotations
 
 import os
-
-from typing import List
+from typing import TYPE_CHECKING
 
 import src.api.config
 import src.api.global_ as gl
-
 from src import arch
-
-from src.api.utils import open_file
-from src.api.config import OPTIONS
-from src.zxbc import args_parser
 from src.api import errmsg
-from src.api import debug
-from src.zxbpp import zxbpp
-from src.zxbc import zxbparser
+from src.api.config import OPTIONS
+from src.api.utils import open_file
+from src.zxbc import args_parser
 
-__all__ = [
-    'FileType',
-    'parse_options'
-]
+if TYPE_CHECKING:
+    from argparse import Namespace
+
+__all__ = "FileType", "parse_options", "set_option_defines"
 
 
 class FileType:
-    ASM = 'asm'
-    IC = 'ic'
-    TAP = 'tap'
-    TZX = 'tzx'
+    ASM = "asm"
+    IC = "ic"
+    TAP = "tap"
+    TZX = "tzx"
 
 
-def parse_options(args: List[str] = None):
-    """ Parses command line options and setup global Options container
-    """
+def parse_options(args: list[str] | None = None) -> Namespace:
+    """Parses command line options and setup global Options container"""
     parser = args_parser.parser()
     options = parser.parse_args(args=args)
 
@@ -66,7 +60,6 @@ def parse_options(args: List[str] = None):
 
     if options.arch not in arch.AVAILABLE_ARCHITECTURES:
         parser.error(f"Invalid architecture '{options.arch}'")
-        return 2
 
     OPTIONS.architecture = options.arch
 
@@ -76,9 +69,7 @@ def parse_options(args: List[str] = None):
     duplicated_options = [f"W{x}" for x in enabled_warnings.intersection(disabled_warnings)]
 
     if duplicated_options:
-        parser.error(f"Warning(s) {', '.join(duplicated_options)} cannot be enabled "
-                     f"and disabled simultaneously")
-        return 2
+        parser.error(f"Warning(s) {', '.join(duplicated_options)} cannot be enabled " f"and disabled simultaneously")
 
     for warn_code in enabled_warnings:
         errmsg.enable_warning(warn_code)
@@ -92,34 +83,33 @@ def parse_options(args: List[str] = None):
     if OPTIONS.org is None:
         parser.error(f"Invalid --org option '{options.org}'")
 
+    OPTIONS.heap_address = (
+        OPTIONS.heap_address if options.heap_address is None else src.api.utils.parse_int(options.heap_address)
+    )
+
     if options.defines:
         for i in options.defines:
-            macro = list(i.split('=', 1))
+            macro = list(i.split("=", 1))
             name = macro[0]
-            val = ''.join(macro[1:])
+            val = "".join(macro[1:])
             OPTIONS.__DEFINES[name] = val
-            zxbpp.ID_TABLE.define(name, value=val, lineno=0)
 
     if OPTIONS.sinclair:
         OPTIONS.array_base = 1
         OPTIONS.string_base = 1
-        OPTIONS.strictBool = True
+        OPTIONS.strict_bool = True
         OPTIONS.case_insensitive = True
 
     OPTIONS.case_insensitive = options.ignore_case
-    debug.ENABLED = OPTIONS.debug_level > 0
 
     if options.basic and not options.tzx and not options.tap:
-        parser.error('Option --BASIC and --autorun requires --tzx or tap format')
-        return 4
+        parser.error("Option --BASIC and --autorun requires --tzx or tap format")
 
     if options.append_binary and not options.tzx and not options.tap:
-        parser.error('Option --append-binary needs either --tap or --tzx')
-        return 5
+        parser.error("Option --append-binary needs either --tap or --tzx")
 
     if options.asm and options.memory_map:
-        parser.error('Option --asm and --mmap cannot be used together')
-        return 6
+        parser.error("Option --asm and --mmap cannot be used together")
 
     OPTIONS.use_basic_loader = options.basic
     OPTIONS.autorun = options.autorun
@@ -136,29 +126,30 @@ def parse_options(args: List[str] = None):
     args = [options.PROGRAM]
     if not os.path.exists(options.PROGRAM):
         parser.error("No such file or directory: '%s'" % args[0])
-        return 2
 
-    if OPTIONS.memory_check:
-        OPTIONS.__DEFINES['__MEMORY_CHECK__'] = ''
-        zxbpp.ID_TABLE.define('__MEMORY_CHECK__', lineno=0)
-
-    if OPTIONS.array_check:
-        OPTIONS.__DEFINES['__CHECK_ARRAY_BOUNDARY__'] = ''
-        zxbpp.ID_TABLE.define('__CHECK_ARRAY_BOUNDARY__', lineno=0)
-
-    if OPTIONS.enable_break:
-        OPTIONS.__DEFINES['__ENABLE_BREAK__'] = ''
-        zxbpp.ID_TABLE.define('__ENABLE_BREAK__', lineno=0)
+    set_option_defines()
 
     OPTIONS.include_path = options.include_path
-    OPTIONS.input_filename = zxbparser.FILENAME = os.path.basename(args[0])
+    OPTIONS.input_filename = os.path.basename(args[0])
 
     if not OPTIONS.output_filename:
-        OPTIONS.output_filename = \
-            os.path.splitext(os.path.basename(OPTIONS.input_filename))[0] + os.path.extsep + \
-            OPTIONS.output_file_type
+        OPTIONS.output_filename = (
+            os.path.splitext(os.path.basename(OPTIONS.input_filename))[0] + os.path.extsep + OPTIONS.output_file_type
+        )
 
     if OPTIONS.stderr_filename:
-        OPTIONS.stderr = open_file(OPTIONS.stderr_filename, 'wt', 'utf-8')
+        OPTIONS.stderr = open_file(OPTIONS.stderr_filename, "wt", "utf-8")
 
     return options
+
+
+def set_option_defines() -> None:
+    """Sets some macros automatically, according to options"""
+    if OPTIONS.memory_check:
+        OPTIONS.__DEFINES["__MEMORY_CHECK__"] = ""
+
+    if OPTIONS.array_check:
+        OPTIONS.__DEFINES["__CHECK_ARRAY_BOUNDARY__"] = ""
+
+    if OPTIONS.enable_break:
+        OPTIONS.__DEFINES["__ENABLE_BREAK__"] = ""

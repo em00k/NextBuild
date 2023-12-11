@@ -1,0 +1,17 @@
+;; Removes useless operation
+;; Tries to guess if the result of the operation LD, OR, AND, XOR, ADC, ADD, SBC is later used
+
+OLEVEL: 4
+OFLAG: 109
+
+REPLACE {{
+  $1 $2, $3
+}}
+
+IF {{
+($2 <> sp) && ($2 <> ix) && !IS_REQUIRED($2) &&
+ ($1 == ld || (!IS_REQUIRED(f) && ($1 == add || $1 == adc || $1 == sbc)))
+}}
+
+WITH {{
+}}

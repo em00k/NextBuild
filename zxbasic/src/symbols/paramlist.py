@@ -9,14 +9,15 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
-from .symbol_ import Symbol
+from src.symbols.id_.interface import SymbolIdABC as SymbolID
+from src.symbols.symbol_ import Symbol
 
 
 class SymbolPARAMLIST(Symbol):
-    """ Defines a list of parameters definitions in a function header
-    """
+    """Defines a list of parameters definitions in a function header"""
+
     def __init__(self, *params):
-        super(SymbolPARAMLIST, self).__init__(*params)
+        super().__init__(*params)
         self.size = 0
 
     def __getitem__(self, key):
@@ -28,9 +29,13 @@ class SymbolPARAMLIST(Symbol):
     def __len__(self):
         return len(self.children)
 
+    def __iter__(self):
+        for child in self.children:
+            yield child
+
     @classmethod
-    def make_node(cls, node, *params):
-        """ This will return a node with a param_list
+    def make_node(cls, node, *params: list[SymbolID]):
+        """This will return a node with a param_list
         (declared in a function declaration)
         Parameters:
             -node: A SymbolPARAMLIST instance or None
@@ -39,19 +44,19 @@ class SymbolPARAMLIST(Symbol):
         if node is None:
             node = cls()
 
-        if node.token != 'PARAMLIST':
+        if node.token != "PARAMLIST":
             return cls.make_node(None, node, *params)
 
         for i in params:
             if i is not None:
-                node.appendChild(i)
+                assert i.t
+                node.append_child(i)
 
         return node
 
-    def appendChild(self, param):
-        """ Overrides base class.
-        """
-        Symbol.appendChild(self, param)
-        if param.offset is None:
-            param.offset = self.size
+    def append_child(self, param):
+        """Overrides base class."""
+        Symbol.append_child(self, param)
+        if param.ref.offset is None:
+            param.ref.offset = self.size
             self.size += param.size

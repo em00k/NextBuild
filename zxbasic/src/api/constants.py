@@ -9,256 +9,208 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
+import enum
 import os
+from typing import Optional, Union
 
 from .decorator import classproperty
-
 
 # -------------------------------------------------
 # Global constants
 # -------------------------------------------------
 
 # Path to main ZX Basic compiler executable
-ZXBASIC_ROOT = os.path.abspath(os.path.join(
-    os.path.abspath(os.path.dirname(os.path.abspath(__file__))), os.path.pardir)
+ZXBASIC_ROOT = os.path.abspath(
+    os.path.join(os.path.abspath(os.path.dirname(os.path.abspath(__file__))), os.path.pardir)
 )
+
 
 # ----------------------------------------------------------------------
 # Class enums
 # ----------------------------------------------------------------------
 
 
-class CLASS(object):
-    """ Enums class constants
-    """
-    unknown = 'unknown'  # 0
-    var = 'var'  # 1  # scalar variable
-    array = 'array'  # 2  # array variable
-    function = 'function'  # 3  # function
-    label = 'label'  # 4 Labels
-    const = 'const'  # 5  # constant literal value e.g. 5 or "AB"
-    sub = 'sub'  # 6  # subroutine
-    type_ = 'type'  # 7  # type
+@enum.unique
+class CLASS(str, enum.Enum):
+    """Enums class constants"""
 
-    _CLASS_NAMES = {
-        unknown: '(unknown)',
-        var: 'var',
-        array: 'array',
-        function: 'function',
-        label: 'label',
-        const: 'const',
-        sub: 'sub',
-        type_: 'type'
-    }
+    unknown = "unknown"  # 0
+    var = "var"  # 1  # scalar variable
+    array = "array"  # 2  # array variable
+    function = "function"  # 3  # function
+    label = "label"  # 4 Labels
+    const = "const"  # 5  # constant literal value e.g. 5 or "AB"
+    sub = "sub"  # 6  # subroutine
+    type = "type"  # 7  # type
 
     @classproperty
     def classes(cls):
-        return (cls.unknown, cls.var, cls.array, cls.function, cls.sub,
-                cls.const, cls.label)
+        return cls.unknown, cls.var, cls.array, cls.function, cls.sub, cls.const, cls.label
 
     @classmethod
-    def is_valid(cls, class_):
-        """ Whether the given class is
+    def is_valid(cls, class_: Union[str, "CLASS"]):
+        """Whether the given class is
         valid or not.
         """
-        return class_ in cls.classes
+        return class_ in set(CLASS)
 
     @classmethod
-    def to_string(cls, class_):
+    def to_string(cls, class_: "CLASS"):
         assert cls.is_valid(class_)
-        return cls._CLASS_NAMES[class_]
+        return class_.value
 
 
-class ARRAY(object):
-    """ Enums array constants
-    """
+class ARRAY:
+    """Enums array constants"""
+
     bound_size = 2  # This might change depending on arch, program, etc..
     bound_count = 2  # Size of bounds counter
     array_type_size = 1  # Size of array type
 
 
-class TYPE(object):
-    """ Enums type constants
-    """
-    auto = unknown = None
-    byte_ = 1
+@enum.unique
+class TYPE(enum.IntEnum):
+    """Enums primary type constants"""
+
+    unknown = 0
+    byte = 1
     ubyte = 2
     integer = 3
     uinteger = 4
-    long_ = 5
+    long = 5
     ulong = 6
     fixed = 7
-    float_ = 8
+    float = 8
     string = 9
 
-    TYPE_SIZES = {
-        byte_: 1, ubyte: 1,
-        integer: 2, uinteger: 2,
-        long_: 4, ulong: 4,
-        fixed: 4, float_: 5,
-        string: 2, unknown: 0
-    }
-
-    TYPE_NAMES = {
-        byte_: 'byte', ubyte: 'ubyte',
-        integer: 'integer', uinteger: 'uinteger',
-        long_: 'long', ulong: 'ulong',
-        fixed: 'fixed', float_: 'float',
-        string: 'string', unknown: 'none'
-    }
+    @classmethod
+    def type_size(cls, type_: "TYPE"):
+        type_sizes = {
+            cls.byte: 1,
+            cls.ubyte: 1,
+            cls.integer: 2,
+            cls.uinteger: 2,
+            cls.long: 4,
+            cls.ulong: 4,
+            cls.fixed: 4,
+            cls.float: 5,
+            cls.string: 2,
+            cls.unknown: 0,
+        }
+        return type_sizes[type_]
 
     @classproperty
     def types(cls):
-        return tuple(cls.TYPE_SIZES.keys())
+        return set(TYPE)
 
     @classmethod
-    def size(cls, type_):
-        return cls.TYPE_SIZES.get(type_, None)
+    def size(cls, type_: "TYPE"):
+        return cls.type_size(type_)
 
     @classproperty
     def integral(cls):
-        return (cls.byte_, cls.ubyte, cls.integer, cls.uinteger,
-                cls.long_, cls.ulong)
+        return {cls.byte, cls.ubyte, cls.integer, cls.uinteger, cls.long, cls.ulong}
 
     @classproperty
     def signed(cls):
-        return (cls.byte_, cls.integer, cls.long_, cls.fixed, cls.float_)
+        return {cls.byte, cls.integer, cls.long, cls.fixed, cls.float}
 
     @classproperty
     def unsigned(cls):
-        return (cls.ubyte, cls.uinteger, cls.ulong)
+        return {cls.ubyte, cls.uinteger, cls.ulong}
 
     @classproperty
     def decimals(cls):
-        return (cls.fixed, cls.float_)
+        return {cls.fixed, cls.float}
 
     @classproperty
     def numbers(cls):
-        return tuple(list(cls.integral) + list(cls.decimals))
+        return set(cls.integral) | set(cls.decimals)
 
     @classmethod
-    def is_valid(cls, type_):
-        """ Whether the given type is
+    def is_valid(cls, type_: "TYPE"):
+        """Whether the given type is
         valid or not.
         """
         return type_ in cls.types
 
     @classmethod
-    def is_signed(cls, type_):
+    def is_signed(cls, type_: "TYPE"):
         return type_ in cls.signed
 
     @classmethod
-    def is_unsigned(cls, type_):
+    def is_unsigned(cls, type_: "TYPE"):
         return type_ in cls.unsigned
 
     @classmethod
-    def to_signed(cls, type_):
-        """ Return signed type or equivalent
-        """
+    def to_signed(cls, type_: "TYPE"):
+        """Return signed type or equivalent"""
         if type_ in cls.unsigned:
-            return {TYPE.ubyte: TYPE.byte_,
-                    TYPE.uinteger: TYPE.integer,
-                    TYPE.ulong: TYPE.long_}[type_]
+            return {TYPE.ubyte: TYPE.byte, TYPE.uinteger: TYPE.integer, TYPE.ulong: TYPE.long}[type_]
         if type_ in cls.decimals or type_ in cls.signed:
             return type_
         return cls.unknown
 
-    @classmethod
-    def to_string(cls, type_):
-        """ Return ID representation (string) of a type
-        """
-        return cls.TYPE_NAMES[type_]
+    @staticmethod
+    def to_string(type_: "TYPE"):
+        """Return ID representation (string) of a type"""
+        return type_.name
 
-    @classmethod
-    def to_type(cls, typename):
-        """ Converts a type ID to name. On error returns None
-        """
-        NAME_TYPES = {cls.TYPE_NAMES[x]: x for x in cls.TYPE_NAMES}
-        return NAME_TYPES.get(typename, None)
+    @staticmethod
+    def to_type(typename: str) -> Optional["TYPE"]:
+        """Converts a type ID to name. On error returns None"""
+        for t in TYPE:
+            if t.name == typename:
+                return t
 
-
-class SCOPE(object):
-    """ Enum scopes
-    """
-    unknown = None
-    global_ = 'global'
-    local = 'local'
-    parameter = 'parameter'
-
-    _names = {
-        unknown: 'unknown',
-        global_: 'global',
-        local: 'local',
-        parameter: 'parameter'
-    }
-
-    @classmethod
-    def is_valid(cls, scope):
-        return cls._names.get(scope, None) is not None
-
-    @classmethod
-    def to_string(cls, scope):
-        assert cls.is_valid(scope)
-        return cls._names[scope]
+        return None
 
 
-class KIND(object):
-    """ Enum kind
-    """
-    unknown = None
-    var = 'var'
-    function = 'function'
-    sub = 'sub'
-    type_ = 'type'
+@enum.unique
+class SCOPE(str, enum.Enum):
+    """Enum scopes"""
 
-    _NAMES = {
-        unknown: '(unknown)',
-        var: 'variable',
-        function: 'function',
-        sub: 'subroutine',
-        type_: 'type'
-    }
+    global_ = "global"
+    local = "local"
+    parameter = "parameter"
 
-    @classmethod
-    def is_valid(cls, kind):
-        return cls._NAMES.get(kind, None) is not None
+    @staticmethod
+    def is_valid(scope: Union[str, "SCOPE"]):
+        return scope in set(SCOPE)
 
-    @classmethod
-    def to_string(cls, kind):
-        assert cls.is_valid(kind)
-        return cls._NAMES.get(kind)
+    @staticmethod
+    def to_string(scope: "SCOPE"):
+        assert SCOPE.is_valid(scope)
+        return scope.value
 
 
-class CONVENTION(object):
-    unknown = None
-    fastcall = '__fastcall__'
-    stdcall = '__stdcall__'
+@enum.unique
+class CONVENTION(str, enum.Enum):
+    unknown = "unknown"
+    fastcall = "__fastcall__"
+    stdcall = "__stdcall__"
 
-    _NAMES = {
-        unknown: '(unknown)',
-        fastcall: '__fastcall__',
-        stdcall: '__stdcall__'
-    }
+    @staticmethod
+    def is_valid(convention: Union[str, "CONVENTION"]):
+        return convention in set(CONVENTION)
 
-    @classmethod
-    def is_valid(cls, convention):
-        return cls._NAMES.get(convention, None) is not None
-
-    @classmethod
-    def to_string(cls, convention):
-        assert cls.is_valid(convention)
-        return cls._NAMES[convention]
+    @staticmethod
+    def to_string(convention: "CONVENTION"):
+        assert CONVENTION.is_valid(convention)
+        return convention.value
 
 
-# ----------------------------------------------------------------------
-# Identifier Class (variable, function, label, array)
-# ----------------------------------------------------------------------
-ID_CLASSES = CLASS.classes
+@enum.unique
+class LoopType(str, enum.Enum):
+    DO = "DO"
+    FOR = "FOR"
+    WHILE = "WHILE"
+
 
 # ----------------------------------------------------------------------
 # Deprecated suffixes for variable names, such as "a$"
 # ----------------------------------------------------------------------
-DEPRECATED_SUFFIXES = ('$', '%', '&')
+DEPRECATED_SUFFIXES = ("$", "%", "&")
 
 # ----------------------------------------------------------------------
 # Identifier type
@@ -268,4 +220,4 @@ DEPRECATED_SUFFIXES = ('$', '%', '&')
 ID_TYPES = TYPE.types
 
 # Maps deprecated suffixes to types
-SUFFIX_TYPE = {'$': TYPE.string, '%': TYPE.integer, '&': TYPE.long_}
+SUFFIX_TYPE = {"$": TYPE.string, "%": TYPE.integer, "&": TYPE.long}

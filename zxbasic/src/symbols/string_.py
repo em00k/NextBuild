@@ -8,30 +8,33 @@
 # This program is Free Software and is released under the terms of
 #                    the GNU General License
 # ----------------------------------------------------------------------
+from __future__ import annotations
 
 from src.api.constants import CLASS
-from .symbol_ import Symbol
-from .type_ import Type
+from src.symbols.symbol_ import Symbol
+from src.symbols.type_ import Type
 
 
 class SymbolSTRING(Symbol):
-    """ Defines a string constant.
-    """
-    def __init__(self, value, lineno):
-        assert isinstance(value, str) or isinstance(value, SymbolSTRING)
-        super(SymbolSTRING, self).__init__()
-        self.value = value
+    """Defines a string value."""
+
+    value: str
+
+    def __init__(self, value: SymbolSTRING | str, lineno: int):
+        assert isinstance(value, (str, SymbolSTRING))
+        super().__init__()
+        self.value = value.value if isinstance(value, SymbolSTRING) else value
         self.type_ = Type.string
         self.lineno = lineno
         self.class_ = CLASS.const
-        self.t = value
+        self._t = self.value
 
     @property
-    def t(self):
+    def t(self) -> str:
         return self._t
 
     @t.setter
-    def t(self, value):
+    def t(self, value: str):
         assert isinstance(value, str)
         self._t = value
 
@@ -41,21 +44,21 @@ class SymbolSTRING(Symbol):
     def __repr__(self):
         return '"%s"' % str(self)
 
-    def __eq__(self, other):
+    def __eq__(self, other: str | SymbolSTRING):
         if isinstance(other, str):
             return self.value == other
 
         assert isinstance(other, SymbolSTRING)
         return self.value == other.value
 
-    def __gt__(self, other):
+    def __gt__(self, other: str | SymbolSTRING):
         if isinstance(other, str):
             return self.value > other
 
         assert isinstance(other, SymbolSTRING)
         return self.value > other.value
 
-    def __lt__(self, other):
+    def __lt__(self, other: str | SymbolSTRING):
         if isinstance(other, str):
             return self.value < other
 
@@ -63,7 +66,7 @@ class SymbolSTRING(Symbol):
         return self.value < other.value
 
     def __hash__(self):
-        return id(self)
+        return hash(self.value)
 
     def __ne__(self, other):
         return not self.__eq__(other)

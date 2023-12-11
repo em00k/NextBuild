@@ -1,0 +1,3 @@
+Plugin source can be found here
+
+https://github.com/mikedailly/CSpect

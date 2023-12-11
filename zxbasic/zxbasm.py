@@ -11,8 +11,12 @@
 # This is the Parser for the ZXBASM (ZXBasic Assembler)
 # ----------------------------------------------------------------------
 
+import os
 import sys
-from src import zxbasm
 
-if __name__ == '__main__':
+sys.path.append(os.path.dirname(__file__))
+
+from src import zxbasm  # noqa: E402
+
+if __name__ == "__main__":
     sys.exit(zxbasm.main())

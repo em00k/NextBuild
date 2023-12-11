@@ -9,8 +9,9 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
-from typing import Callable, Any
 import types
+from typing import Any, Callable, Type
+
 from .tree import Tree
 
 
@@ -18,12 +19,18 @@ from .tree import Tree
 # Abstract Syntax Tree class
 # ----------------------------------------------------------------------
 class Ast(Tree):
-    """ Adds some methods for easier coding...
-    """
-    pass
+    """Adds some methods for easier coding..."""
+
+    __slots__: tuple[str, ...] = tuple()
+
+    @property
+    def token(self):
+        return self.__class__
 
 
 class NodeVisitor:
+    node_type: Type = Ast
+
     def visit(self, node):
         stack = [node]
         last_result = None
@@ -34,7 +41,7 @@ class NodeVisitor:
                 if isinstance(last, types.GeneratorType):
                     stack.append(last.send(last_result))
                     last_result = None
-                elif isinstance(last, Ast):
+                elif isinstance(last, self.node_type):
                     stack.append(self._visit(stack.pop()))
                 else:
                     last_result = stack.pop()
@@ -44,21 +51,16 @@ class NodeVisitor:
         return last_result
 
     def _visit(self, node):
-        methname = 'visit_' + node.token
-        meth = getattr(self, methname, None)
-        if meth is None:
-            meth = self.generic_visit
+        meth = getattr(self, f"visit_{node.token}", self.generic_visit)
         return meth(node)
 
-    @staticmethod
-    def generic_visit(node: Ast):
-        raise RuntimeError("No {}() method defined".format('visit_' + node.token))
+    def generic_visit(self, node: Ast):
+        raise RuntimeError(f"No visit_{node.token}() method defined")
 
-    def filter_inorder(self,
-                       node,
-                       filter_func: Callable[[Any], bool],
-                       child_selector: Callable[[Ast], bool] = lambda x: True):
-        """ Visit the tree inorder, but only those that return true for filter_func and visiting children which
+    def filter_inorder(
+        self, node, filter_func: Callable[[Any], bool], child_selector: Callable[[Ast], bool] = lambda x: True
+    ):
+        """Visit the tree inorder, but only those that return true for filter_func and visiting children which
         return true for child_selector.
         """
         visited = set()

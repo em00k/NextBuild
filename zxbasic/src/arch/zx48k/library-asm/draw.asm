@@ -8,8 +8,8 @@
 #include once <error.asm>
 #include once <in_screen.asm>
 
-#include once <cls.asm>
-#include once <attr.asm>
+#include once <sysvars.asm>
+#include once <set_pixel_addr_attr.asm>
 
 #include once <SP/PixelDown.asm>
 #include once <SP/PixelUp.asm>
@@ -100,6 +100,7 @@ __DRAW_START:
     LOCAL __PIXEL_ADDR
 __PIXEL_ADDR EQU 22ACh
     call __PIXEL_ADDR
+    res 6, h    ; Starts from 0 offset
 
     ;; Now gets pixel mask in A register
     ld b, a
@@ -112,12 +113,15 @@ __PIXEL_MASK:
     djnz __PIXEL_MASK
 
     ld b, d         ; Restores B' from D'
+    ld de, (SCREEN_ADDR)
+    add hl, de
     pop de			; D'E' = y2, x2
     exx             ; At this point: D'E' = y2,x2 coords
     ; B'C' = y1, y1  coords
+    ; H'L' = Screen Address of pixel
+
     ex af, af'      ; Saves A reg for later
     ; A' = Pixel mask
-    ; H'L' = Screen Address of pixel
 
     ld bc, (COORDS) ; B,C = y1, x1
 
@@ -330,4 +334,3 @@ __FASTPLOTEND:
     ENDP
 
     pop namespace
-

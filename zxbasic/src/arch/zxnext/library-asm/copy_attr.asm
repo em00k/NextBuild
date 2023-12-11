@@ -2,7 +2,7 @@
 #include once <print.asm>
 #endif
 
-#include once <const.asm>
+#include once <sysvars.asm>
 
     push namespace core
 
@@ -67,7 +67,7 @@ TABLE:
 
 __REFRESH_TMP:
     ld a, (hl)
-    and 10101010b
+    and 0b10101010
     ld c, a
     rra
     or c

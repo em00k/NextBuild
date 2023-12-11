@@ -1,26 +1,329 @@
-﻿#CSpect V2.13.00 ZXSpectrum emulator by Mike Dailly
-(c)Copyright 1998-2020 All rights reserved
+﻿#CSpect V2.19.5.0 ZXSpectrum emulator by Mike Dailly
+(c)Copyright 1998-2023 All rights reserved
 
 Be aware...emulator is far from well tested, and might crash for any reason - sometimes just out of pure spite!
 
-NOTE: DISTRIBUTION WITH COMMERCIAL TITLES IS NOT PERMITTED WITHOUT WRITTEN CONSENT.
+NOTE: DISTRIBUTION WITH TITLES IS NOT PERMITTED WITHOUT WRITTEN CONSENT.
 
 
 Whats new
 ======================================================================================
+v2.19.5.0
+---------
+Fixed Layer 2, 320x256 right clipping
+Fixed a sprite clip bug that was causing a hard crash
+Optimised sprite rendering a little
+Adding better streaming support through esxDOS.
+Adding in better config mode support
+Copper can now generate IRQs properly
+Fixed stackless NMIs
+Fixed some DIVMMC RAM/ROM stuff
+Fixed some DIVMMC address paging
+Fixed a debugger memory window crash
+First pass at a sprite viewer
+Fixed "EQUs" being used as debugger address symbols
+Added NextReg $B2 for extended MD Pad buttons
+Fixed DMA continous mode when also in Prescaler mode - though, please don't do this! :D Note: This is a total fudge, it may break.
+Fixed DMA status register. DMA End flag, and 1 byte trasnfered flag now works.
+
+v2.19.4.4
+----------
+OUT ($ff),$40 will not disable ULA Vblanks, while OUT ($ff),$00 will now enable them (see NextReg $22)
+New debugger command "NEXTBRK" will stop in the debugger after a Next instruction has been executed
+
+v2.19.4.3
+----------
+Reverted the ZIP file detection to fix SDCard access.
+
+v2.19.4.2
+----------
+I now try and detect if you've accidentally provided a ZIP file instead of an SD card image.
+Fixed a CSpect crash when a streaming file wasn't there. (esxDOS emulation)
+
+v2.19.4.1
+----------
+AY will now be reset with nextreg 6 (bits 0-1)
+
+v2.19.4.0
+----------
+Added "-nodelay" startup option to the docs. Totally forgot about it, my bad.
+Fixed up DACs, incorrect channels were sometimes being set, and some ports were wrong.
+
+v2.19.3.0
+----------
+Extended the debugger's "Display" view to show the whole screenhttps://www.javalemmings.com/public/zxnext/CSpect2_19_4_1.zip
+You will now be prompted to install OpenAL if it can't be found (on windows)
+Fixed Layer 2 pixels in the border area
+Fixed the esxDOS emulation streaming, allowing Pogie to run with audio from the command line again
+Added "INPORT <16bitport>" and "OUTPORT <16bitport>" breakpoints in the debugger, allowing a break on a read/write to a port.
+Added a new "TONE" command to the debugger. This switches on a single tone to the audio buffer to test if there are system playback issues.
+
+v2.19.2.1
+----------
+Fixed the debugger screen so it's no longer transparent
+.NEX file start delay added to loading of NEX files
+-nodelay added to skip a .NEX file start delay
+-rot90 Rotate the display 90 degrees
+-rot180 Rotate the display 180 degrees
+-rot270 Rotate the display 270 degrees
+Command line processing cleaned up a bit
+cspec_win.dat file format changed. Now includes a version [0], and screen rotation [1]
+
+v2.19.2.0
+----------
+Added new debugger command "LOAD <filename>,<address>[,length]" where address can also be ""<bank>:<offset>""
+Copper writes fixed up, wasn't executing all CPU TStates, so going slower than it should have been.
+Updated screen drawing to be later in the line, to account for left border better.
+Added a little Time base correction when audio/video buffers overflow instead of just throwing the spare frames away.
+AY chips now respect the ABC,ACB and mono selection for each chip.
+Added 2 new iCSpect.GetGlobal() calls; ""eGlobal.low_rom"" and ""eGlobal.high_rom"" to return the ROM/RAM at the low/high position
+Added LoadFile() to iCSpect to load a file from SD card or relative file mmc path.
+
+v2.19.1.0
+----------
+Rewrote command line processor
+Added debugger macros to the command line '+def[0-9]"g $8000". use ";" for multiple commands: '+def[0-9]"g $8000;m$4000".  ALT+[0-9] to play macro.
+Fixed a crash when L2 left clip was > L2 right clip
+L2 no longer renders with top clip was > L2 bottom clip
+Fixed a bug in the ULA rendering where the border colour was being set to the fallback colour, and not the border colour (which matches global transparancy).
+Updated TileTest screen mode test app
+OpenTK upgraded to v3.3.3
+
+v2.19.0.3
+----------
+Fixed Timex Hires non-ULANext ink/paper orders
+Fixed Timex Hires ULANext ink/paper orders
+Added wildcard support in F_OPENDIR ($a3)
+Added better exception reporting to the LOG for loading plugins
+Fixed DeZog plugin building - DLL has been properly updated with new Plugin interface
+
+v2.19.0.2
+----------
+Fixed up keyboard cross threading issues
+Fixed up File open cross threading issue
+Added a new OSTick() call to plugins to allow UI/OS function calls - please note the changes in plugins to avoid crashes
+Fixed Timex hires with ULA Next ink/paper shift mode
+Added a "Standard Plugin Keys" section to the readme.txt file
+
+v2.19.0.1
+----------
+Fixed 2 profiler crashes, when clicking on the profile window in different states
+Fixed ULA last line drawing
+Fixed sprite in border bugs with new screen rendering
+Fixed L2 640x256 and 320x256 clipping
+Fixed Timex border colour issues
+New Audio/Video syncing system
+Fixed 320x256 window
+
+v2.19.0.0
+----------
+Fixed a crash in Mode 6 and 7 when the tile window was larger than the screen
+Fixed blending of tiles to border when in Mode 6 and 7
+Fixed border when in Mode 6 and 7 when ULA is being used in blending
+Fixed an esxDOS emulator issue, when a game requests too many bytes than is left in the file, and it fills the extra space with 0s resulting in game crashes
+Timing fixed. 50hz and 60hz were both running slowly/weirdly both with and without sound. Should now be correct. 
+-60 and -VSYNC should now be perfectly smooth again
+-fps added to show FPS on title bar
+-freerun disable all timers and run as fast as we can (must use -sound as well)
+ULA Y scrcolling fixed to use Yscroll value MOD 192 (instead of anything over 192 being 0)
+ULA+TILE Stencil mode added. Stencil will use any ULA mode (normal, timex, lowres)
+Mode6/7 blending can now be used with stencil mode (where ever the hardware allowed it)
+
+v2.18.0
+--------
+Mode 6 and 7 added in all it's ULA/Tile ordering weirdness. "(U|T) S (T|U) L" ordering
+Mode 6 blending added (B+L)
+Mode 7 blending added (B+L-5)
+multiface is now paged out on RETN
+Added the Mode 6 and 7 blend mode (and fiddling) test/demo + source
+
+v2.17.1
+--------
+Fixed a crash in the profiler
+Added a new extension to assosiate .NEX and .SNX files with the emulator
+
+v2.17.0
+--------
+Fixed auto-mapping when RAM paged in over the ROM
+IM1 now has IRQs disabled on triggering
+Added Timex Hires and Timex Hi colour, smooth scrolling
+Fixed Timex Hires border colour (I think)
+Added DMA ports $0B and $6B
+Contended memory no longer affects 7,14 and 28Mhz modes
+Fixed a bug where all NEXT register stores (for reading back) were being zero'd on direct load of a NEX/SNA/SNX file
+CTC timers should now always run at 28Mhz regardless of CPU speed.
+SD card detection no longer crashes when it can't read partitions from a NEX/SNA/SNX file...
+Fixed using F3 on older card images (2.06 and below)
+New NextRegister Viewer window, activated by pressing <CTRL+ALT+R>
+New Plugin command added "DissasembleMemory()" - see iPlugin.cs for details
+Instruction TStates added to debugger view
+New Profiler added, activated by pressing <CTRL+ALT+P>
+Fixed up some TStates for Next instruction in the debugger
+
+v2.16.6
+--------
+Regs $6e and $6f set to newer defaults, reading should also be fixed.
+F_SEEK in esxDOS emulation now takes IXL (instead of L) for the offset type.
+Hires tile maps now scroll properly - and at the right speed
+640 L2 mode now clips in the lower screen properly.
+Command line will now try and detect what your doing, so passing in 
+  an SD card image will setup the proper options, same for NEX files etc.
+  "CSPect.exe card.img"  or   "CSpect.exe game.nex" is now valid
+Plugin "CSpect.Debugger(eDebugCommand.Enter)" now triggers on the next instruction, not a frame later.
+NextRegister 2 - hard reset, should now work.
+F3 now does a full hard reset, so should be far more dependable.
+
+v2.16.5
+--------
+Now detects older Next ROM image files and will auto-disable the divMMC auto mapping so they still work.
+
+v2.16.4
+--------
+Now correctly detects that OpenAL is not installed, and will message the user and disable audio
+Added "IR" register to disassembly window
+Fixed some 4bit relative sprite shape stuff.
+F5 will now screen shot whatever is on screen. The Spectrum screen (pre-shader), or the debugger.
+Window should now start centered on screen (or 0,0 if screen isn't big enough)
+
+v2.16.3
+--------
+Fixed CTC timers, should now be correct
+CTC cascading timers added (I think)
+Fixed disassembler, "LD A,(IX-??)" should now be displayed correctly
+Interrupts are now disabled im start of IM2
+
+v2.16.1
+--------
+iCSpect interface now has the primary window handle so plugins can reference it
+CopperDissassembler now uses the primary window handle in it's "Show()" to try and fix Linux rendering issues
+
+v2.16.0
+--------
+Added directory functions to RST$08 plugin
+Fixed screen rendering time a little.
+on .NEX load, regs $B8-$BB are set to $82,$00,$00,$F0 - same as the OS.
+Added reg $0A = bit 2, to be able to disable DivMMC auto mapping
+Fixed crash when typing "BR <BANK>:<OFFSET>" in debugger
+Added a "-mouse" command line option. This will disable the "grabbing" of the mouse.
+When specifying an SD card image, you no longer have to specify -zxnext and -nextrom on the command line as well
+Fixed Copper when the DMA is running and blocking CPU, now counts DMA "TStates" instead of CPU ones 
+.NEX files will automatically disable DIvMMC PC address memory mapping
+Added -divmap command line, so you can force memory mapping of the DIVMMC "on" when directly loading a .NEX file
+Fixed a raster interrupt issue
+Added -copwait command line so you can easily visualise where the copper splits are
+Added -irqwait command line so you can easily visualise where the raster irq splits are
+You can now toggle the copper and irq visualiser with CTRL+ALT+S via the copper disassembler plugin
+You can now "set" command line globals via the Plugin interface
+
+v2.15.2
+--------
+DeZogPlugin added to main distro so it remains upto date.
+Added stackless NMI support
+Reset register $02 added
+Added NextRegs $B8 to $BB for DivMMC direct paging control
+Current ROM and DivMMC registers added to rewind history
+F6 now cycles through turbo speed settings
+F5 Now takes a screen shot (was on CTRL+F3)
+Fixed a rendering glitch when estimates for the right HBlank timing are "missed" and the line isn't drawn.
+-log_cpu removed. Rewind probably replaces the need for this.
+Updated RST$08 read/write to return values in BC,HL and DE as described in NextZXOS
+Layer 2 banks can now be in the full 2Mb (regs $12 and $13)
+Parallax demo updated to work with new $B8-$BA registers
+
+v2.15.1
+--------
+Fixed SD card access - SpecNext IMG files now boot again
+
+v2.15.0
+--------
+Fixed a crash when trying to get file info on a file that can't be found (or opened)
+Fixed ULA colour 3 (where colours are 0-15) on a loaded NEX file.
+Fixed Border colour when ULA Palette scale set to 255, but ULANext mode is disabled
+All RST $08 operations have been moved to a new open source extension esxDOS.dll - lightly tested
+Added Copper Read/Write to extension system - allowing for a copper debugger/assembler etc 
+Added single byte peek/pokes to extension interface for simpler access
+OpenTK upgraded to v3.3.2, any newer version won't install as it's incompatible with .NET frameworks
+Added initial open source Copper disassembler/viewer - "<ctrl><alt>c" to open
+Open source extensions added to Github: https://github.com/mikedailly/CSpect
+
+v2.14.8
+--------
+Fixed a L2 scroll issue - that I just added. *sigh*
+
+v2.14.7
+--------
+Fixed a L2 clip scroll offset issue
+
+v2.14.6
+--------
+Switch on the new rendering mode again.
+
+v2.14.5
+--------
+Fixed L2 left clip (I think)
+
+v2.14.4
+--------
+Fixed L2 320 and 640 clip window
+Fixed LD_R_A in debugger to "LD R,A"
+Fixed a bug when writing the copper control byte, where it would reset the lower byte of the copper write address
+Added the raster offset register ($62) but mostly untested.
+Screen rendering now starts in the HBlank, not at the end of the line, allowing changes for the next line to take place in the HBlank.
+
+v2.14.3
+--------
+Fixed BIS and Warhawk crash
+
+v2.14.2
+--------
+Odd crash with last version, rebuilding zip to try and fix
+Now alerts you to a new version
+Did more sprite window fixes
+Altered FLASH rendering
+
+v2.14.1
+--------
+Added a check for AY regs above 16, as a common music driver has a bug in it
+Timers are now reset on F3
+IRQ TStates are reset back to 30 Pre-Tstates. This isn't correct but helps some games work better.
+Stopped a crash on exit from fullscreen
+
+v2.14.0
+--------
+Fixed esxDOS Read/Write so it's now returning NEXT pointer IX instead of HL.
+You no longer need to extract ROM files to run in full SD card mode, they will be copied out the SD card image directly.
+Sprite right edge clip fixed - I think.
+AY registers are now readable
+Some very basic analytics are now collected. Each startup, command line options etc. "-analytics" to disable. Please leave it on if you can, as it'll help me direct developement effort.
+I have added my new SDCardEditor into the archive. This is very much just a beta, but lets you easy copy files from the SD card. Full editing coming on this.
+The latest windows update now causes some nasty stalling. To reduce (but not remove), go into "settings" and search for "game mode" and switch it off. This will help a little.
+
+
+v2.13.01
+--------
+Put some guards around break point setting to check ranges a little.
+Symbols are uppercased on load (they aren't case sensitive)
+Fixed memory window. Any address<$10000 is not a physical address, it's the 64k mapped. If you need this, use bank/offset
+Fixed some BASIC key issues - holding down control keys etc
+Fixed a ULA global transparancy issue
+Fixed NEX loading and initialising of ULA colours
+Fixed some Timex rendering issues
+Basic CTC timers (4) added. Timer mode only, no cascading. Timers can generate IRQs. Example added to Bundle.
+NextReg $CC and $CD - IRQ DMA suspend mode for timers, liner interrupts and ULA added
+Z80 CTC Timer example source included in demo
+
 v2.13.00
 --------
 Fixed a bug in the rewind of MMUs
 Swapped to 2.13 coz I was bored of 12.??
-
 
 v2.12.39
 --------
 Fixed physical breakpoints in the plugins
 (Highly) Experiminetal "rewind" debugger feature. Simply press SHIFT+F7 to step back.
          Currently tracks all RAM access and Sprite port access.
-		 There's bound to be HEAPs of issues and bugs with this, but for simple debugging, 
-		 it should be fine.
+         There's bound to be HEAPs of issues and bugs with this, but for simple debugging, 
+         it should be fine.
 Added UnStep in plugin system
 Added "REWIND" debugger command, to allow you to switch the CPU history on/off dynamically
 Added Debugger message display. Now reports errors when you use a non-existant label etc.
@@ -32,8 +335,8 @@ Added NextRegs $2C and $2E (DAC mirrors)
 DMA read flags (Bit 5 and Bit 1) added and fixed.
 Added "_" to BASIC key detection
 I "think" I've fixed the stuck BASIC mode keys (where : just gets stuck and repeats....)
-Added OpenAL32.dll to the zip.... turns out that's allowed.
-on loading of a NEX file, NextRegs are set to what the OS NexLoad sets
+On loading of a NEX file, NextRegs are set to what the OS NexLoad sets
+
 
 v2.12.37
 --------

@@ -1,4 +1,4 @@
-ZXSpectrum emulator by Mike Dailly (c) Copyright 1998-2020 All rights reserved
+ZXSpectrum emulator by Mike Dailly (c) Copyright 1998-2023 All rights reserved
 
 Be aware...emulator is far from well tested, and might crash for any reason - sometimes just out of pure spite!
 
@@ -22,7 +22,7 @@ Latest versions can be found here: https://github.com/Threetwosevensixseven/NXte
 Command Line Options
 ======================================================================================
 -zxnext            =  enable Next hardware registers
--nextrom           =  enable the Next ROM ("enNextZX.rom", "enNxtmmc.rom" and SD card image required)
+-nextrom           =  enable the Next ROM (SD card image required)
 -zx128             =  enable ZX Spectrum 128 mode
 -s7                =  enable 7Mhz mode
 -s14               =  enable 14Mhz mode
@@ -34,7 +34,7 @@ Command Line Options
 -8_3               =  set filenames back to 8.3 detection
 -mmc=<dir\ or file>=  enable RST $08 usage, must provide path to "root" dir of emulated SD card (eg  "-mmc=.\" or "-mmc=c:\test\")
 -sd2=<path\file>   =  Second SD card image file
--map=<path\file>   =  SNASM format map file for use in the debugger. format is: "<16bit address> <physical address> <type> <primary_label>[@<local>]"
+-map=<path\file>   =  SNASM format map file for use in the debugger. format is: "<16bit_address> <24bit_physical_address> <type> <primary_label>[@<local>]"
 -sound             =  disable sound
 -joy               =  disable joysticks
 -w<size>           =  set window size (1 to 4)
@@ -44,7 +44,6 @@ Command Line Options
 -fullscreen        =  Startup in fullscreen mode
 -vsync             =  Sync to display (for smoother scrolling when using "-60 -sound", but a little faster)
 -com="COM?:BAUD"   =  Setup com port for UART. i.e. -com="COM5:115200". if not set, coms will be disabled.
--log_cpu           =  Log the CPU status out
 -basickeys         =  Enable Next BASIC key interface (F10 toggles)
 -tv                =  Disable the TV shader (or CTRL+F1)
 -emu               =  Enable the emulator "bit" in the hardware registers
@@ -54,7 +53,12 @@ Command Line Options
 -remote            =  Enable the remote debugger mode, by disabling the debugger screen.
 -fill=$XXXXX...XX  =  Fill memory with this hex sequence on power up
 -rewind            =  Enable CPU history for debugger rewinding
-
+-analytics         =  Disable analytics. Please if you can, leave these on as it'll help direct developement effort.
+-fps               =  Display FPS in titlebar
+-freerun           =  Disable all timer locks and run as fast as we can (must use -sound as well)
++def[0-9]"text"    =  Debugger macro command, executed using ALT+[0-9] allowing handy pre-defined bookmarks
+-divmap            =  Disable the DivMMC automapping (might speed things up for some people)
+-nodelay           =  Do now wait for NEX file delay (used to display title screens etc)
 
 
 Manual SDCARD setup 
@@ -85,7 +89,111 @@ I found a copy of this tool here: http://uto.speccy.org/downloads/hdfmonkey_wind
 
 
 
+General Emulator Keys
+======================================================================================
+Escape  - quit
+F1      - Enter/Exit debugger
+F2      - load SNA
+F3      - reset
+F5      - Take screenshot
+F6      - Cycle through different speeds (3.5,7,14 and 28)
+F10     - Toggle Key mode
 
+
+Standard Plugin Keys
+======================================================================================
+CTRL+ALT+C          Copper Disassembler
+CTRL+ALT+S          Show copper wait lines
+CTRL+ALT+R          Show Next Register window
+CTRL+ALT+SHIFT+A    Assosiate .SNX and .NEX fies to this EXE
+CTRL+ALT+P          Bring up the profiler
+
+Debugger Keys
+======================================================================================
+F1                  - Exit debugger
+F2                  - load SNA
+F3                  - reset
+F7                  - single step
+F7+SHIFT            - Rewind CPU (when active)
+F8                  - Step over (for loops calls etc)
+F9                  - toggle breakpoint on current line
+Up                  - move user bar up
+Down                - move user bar down
+PageUp              - Page disassembly window up
+PageDown            - Page disassembly window down
+SHIFT+Up            - move memory window up 16 bytes
+SHIFT+Down          - move memory window down 16 bytes
+SHIFT+PageUp        - Page memory window up
+SHIFT+PageDown      - Page memory window down
+CTRL+SHIFT+Up       - move trace window up 16 bytes
+CTRL+SHIFT+Down     - move trace window down 16 bytes
+CTRL+SHIFT+PageUp   - Page trace window up
+CTRL+SHIFT+PageDown - Page trace window down
+CTRL+SHIFT+[1-0]    - Set memory window bookmark
+CTRL+[0-9]          - Goto memory window bookmark
+ALT+[0-9]           - Playback command line definition
+
+Mouse is used to toggle "switches"
+HEX/DEC mode can be toggled via "switches"
+
+You can also use the mouse to select "bytes" to edit in the memory window, simply place 
+mouse over the top and left click. Enter will cancel, as will clicking outside the
+memory window.
+
+
+Debugger Commands
+======================================================================================
+M <address>         Set memory window base address (in normal 64k window)
+M <bank>:<offset>   Set memory window into physical memory using bank/offset
+G <address>         Goto address in disassembly window
+BR <address>        Toggle Breakpoint
+WRITE <address>     Toggle a WRITE access break point
+READ  <address>     Toggle a READ access break point (also when EXECUTED)
+INPORT <16bitport>  Toggle a breakpoint on port READ
+OUTPORT <16bitport> Toggle a breakpoint on port WRITE
+PUSH <value>        push a 16 bit value onto the stack
+POP				    pop the top of the stack
+POKE <add>,<val>    Poke a value into memory
+TONE                Toggles a single tone to be played back. Testing the audio streaming is consistent and working
+NEXTBRK             Toggles stopping in the debugger after a NEXT specific instruction is executed
+Registers:
+   A  <value>       Set the A register
+   A' <value>       Set alternate A register
+   F  <value>       Set the Flags register
+   F' <value>       Set alternate Flags register
+   AF <value>       Set 16bit register pair value
+   AF'<value>       Set 16bit register pair value
+   |
+   | same for all others
+   |
+   SP <value>       Set the stack register
+   PC <value>       Set alternate program counter register
+LOG OUT [port]      LOG all port writes to [port]. If port is not specified, ALL port writes are logged.
+                    (Logging only occurs when values to the port change)
+LOG IN  [port]      LOG all port reads from [port]. If port is not specified, ALL port reads are logged.
+                    (Logging only occurs when values port changes)
+NEXTREG <reg>,<val> Poke a next register	
+OUT Port,Value      Out a value to a 16bit port
+SAVE "NAME",add,len                   Save in the 64K memory space
+SAVE "NAME",BANK:OFFSET,length        Save in physical memory using a bank and offset as the start address
+SAVE "NAME",BANK:OFFSET,BANK:OFFSET   Save in physical memory using a bank and offset as the start address, and as an end address
+LOAD "NAME",add[,len]                 Load in the 64K memory space with optional length
+LOAD "NAME",BANK:OFFSET[,length]      Load in physical memory using a bank and offset as the start address, with optional length
+
+
+Symbol file format
+======================================================================================
+The symbol file is a simple list of values in this format
+
+<16bit_address> <24bit_physical_address> <type> <primary_label>[@<local>]"
+
+A symbols 24 bit address is (Bank*8192)+Offset
+The TYPE can be one of these. If in doubt use FFFFFFFF.
+00000000 = Label
+00000001 = EQU or SET
+FFFFFFFF = Unknown Label
+
+You can force the use of the 16bit only value by specifying "-16bit" on the command line.
 
 
 New Z80n opcodes on the NEXT
@@ -121,85 +229,6 @@ New Z80n opcodes on the NEXT
    jp (c)            ED 98           13Ts     JP  ((IN(c)*64)+PC&0xC000)"
 
 
-
-General Emulator Keys
-======================================================================================
-Escape  - quit
-F1      - Enter/Exit debugger
-F2      - load SNA
-F3      - reset
-F5      - 3.5Mhz mode           (when not in debugger)
-F6      - 7Mhz mode             (when not in debugger)
-F7      - 14Mhz mode            (when not in debugger)
-F8      - 28Mhz mode            (when not in debugger)
-F10     - Toggle Key mode
-
-
-
-
-Debugger Keys
-======================================================================================
-F1                  - Exit debugger
-F2                  - load SNA
-F3                  - reset
-F7                  - single step
-F8                  - Step over (for loops calls etc)
-F9                  - toggle breakpoint on current line
-Up                  - move user bar up
-Down                - move user bar down
-PageUp              - Page disassembly window up
-PageDown            - Page disassembly window down
-SHIFT+Up            - move memory window up 16 bytes
-SHIFT+Down          - move memory window down 16 bytes
-SHIFT+PageUp        - Page memory window up
-SHIFT+PageDown      - Page memory window down
-CTRL+SHIFT+Up       - move trace window up 16 bytes
-CTRL+SHIFT+Down     - move trace window down 16 bytes
-CTRL+SHIFT+PageUp   - Page trace window up
-CTRL+SHIFT+PageDown - Page trace window down
-CTRL+SHIFT+[0-9]    - Set Bookmark
-CTRL+[0-9]          - Goto Bookmark
-
-Mouse is used to toggle "switches"
-HEX/DEC mode can be toggled via "switches"
-
-You can also use the mouse to select "bytes" to edit in the memory window, simply place 
-mouse over the top and left click. Enter will cancel, as will clicking outside the
-memory window.
-
-
-Debugger Commands
-======================================================================================
-M <address>         Set memory window base address (in normal 64k window)
-M <bank>:<offset>   Set memory window into physical memory using bank/offset
-G <address>         Goto address in disassembly window
-BR <address>        Toggle Breakpoint
-WRITE <address>     Toggle a WRITE access break point
-READ  <address>     Toggle a READ access break point (also when EXECUTED)
-PUSH <value>        push a 16 bit value onto the stack
-POP				    pop the top of the stack
-POKE <add>,<val>    Poke a value into memory
-Registers:
-   A  <value>       Set the A register
-   A' <value>       Set alternate A register
-   F  <value>       Set the Flags register
-   F' <value>       Set alternate Flags register
-   AF <value>       Set 16bit register pair value
-   AF'<value>       Set 16bit register pair value
-   |
-   | same for all others
-   |
-   SP <value>       Set the stack register
-   PC <value>       Set alternate program counter register
-LOG OUT [port]      LOG all port writes to [port]. If port is not specified, ALL port writes are logged.
-                    (Logging only occurs when values to the port change)
-LOG IN  [port]      LOG all port reads from [port]. If port is not specified, ALL port reads are logged.
-                    (Logging only occurs when values port changes)
-NEXTREG <reg>,<val> Poke a next register	
-SAVE "NAME",add,len                   Save in the 64K memory space
-SAVE "NAME",BANK:OFFSET,length        Save in physical memory using a bank and offset as the start address
-SAVE "NAME",BANK:OFFSET,BANK:OFFSET   Save in physical memory using a bank and offset as the start address, and as an end address
-REWIND              Enable/Disable CPU rewind mode
 
 
 

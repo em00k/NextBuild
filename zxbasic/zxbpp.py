@@ -11,8 +11,12 @@
 # This is the Parser for the ZXBpp (ZXBasic Preprocessor)
 # ----------------------------------------------------------------------
 
+import os
 import sys
-from src import zxbpp
 
-if __name__ == '__main__':
+sys.path.append(os.path.dirname(__file__))
+
+from src import zxbpp  # noqa: E402
+
+if __name__ == "__main__":
     sys.exit(zxbpp.entry_point())

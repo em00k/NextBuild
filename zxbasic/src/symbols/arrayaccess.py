@@ -11,22 +11,20 @@
 
 from typing import Optional
 
-import src.api.global_ as gl
-import src.api.errmsg as errmsg
 import src.api.check as check
-
+import src.api.errmsg as errmsg
+import src.api.global_ as gl
 from src.api.constants import SCOPE
-
-from .call import SymbolCALL
-from .number import SymbolNUMBER as NUMBER
-from .typecast import SymbolTYPECAST as TYPECAST
-from .binary import SymbolBINARY as BINARY
-from .vararray import SymbolVARARRAY
-from .arglist import SymbolARGLIST
+from src.symbols.arglist import SymbolARGLIST
+from src.symbols.binary import SymbolBINARY as BINARY
+from src.symbols.call import SymbolCALL
+from src.symbols.id_ import SymbolID
+from src.symbols.number import SymbolNUMBER as NUMBER
+from src.symbols.typecast import SymbolTYPECAST as TYPECAST
 
 
 class SymbolARRAYACCESS(SymbolCALL):
-    """ Defines an array access. It's pretty much like a function call
+    """Defines an array access. It's pretty much like a function call
     (e.g. A(1, 2) could be an array access or a function call, depending on
     context). So we derive this class from SymbolCall
 
@@ -48,8 +46,8 @@ class SymbolARRAYACCESS(SymbolCALL):
         return self.children[0]
 
     @entry.setter
-    def entry(self, value):
-        assert isinstance(value, SymbolVARARRAY)
+    def entry(self, value: SymbolID):
+        assert isinstance(value, SymbolID) and value.token == "VARARRAY"
         if self.children is None or not self.children:
             self.children = [value]
         else:
@@ -74,7 +72,7 @@ class SymbolARRAYACCESS(SymbolCALL):
 
     @property
     def offset(self):
-        """ If this is a constant access (e.g. A(1))
+        """If this is a constant access (e.g. A(1))
         return the offset in bytes from the beginning of the
         variable in memory.
 
@@ -102,9 +100,8 @@ class SymbolARRAYACCESS(SymbolCALL):
         return offset
 
     @classmethod
-    def make_node(cls, id_: str, arglist: SymbolARGLIST, lineno: int, filename: str) -> Optional['SymbolARRAYACCESS']:
-        """ Creates an array access. A(x1, x2, ..., xn)
-        """
+    def make_node(cls, id_: str, arglist: SymbolARGLIST, lineno: int, filename: str) -> Optional["SymbolARRAYACCESS"]:
+        """Creates an array access. A(x1, x2, ..., xn)"""
         assert isinstance(arglist, SymbolARGLIST)
         variable = gl.SYMBOL_TABLE.access_array(id_, lineno)
         if variable is None:
@@ -112,8 +109,9 @@ class SymbolARRAYACCESS(SymbolCALL):
 
         if variable.scope != SCOPE.parameter:
             if len(variable.bounds) != len(arglist):
-                errmsg.error(lineno, "Array '%s' has %i dimensions, not %i" %
-                             (variable.name, len(variable.bounds), len(arglist)))
+                errmsg.error(
+                    lineno, "Array '%s' has %i dimensions, not %i" % (variable.name, len(variable.bounds), len(arglist))
+                )
                 return None
 
             # Checks for array subscript range if the subscript is constant
@@ -127,10 +125,14 @@ class SymbolARRAYACCESS(SymbolCALL):
                     if val < b.lower or val > b.upper:
                         errmsg.warning(lineno, "Array '%s' subscript out of range" % id_)
 
-                i.value = BINARY.make_node('MINUS',
-                                           TYPECAST.make_node(btype, i.value, lineno),
-                                           lower_bound, lineno, func=lambda x, y: x - y,
-                                           type_=btype)
+                i.value = BINARY.make_node(
+                    "MINUS",
+                    TYPECAST.make_node(btype, i.value, lineno),
+                    lower_bound,
+                    lineno,
+                    func=lambda x, y: x - y,
+                    type_=btype,
+                )
         else:
             btype = gl.SYMBOL_TABLE.basic_types[gl.BOUND_TYPE]
             for arg in arglist:

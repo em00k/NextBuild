@@ -6,7 +6,7 @@
 ; and A register is non-zero if the string must be freed (TMP string)
 
 #include once <error.asm>
-#include once <const.asm>
+#include once <sysvars.asm>
 #include once <free.asm>
 
     push namespace core
@@ -30,7 +30,7 @@ USR_STR:
 
     inc hl
     ld a, (hl) ; Only the 1st char is needed
-    and 11011111b ; Convert it to UPPER CASE
+    and %11011111 ; Convert it to UPPER CASE
     sub 144   ; CODE(UDG "A")
     jr nc, CONT
     add a, 144   ; It was a letter
@@ -71,4 +71,3 @@ USR_ERROR:
     ENDP
 
     pop namespace
-

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# vim: ts=4:et:sw=4:
 
 # ----------------------------------------------------------------------
 # Copyleft (K), Jose M. Rodriguez-Rosa (a.k.a. Boriel)
@@ -9,20 +8,20 @@
 #                    the GNU General License
 # ----------------------------------------------------------------------
 
-from .symbol_ import Symbol
-from .number import SymbolNUMBER
-from .type_ import SymbolTYPE
-
 import src.api.check as check
+
+from .number import SymbolNUMBER
+from .symbol_ import Symbol
+from .type_ import SymbolTYPE
 
 
 class SymbolBUILTIN(Symbol):
-    """ Defines an BUILTIN function e.g. INKEY$(), RND() or LEN
-    """
+    """Defines an BUILTIN function e.g. INKEY$(), RND() or LEN"""
+
     def __init__(self, lineno, fname, type_=None, *operands):
         assert isinstance(lineno, int)
         assert type_ is None or isinstance(type_, SymbolTYPE)
-        super(SymbolBUILTIN, self).__init__(*operands)
+        super().__init__(*operands)
         self.lineno = lineno
         self.fname = fname
         self.type_ = type_
@@ -59,15 +58,14 @@ class SymbolBUILTIN(Symbol):
 
     @property
     def size(self):
-        """ sizeof(type)
-        """
+        """sizeof(type)"""
         if self.type_ is None:
             return 0
         return self.type_.size
 
     @classmethod
     def make_node(cls, lineno, fname, func=None, type_=None, *operands):
-        """ Creates a node for a unary operation. E.g. -x or LEN(a$)
+        """Creates a node for a unary operation. E.g. -x or LEN(a$)
 
         Parameters:
             -func: function used on constant folding when possible
