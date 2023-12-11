@@ -4,7 +4,7 @@ NextBuild : A suite of tools based on Boriel's ZX Basic Compiler targetting the 
 
 Please report any bugs and I will try to fix them.
 
-- 11/12/23  -   updated Boreil to 1.17.1 and CSpect to 2.19.5 
+- 11/12/23  -   updated Boriel to 1.17.1 and CSpect to 2.19.5 
 
 http://zxnext.uk/nextbuild/
 
