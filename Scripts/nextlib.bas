@@ -1028,6 +1028,66 @@ sploop:
 	end asm 
 end sub 
 
+Sub fastcall InitSprites2(byVal Total as ubyte, spraddress as uinteger,bank as ubyte=$0)
+    ' uploads sprites from memory location to sprite memory 
+    ' Total = number of sprites, spraddess memory address, optinal bank parameter to page into slot 0/1 
+    ' works for both 8 and 4 bit sprites 
+
+    asm  
+        PROC
+        LOCAL spr_nobank, spr_address, sploop, sp_out
+        
+         
+        ld      (spr_address+1), hl                                         ; save spr_address  16 T    3bytes 
+        exx     
+        pop     hl
+        exx                                                                 ; save ret address  18 T  3bytes , 36 T with exx : push hl : exx   
+
+        ld      d, a                                                        ; save Total sprites from a to d 
+
+        xor 	a 															; clear a to 0 and point to 
+        ld 		bc, SPRITE_STATUS_SLOT_SELECT_P_303B						; first sprite 
+        out 	(c), a
+
+        ; let check if a bank was set ? 
+        inc     sp 
+        inc     sp 
+        pop     af                                                          ; bank in a  
+        or      a   
+        jr      z,spr_nobank                                                ; is it bank zero then skip over 
+        nextreg $50,a                                                       ; setting slot 0 to a bank  
+        inc     a 
+        nextreg $51,a                                                       ; setting slot 1 to a bank + 1 
+
+    spr_nobank:
+
+        ld 		b,d															; how many sprites to send 
+
+    spr_address: 
+        ld      hl,0                                                        ; smc from above 
+
+    sploop:                                                                 ; sprite upload loop 
+
+        push 	bc
+        ld 		bc,$005b					
+        otir
+        pop 	bc 
+        djnz 	sploop
+
+        nextreg $50, $FF                                                    ; restore rom 
+        nextreg $51, $FF                                                    ; restore rom 
+
+    sp_out:
+        exx    
+        push    hl 
+        exx 
+        
+        ENDP 
+
+    end asm 
+
+end sub
+
 sub RemoveSprite(spriteid AS UBYTE, visible as ubyte)
 	ASM 
 		push bc 
