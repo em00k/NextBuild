@@ -10,11 +10,22 @@
 import sys
 import subprocess, os, platform
 
-# add a bunch or dirs to the path 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), os.pardir))
-SCRIPTS_DIR = os.path.abspath(os.path.join(BASE_DIR, 'Scripts'))  # ZX BASIC root path
-EMU_DIR = os.path.abspath(os.path.join(BASE_DIR, 'Emu/CSpect'))  # ZX BASIC root path
-ZXBASIC_DIR = os.path.abspath(os.path.join(BASE_DIR, 'zxbasic'))  # ZX BASIC root path
+
+# Get the absolute path of the current file's directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Get the root directory containing the drive
+root_dir = os.path.splitdrive(current_dir)[0] + os.sep
+
+# Get the relative path from the current file to the parent directory
+relative_path_to_parent = os.path.join(*([os.pardir] * 1))
+
+# Construct the base directory by joining the root directory and the relative path
+BASE_DIR = os.path.abspath(os.path.join(root_dir, relative_path_to_parent))
+
+SCRIPTS_DIR = os.path.abspath(os.path.join(BASE_DIR, 'Scripts'))
+EMU_DIR = os.path.abspath(os.path.join(BASE_DIR, 'Emu/CSpect'))
+ZXBASIC_DIR = os.path.abspath(os.path.join(BASE_DIR, 'zxbasic'))
 LIB_DIR = os.path.join(ZXBASIC_DIR, 'src/arch/zxnext/library')
 SRC_DIR = os.path.join(ZXBASIC_DIR, 'src')
 TOOLS_DIR = os.path.join(ZXBASIC_DIR, 'tools')
