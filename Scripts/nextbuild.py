@@ -10,12 +10,11 @@
 import sys
 import subprocess, os, platform
 
-
 # Get the absolute path of the current file's directory
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Get the root directory containing the drive
-root_dir = os.path.splitdrive(current_dir)[0] + os.sep
+root_dir = current_dir
 
 # Get the relative path from the current file to the parent directory
 relative_path_to_parent = os.path.join(*([os.pardir] * 1))
