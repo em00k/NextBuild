@@ -27,7 +27,7 @@ end asm
 
 ' -- Load block is where we load all out data files 
 LoadSDBank("tiles.spr",0,0,0,32)				' sprites bank 32
-LoadSDBank("player.spr",0,0,0,34)				' sprites bank 34
+LoadSDBank("player.spr",0,0,0,34)				' sprites bank 32
 LoadSDBank("game.afb",0,0,0,36) 				' load game.afb into bank 36
 LoadSDBank("vt24000.bin",0,0,0,38) 				' load the music replayer into bank 38
 LoadSDBank("thunder.pt3",0,0,0,39) 				' load music.pt3 into bank 39
@@ -39,7 +39,7 @@ InitSprites(64,$0000)									' init all sprites
 asm : nextreg $50,$ff : nextreg $51,$ff : end asm   	' pop back default banks 
 
 InitSFX(36)							            ' init the SFX engine, sfx are in bank 36
-InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 39
+InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 34
 SetUpIM()							            ' init the IM2 code 
 
 ' DEFINE variables 
@@ -77,11 +77,11 @@ drawmap()										' draw inital map
 
 do 
     WaitRetrace2(1)		
-    'border 2
+    border 2
     ReadKeys()
 	CheckCollision()
     UpdatePlayer()
-    'border 0
+    border 0
 loop 
 
 

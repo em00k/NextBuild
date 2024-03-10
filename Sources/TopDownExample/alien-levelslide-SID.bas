@@ -1,6 +1,6 @@
 '!ORG=24576
-'!HEAP=512
-'!copy=h:\alien.nex
+'!HEAP=1024
+'#!copy=h:\alien.nex
 ' over top game engine for NextBuild by em00k 
 ' Uses banked tiles, ayfx music interrupts
 ' v2 - with level sliding 
@@ -18,30 +18,135 @@ const spdown   as ubyte = %0100
 PAPER 0 : BORDER 0 : ink 7 : CLS 				' paint it all black
 
 asm 
-	nextreg SPRITE_CONTROL_NR_15,%00000001		; Sprites on, bits 4-2  %100 ULA on top of Sprites on top of Layer2
+	nextreg SPRITE_CONTROL_NR_15,%00010001		; Sprites on, bits 4-2  %100 ULA on top of Sprites on top of Layer2
 	nextreg GLOBAL_TRANSPARENCY_NR_14,0			; set global transparency to black 
 	nextreg TURBO_CONTROL_NR_07,3				; turbo mode 28mhz 
-	nextreg PERIPHERAL_3_NR_08,254				; disable contention 
+;	nextreg PERIPHERAL_3_NR_08,254				; disable contention 
 	di 
 end asm 
 
 
 ' -- Load block is where we load all out data files 
-LoadSDBank("tiles.spr",0,0,0,32)				' sprites bank 32
+LoadSDBank("tiles.spr",0,0,0,36)				' sprites bank 32
 LoadSDBank("player.spr",0,0,0,34)				' sprites bank 32
-LoadSDBank("game.afb",0,0,0,36) 				' load game.afb into bank 36
-LoadSDBank("vt24000.bin",0,0,0,38) 				' load the music replayer into bank 38
-LoadSDBank("thunder.pt3",0,0,0,39) 				' load music.pt3 into bank 39
+'#oadSDBank("game.afb",0,0,0,36) 				' load game.afb into bank 36
+'#oadSDBank("vt24000.bin",0,0,0,38) 				' load the music replayer into bank 38
+'#oadSDBank("thunder.pt3",0,0,0,39) 				' load music.pt3 into bank 39
 LoadSDBank("font4.spr",0,0,0,40)				' load font into bank 40
 ' -- 
 
 asm : nextreg $50,34 : nextreg $51,35 : end asm 		
 InitSprites(64,$0000)									' init all sprites 
 asm : nextreg $50,$ff : nextreg $51,$ff : end asm   	' pop back default banks 
+LoadSDBank("nextsid.bin",0,0,0,33)
+LoadSDBank("chiptune2.pt3",0,0,0,44)
 
-InitSFX(36)							            ' init the SFX engine, sfx are in bank 36
-InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 34
-SetUpIM()							            ' init the IM2 code 
+asm 
+	nextsid_init EQU 0x0000E098
+
+	nextsid_set_waveform_A EQU 0x0000E07A
+	nextsid_set_waveform_B EQU 0x0000E081
+	nextsid_set_waveform_C EQU 0x0000E088
+	nextsid_set_detune_A EQU 0x0000E056
+	nextsid_set_detune_B EQU 0x0000E05A
+	nextsid_set_detune_C EQU 0x0000E05E
+
+	nextsid_play EQU 0x0000E007
+	nextsid_stop EQU 0x0000E011
+	nextsid_mode EQU 0x0000E2D7
+	nextsid_pause EQU 0x0000E000
+	nextsid_set_pt3 EQU 0x0000E025
+	init EQU 0x0000E3F9
+	nextsid_set_psg_clock EQU 0x0000E04E
+	nextsid_vsync EQU 0x0000E08F
+
+	nextreg $57,33					; put nextsid in place
+	irq_vector	equ	65022			;     2 BYTES Interrupt vector
+	stack	equ	65021				;   252 BYTES System stack
+	vector_table	equ	64512		;   257 BYTES Interrupt vector table	
+	startup:	di					; Set stack and interrupts
+	;ld	sp,stack					; System STACK
+
+	nextreg	TURBO_CONTROL_NR_07,%00000011	; 28Mhz / 27Mhz
+
+	ld	hl,vector_table	; 252 (FCh)
+	ld	a,h
+	ld	i,a
+	im	2
+
+	inc	a							; 253 (FDh)
+
+	ld	b,l							; Build 257 BYTE INT table
+.irq:	ld	(hl),a
+	inc	hl
+	djnz	.irq					; B = 0
+	ld	(hl),a
+
+	ld	a,$FB						; EI
+	ld	hl,$4DED					; RETI
+	ld	(irq_vector-1),a
+	ld	(irq_vector),hl
+
+	ld	bc,0xFFFD					; Turbosound PSG #1
+	ld	a,%11111111
+	out	(c),a
+
+
+	nextreg VIDEO_INTERUPT_CONTROL_NR_22,%00000100
+	nextreg VIDEO_INTERUPT_VALUE_NR_23,255
+
+	;ld	sp,stack					; System STACK
+	ei
+
+; Init the NextSID sound engine, setup the variables and the timers.
+
+	ld	de,0						; LINE (0 = use NextSID)
+	ld	bc,192						; Vsync line
+	call	nextsid_init			; Init sound engine
+
+	; Setup a duty cycle and set a PT3.
+
+	call	nextsid_stop	; Stop playback
+	
+	; channel b 
+	ld	hl,test_waveformb
+	ld	a,32-1		; 16 BYTE waveform
+	call	nextsid_set_waveform_B
+
+	ld	hl,16		; Slight detune
+	call	nextsid_set_detune_B
+
+	; channel a 
+	ld	hl,test_waveforma
+	ld	a,32-1		; 16 BYTE waveform
+	call	nextsid_set_waveform_A
+
+	ld	hl,3		; Slight detune
+	call	nextsid_set_detune_A
+
+	nextreg $50,44
+	nextreg $51,45
+	
+	ld	hl,$0000 	; Init the PT3 player.
+	ld	a,44		; Bank8k a 1st 8K
+	ld	b,45		; Bank8k b 2nd 8K
+	
+	call	nextsid_set_pt3
+
+	call	init		; VT1-MFX init as normal
+
+	nextreg $50,$ff 
+	nextreg $51,$ff 
+	nextreg $57,33
+
+	call	nextsid_play	; Start playback
+	
+	end asm 
+
+
+'InitSFX(36)							            ' init the SFX engine, sfx are in bank 36
+'InitMusic(38,39,0000)				            ' init the music engine 38 has the player, 39 the pt3, 0000 the offset in bank 34
+'SetUpIM()							            ' init the IM2 code 
 
 ' DEFINE variables 
 dim plx as ubyte 
@@ -70,17 +175,23 @@ const MUP	as ubyte = 2
 const MDOWN	as ubyte = 3 
 const MSTILL	as ubyte = 4
 
-intro()											' show intro screen 
+'intro()											' show intro screen 
 
 plx = 14<<4 : ply = 9<<4 : playerattrib3 = 0		' set some variables 
 worldpoint=37 : playerframbase = 0 
+asm 
 
+call	nextsid_vsync
+end asm 
 DrawMap()										' draw inital map 
 
 ' main game loop 
 
 do 
-    WaitRetrace2(1)		
+    asm 
+    call	nextsid_vsync
+    end asm 
+'    WaitRetrace2(1)		
    '; border 2
     ReadKeys()
 	CheckCollision()
@@ -225,13 +336,13 @@ sub ReadKeys()
         keypressed = 1 
     endif 
     if MultiKeys(KEYSPACE) and firepressed = 0 
-        PlaySFX(5)
+    'PlaySFX(5)
         firepressed = 1 
         firetimer = 5
         playerframbase = 6 
     endif 
     if GetKeyScanCode()=KEYR
-        LoadSDBank("tiles.spr",0,0,0,32)            ' so we can change the tiles on the fly and reload to test 
+    '    #'oadSDBank("tiles.spr",0,0,0,32)            ' so we can change the tiles on the fly and reload to test 
         DrawMap()
         
     endif 
@@ -284,11 +395,11 @@ sub DrawMapSlide(type as ubyte)
     
     if type = 0                                         ' slide in from right 
         for x = 0 to 15
-            WaitRetrace(1)
+        '    WaitRetrace(1)
             sp = x : scrl=scrl+16 : ScrollLayer(scrl,0)         ' sp is the tile we start at, scrl = X scroll offset 
             for y = 0 to 11                                     ' we will draw a vertical line on the right
                 p = peek(mapbuffer+sp)
-                DoTileBank16(x,y,p,32)
+                DoTileBank16(x,y,p,36)
                 sp = sp + 16
             next y 
             plx = plx - 16 : UpdatePlayer()                     ' move player with screen scroll 
@@ -297,12 +408,12 @@ sub DrawMapSlide(type as ubyte)
     elseif type = 1                 ' slide in from left 
         sp = 15 
         for x = 0 to 15
-            WaitRetrace(1)
+        '    WaitRetrace(1)
             sp = 15-x : scrl=scrl-16
             ScrollLayer(scrl,0)
             for y = 0 to 11                                     ' we will draw a vertical line on the right
                 p = peek(mapbuffer+sp)
-                DoTileBank16(15-x,y,p,32)
+                DoTileBank16(15-x,y,p,36)
                 sp = sp + 16
             next y 
             plx = plx + 16 : UpdatePlayer()
@@ -311,12 +422,12 @@ sub DrawMapSlide(type as ubyte)
     elseif type = 2                 ' slide in from bottom 
         scrl = 0
         for y = 0 to 11 
-            WaitRetrace(1)
+        '    WaitRetrace(1)
             scrl=scrl+16
             ScrollLayer(0,scrl)
             for x = 0 to 15
                 p = peek(mapbuffer+sp)
-                DoTileBank16(x,y,p,32)
+                DoTileBank16(x,y,p,36)
                 sp = sp + 1
             next x 
             ply = ply - 16 : UpdatePlayer()
@@ -325,11 +436,11 @@ sub DrawMapSlide(type as ubyte)
     elseif type = 3                 ' slide in from top 
         scrl = 192 : sp = 160+16
         for y = 0 to 11           
-            WaitRetrace(1)
+        '    WaitRetrace(1)
             scrl=scrl-16 : ScrollLayer(0,scrl)
             for x = 0 to 15
                 p = peek(mapbuffer+sp)
-                DoTileBank16(x,11-y,p,32)
+                DoTileBank16(x,11-y,p,36)
                 sp = sp + 1
                 next x 
             ply = ply + 16 : UpdatePlayer()
@@ -370,7 +481,7 @@ sub DrawMap()
 	for y = 0 to 11 
 		for x = 0 to 15
 			p = peek(mapbuffer+sp)
-			DoTileBank16(x,y,p,32)
+			DoTileBank16(x,y,p,36)
 			sp = sp + 1 
 		next x 
     next y
@@ -382,15 +493,19 @@ end sub
 
 sub intro()
     'WaitKey()       
-    EnableSFX							            ' Enables the AYFX, use DisableSFX to top
-    EnableMusic 						            ' Enables Music, use DisableMusic to stop 
-    PlaySFX(0)                                      ' Plays SFX 
+    'EnableSFX							            ' Enables the AYFX, use DisableSFX to top
+    'EnableMusic 						            ' Enables Music, use DisableMusic to stop 
+    'PlaySFX(0)                                      ' Plays SFX 
     CLS256(0)   
     L2Text(0,0,"THIS IS A QUICK DEMO WRITTEN",40,0)
     L2Text(0,1,"USING NEXTBUILD AND BORIELS ",40,0)
     L2Text(0,2,"ZXBASIC COMPILER",40,0)
     L2Text(0,3,"USE WASD TO MOVE, SPACE FIRE",40,0)
     L2Text(0,5,"ANY KEY TO CONTINUE",40,0)
+    asm 
+    nextsid_vsync EQU 0x0000E07E
+    call	nextsid_vsync
+    end asm 
     WaitRetrace2(10)
     WaitKey()  
 end sub
@@ -495,4 +610,39 @@ map6:
 	db 5,4,1,0,0,0,0,0,0,0,0,0,0,1,5,4
 	db 4,5,4,1,1,1,1,1,1,1,1,1,1,5,4,5
 	db 5,4,5,4,5,4,5,4,5,4,5,4,4,4,5,4	   
+end asm 
+
+
+asm 
+test_waveforma:
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000 
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000
+end asm 
+
+asm 
+test_waveformb:
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000 
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000
+end asm 
+
+
+asm 
+test_waveformc:
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000 
+ db 128,000,128,000,128,000,128,000
+ db 128,000,128,000,128,000,128,000
+end asm 
+
+
+asm 
+noduty_waveform:
+ db 128,128,128,128,128,128,128,128
+ db 128,128,128,128,128,128,128,128 
+ db 128,128,128,128,128,128,128,128
+ db 128,128,128,128,128,128,128,128
 end asm 

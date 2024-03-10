@@ -1,9 +1,8 @@
 '!ORG=24576
 '!HEAP=512
-'!copy=h:\alien.nex
 ' over top game engine for NextBuild by em00k 
 ' Uses banked tiles, ayfx music interrupts
-' v2 - with level sliding 
+' v1 
 
 const spleft as ubyte = %1010					' thare constants required for sprite mirror + flipping 
 const spright as ubyte = %0010
@@ -18,7 +17,7 @@ const spdown   as ubyte = %0100
 PAPER 0 : BORDER 0 : ink 7 : CLS 				' paint it all black
 
 asm 
-	nextreg SPRITE_CONTROL_NR_15,%00000001		; Sprites on, bits 4-2  %100 ULA on top of Sprites on top of Layer2
+	nextreg SPRITE_CONTROL_NR_15,%00010001		; Sprites on, bits 4-2  %100 ULA on top of Sprites on top of Layer2
 	nextreg GLOBAL_TRANSPARENCY_NR_14,0			; set global transparency to black 
 	nextreg TURBO_CONTROL_NR_07,3				; turbo mode 28mhz 
 	nextreg PERIPHERAL_3_NR_08,254				; disable contention 
@@ -72,20 +71,20 @@ const MSTILL	as ubyte = 4
 
 intro()											' show intro screen 
 
-plx = 14<<4 : ply = 9<<4 : playerattrib3 = 0		' set some variables 
+plx = 6<<3 : ply = 6<<3 : playerattrib3 = 0		' set some variables 
 worldpoint=37 : playerframbase = 0 
 
-DrawMap()										' draw inital map 
+drawmap()										' draw inital map 
 
 ' main game loop 
 
 do 
     WaitRetrace2(1)		
-   '; border 2
+   ; border 2
     ReadKeys()
 	CheckCollision()
     UpdatePlayer()
-   '; border 0
+   ; border 0
 loop 
 
 
@@ -95,8 +94,8 @@ Sub CheckCollision()
 	
 	' a robust collision routine for our player against the tilemap
 
-	dim sp,add as uinteger
-	dim plxc,plyc,tilehit,bottile,toptile,righttile,lefttile,tile as ubyte 
+	dim sp as uinteger
+	dim plxc,plyc,tilehit as ubyte 
 	
 	mapbuffer = @map1+worldoffset			' point to the map 	
 
@@ -188,13 +187,13 @@ Sub CheckCollision()
     ' detects if we hit left right top of bottom edges to draw a new map
     ' 
     if plx = 255-14
-        worldpoint=worldpoint+1 : plx = 2 : DrawMapSlide(0)
+        worldpoint=worldpoint+1 : plx = 2 : drawmap()
     elseif plx = 0 
-        worldpoint=worldpoint-1 : plx = 254-14 : DrawMapSlide(1)
+        worldpoint=worldpoint-1 : plx = 254-14 : drawmap()
     elseif ply>192
-        worldpoint=worldpoint+8 :  DrawMapSlide(2)
+        worldpoint=worldpoint+8 : ply = 2 : drawmap()
     elseif ply=0
-        worldpoint=worldpoint-8 : DrawMapSlide(3)
+        worldpoint=worldpoint-8 : ply = 191 : drawmap()
     endif 
 
 	oldpx = plx : oldpy = ply	
@@ -232,7 +231,7 @@ sub ReadKeys()
     endif 
     if GetKeyScanCode()=KEYR
         LoadSDBank("tiles.spr",0,0,0,32)            ' so we can change the tiles on the fly and reload to test 
-        DrawMap()
+        drawmap()
         
     endif 
 
@@ -270,91 +269,8 @@ sub UpdatePlayer()
 
 end sub 
 
-sub DrawMapSlide(type as ubyte)
 
-	dim sp,worldmap,add as uinteger
-	dim p,scrl,x,y as ubyte 
-    
-    worldmap = peek(@world+worldpoint-1)-1              ' get the current map from the worldmap table -1 
-
-    worldoffset = worldmap * 192                        ' each screen is 192 in size 
-
-    mapbuffer = @map1+worldoffset                       ' set the offset 
-
-    
-    if type = 0                                         ' slide in from right 
-        for x = 0 to 15
-            WaitRetrace(1)
-            sp = x : scrl=scrl+16 : ScrollLayer(scrl,0)         ' sp is the tile we start at, scrl = X scroll offset 
-            for y = 0 to 11                                     ' we will draw a vertical line on the right
-                p = peek(mapbuffer+sp)
-                DoTileBank16(x,y,p,32)
-                sp = sp + 16
-            next y 
-            plx = plx - 16 : UpdatePlayer()                     ' move player with screen scroll 
-            'WaitRetrace(1)
-        next x 
-    elseif type = 1                 ' slide in from left 
-        sp = 15 
-        for x = 0 to 15
-            WaitRetrace(1)
-            sp = 15-x : scrl=scrl-16
-            ScrollLayer(scrl,0)
-            for y = 0 to 11                                     ' we will draw a vertical line on the right
-                p = peek(mapbuffer+sp)
-                DoTileBank16(15-x,y,p,32)
-                sp = sp + 16
-            next y 
-            plx = plx + 16 : UpdatePlayer()
-            'WaitRetrace(1)
-        next x 
-    elseif type = 2                 ' slide in from bottom 
-        scrl = 0
-        for y = 0 to 11 
-            WaitRetrace(1)
-            scrl=scrl+16
-            ScrollLayer(0,scrl)
-            for x = 0 to 15
-                p = peek(mapbuffer+sp)
-                DoTileBank16(x,y,p,32)
-                sp = sp + 1
-            next x 
-            ply = ply - 16 : UpdatePlayer()
-            'WaitRetrace(1)
-        next y 
-    elseif type = 3                 ' slide in from top 
-        scrl = 192 : sp = 160+16
-        for y = 0 to 11           
-            WaitRetrace(1)
-            scrl=scrl-16 : ScrollLayer(0,scrl)
-            for x = 0 to 15
-                p = peek(mapbuffer+sp)
-                DoTileBank16(x,11-y,p,32)
-                sp = sp + 1
-                next x 
-            ply = ply + 16 : UpdatePlayer()
-            sp = sp - 32
-        next y 
-    endif 
-
-    '    ClipLayer2(0,0,0,0)									' hide everything so we dont see the screen
-'    ClipSprite(0,0,0,0)									' updating
-	' for y = 0 to 11 
-	' 	for x = 0 to 15
-	' 		p = peek(mapbuffer+sp)
-	' 		DoTileBank16(x,y,p,32)
-	' 		sp = sp + 1 
-      
-	' 	next x 
-    ' next y
-'    ClipLayer2(0,255,0,191)								' unlclip Sprites and Layer 2 
-'    ClipSprite(0,255,0,191) 
-
-    L2Text(0,0,str(worldmap),40,0)
-    
-end sub 
-
-sub DrawMap()
+sub drawmap()
 
 	dim sp,worldmap as uinteger
 	dim p as ubyte 
