@@ -6,8 +6,11 @@ targetting the ZX Spectrum Next
 What does it contain?
 
 Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows 
+
 SUBs/FUNcs inline ASM and a bunch of other features and is SUPER fast. By Jose Rodriguez (https://zxbasic.readthedocs.io/en/docs)
+
 LCD's BorIDE - An integrated editor designed for Boriel's ZXB Daniel Chmielewski
+
 CSpect - One of the premiere ZX Spectrun Next emulators By Mike Dailly full download is https://mdf200.itch.io/cspect
 located in \Emu\cspect\
 
