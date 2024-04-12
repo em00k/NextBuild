@@ -40,6 +40,8 @@ asm : di : end asm
 
 LoadSDBank("128-demo.spr",0,0,0,34)                     ' load 128 4bit sprites to bank 34
 
+declare function BinToString(num as ubyte) as String
+
 asm 
     nextreg TURBO_CONTROL_NR_07,3                       ; 28mhz
     nextreg GLOBAL_TRANSPARENCY_NR_14,0                 ; black trasparency 
@@ -239,3 +241,57 @@ asm
 end asm 
 
 
+
+function FASTCALL BinToString(num as ubyte) as String
+	asm
+	PROC
+	push namespace core
+	LOCAL END_CHAR
+	LOCAL DIGIT
+	LOCAL charloop
+	LOCAL bitisset
+	LOCAL nobitset
+	push af   ; save ubyte 
+	ld bc,10
+	call __MEM_ALLOC
+	ld a, h
+	or l
+	pop bc 
+	ld c,b 
+	ret z	; NO MEMORY
+	
+	push hl	; Saves String ptr
+	ld (hl), 8
+	inc hl
+	ld (hl), 0
+	inc hl  ; 8 chars string length
+
+	; c holds out entry 8 bit value, b number of bits 
+
+	ld b,8
+charloop:
+	call DIGIT
+	djnz charloop 
+	pop hl	; Recovers string ptr
+	ret
+	
+DIGIT:
+	ld a,c
+	bit 7,a
+	jr nz,bitisset 
+	ld a,'0'
+	jr nobitset
+bitisset:
+	ld a,'1'
+nobitset:	
+	
+END_CHAR:
+	ld (hl), a
+	inc hl
+	ld a,c 
+	sla c 
+	ret
+	ENDP
+	pop namespace
+	end asm
+end function
