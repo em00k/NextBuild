@@ -5,8 +5,7 @@ targetting the ZX Spectrum Next
 
 What does it contain?
 
-Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows 
-
+Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows
 SUBs/FUNcs inline ASM and a bunch of other features and is SUPER fast. By Jose Rodriguez (https://github.com/boriel/zxbasic)
 
 LCD's BorIDE - An integrated editor designed for Boriel's ZXB Daniel Chmielewski
