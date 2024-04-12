@@ -1,6 +1,28 @@
 # NextBuild v7 Full Release 
 
-NextBuild : A suite of tools based on Boriel's ZX Basic Compiler targetting the ZX Spectrum Next
+NextBuild : A suite of tools based on Boriel's ZX Basic Compiler 
+targetting the ZX Spectrum Next
+
+What does it contain?
+
+Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows 
+SUBs/FUNcs inline ASM and a bunch of other features and is SUPER fast. By Jose Rodriguez (https://zxbasic.readthedocs.io/en/docs)
+LCD's BorIDE - An integrated editor designed for Boriel's ZXB Daniel Chmielewski
+CSpect - One of the premiere ZX Spectrun Next emulators By Mike Dailly full download is https://mdf200.itch.io/cspect
+located in \Emu\cspect\
+
+Thanks to the many wonderful people that have helped, such Michael Flash Ware for the Tile print code,
+Jose for his support, Mike Dailly for code examples, Gary Lancaster for his inpsiration in NextZXOS, 
+
+This is a collection of tools to allow you to write software for the ZX Spectrum Next (and normal
+spectrum if you use Fuse). It aims to simplify the process by having a one-click launcher into an 
+editor, then press F5 to build and should launch in CSpect.
+
+Scripts, NextLib and launchers by em00k.
+
+As mentioned ZXB lets you use inline ASM so creating macros and includes to control the Next 
+hardware is easily done as well as being very much like ZX Basic but much much faster! 
+There is a whole wiki dedicated to ZXBasic here https://zxbasic.readthedocs.io/en/docs
 
 Please report any bugs and I will try to fix them.
 
