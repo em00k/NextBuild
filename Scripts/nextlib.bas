@@ -1,7 +1,7 @@
 ' vim:ts=4:et:
 ' ---------------------------------------------------------
-' NextLib v7.51 - David Saphier / em00k 2022
-' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Daily 
+' NextLib v8.00 - David Saphier / em00k 2024
+' Help and thanks Boriel, Flash, Baggers, Britlion, Shiru, Mike Dailly 
 ' Matt Davies for help on the fastPLotL2 
 ' ---------------------------------------------------------
 
