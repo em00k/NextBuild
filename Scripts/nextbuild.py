@@ -121,7 +121,7 @@ def GenerateLoader():
             txt2nextbasic.main()
             # copies the autoexec.bas 
             if nextzxos == 1: 
-                subprocess.run([EMU_DIR+'\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img','autoexec.bas','/nextzxos/autoexec.bas'])
+                subprocess.run([EMU_DIR+'\\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img','autoexec.bas','/nextzxos/autoexec.bas'])
         else:
             txt2nextbasic.b_auto = 0 
 
@@ -134,12 +134,12 @@ def GenerateLoader():
             txt2nextbasic.b_auto = 0 
             txt2nextbasic.main()
 
-            subprocess.run([EMU_DIR+'\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img',loaderfile,'/dev/'+loaderfile])
+            subprocess.run([EMU_DIR+'\\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img',loaderfile,'/dev/'+loaderfile])
         
-        subprocess.run([EMU_DIR+'\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img',filenamenoext+ext,'/dev/'+outfilenoext+ext])
-        #subprocess.run([EMU_DIR+'\launchnextzxos.bat',head_tail[0]+'\\Memory.txt',EMU_DIR])
+        subprocess.run([EMU_DIR+'\\hdfmonkey.exe','put','/CSpect/cspect-next-2gb.img',filenamenoext+ext,'/dev/'+outfilenoext+ext])
+        #subprocess.run([EMU_DIR+'\\launchnextzxos.bat',head_tail[0]+'\\Memory.txt',EMU_DIR])
         if noemu == 0:
-            subprocess.Popen([EMU_DIR+'\launchnextzxos.bat',head_tail[0]+'\\Memory.txt',EMU_DIR])
+            subprocess.Popen([EMU_DIR+'\\launchnextzxos.bat',head_tail[0]+'\\Memory.txt',EMU_DIR])
 
 
 def CreateNEXFile():
