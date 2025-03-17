@@ -8,7 +8,8 @@ What does it contain?
 Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows
 SUBs/FUNcs inline ASM and a bunch of other features and is SUPER fast. By Jose Rodriguez (https://github.com/boriel/zxbasic)
 
-LCD's BorIDE - An integrated editor designed for Boriel's ZXB Daniel Chmielewski
+Please note that the version of ZX Basic Compiler has been modified to specially work with the Next - dropping the latest 
+versions of the compiler is not supported - and will probably lead to random crashing on real HW. You have been warned!
 
 CSpect - One of the premiere ZX Spectrun Next emulators By Mike Dailly full download is https://mdf200.itch.io/cspect
 located in \Emu\cspect\
@@ -88,9 +89,11 @@ Copy finalised NEX file to another location:
 
 Thanks to :
 
-- Jose Rodgriguez aka Boriel for ZXBasic
+- Jose Rodgriguez aka Boriel for ZXBasic Compiler
+- Shiru for the AYFX player
+- Michael Flash Ware for the software tile routines 
 - Kounch for Text to NextBASIC File Converter for ZX Spectrum Next
 - JSJ for his ZXBasic vscode extenstion
-- Remy Sharp for his hover helper code
+- Remy Sharp for his hover helper code & NextBasic extension
 - Mike Dailly for CSpect
 - And all others who have helped!
