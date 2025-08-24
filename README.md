@@ -1,33 +1,48 @@
 # NextBuild v7 Full Release 
 
-NextBuild : A suite of tools based on Boriel's ZX Basic Compiler 
-targetting the ZX Spectrum Next
+## NextBuild : A suite of tools based on Boriel's ZX Basic Compiler targetting the ZX Spectrum Next.
 
-What does it contain?
+This is a collection of tools, plugins, scripts and launchers for Visual Studio Code to allow you to write software for the
+ZX Spectrum Next and the normal Spectrum, if you use Fuse. It aims to simplify the process by having a one-click launcher
+into an editor where you can simply press F5 to build a Boriel BASIC .bas file and run your project, if it builds OK, with CSpect.
 
-Boriel's ZX Basic (ZXB) - A PC based language which resembles ZX Basic but allows
+## What does it contain?
+
+**Boriel's ZX Basic (ZXB)** - A PC based language which resembles ZX Basic but allows
 SUBs/FUNcs inline ASM and a bunch of other features and is SUPER fast. By Jose Rodriguez (https://github.com/boriel/zxbasic)
 
 Please note that the version of ZX Basic Compiler has been modified to specially work with the Next - dropping the latest 
 versions of the compiler is not supported - and will probably lead to random crashing on real HW. You have been warned!
 
-CSpect - One of the premiere ZX Spectrun Next emulators By Mike Dailly full download is https://mdf200.itch.io/cspect
+**CSpect** - One of the premiere ZX Spectrun Next emulators By Mike Dailly full download is https://mdf200.itch.io/cspect
 located in \Emu\cspect\
+
+Scripts, NextLib and launchers by em00k.
+
+## Installing Mono
+
+NextBuild is known to work with at least the Windows and Linux versions of VSCode. However, CSpect requires the mono libraries
+to run and mono is often not installed by default by most Linux distributions or MacOS.
+
+To use NextBuild and run CSpect under Linux you must install the mono runtime and libraries using the recommened package manager
+for your distribution.
+
+Users of Debian and Ubuntu based Linux distros can install mono by running:
+
+`sudo apt install mono-complete`
+
+## Thanks
 
 Thanks to the many wonderful people that have helped, such Michael Flash Ware for the Tile print code,
 Jose for his support, Mike Dailly for code examples, Gary Lancaster for his inpsiration in NextZXOS, 
-
-This is a collection of tools to allow you to write software for the ZX Spectrum Next (and normal
-spectrum if you use Fuse). It aims to simplify the process by having a one-click launcher into an 
-editor, then press F5 to build and should launch in CSpect.
-
-Scripts, NextLib and launchers by em00k.
 
 As mentioned ZXB lets you use inline ASM so creating macros and includes to control the Next 
 hardware is easily done as well as being very much like ZX Basic but much much faster! 
 There is a whole wiki dedicated to ZXBasic here https://zxbasic.readthedocs.io/en/docs
 
 Please report any bugs and I will try to fix them.
+
+## News
 
 - 11/12/23  -   updated Boriel to 1.17.1 and CSpect to 2.19.5 
 
