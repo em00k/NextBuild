@@ -1,27 +1,20 @@
 {\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang2057\deflangfe2057{\fonttbl{\f0\fswiss\fprq2\fcharset0 Arial;}{\f1\froman\fprq2\fcharset0 Times New Roman;}{\f2\fmodern\fprq1\fcharset0 Courier New;}}
 {\colortbl ;\red0\green0\blue255;\red0\green128\blue0;}
 {\stylesheet{ Normal;}{\s1 heading 1;}{\s2 heading 2;}{\s3 heading 3;}}
-{\*\generator Riched20 10.0.19041}{\*\mmathPr\mnaryLim0\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
-\pard\keepn\nowidctlpar\s1\li-1276\sb240\sa60\qc\kerning32\b\f0\fs32 SNASM V3.2.00 \endash  6502/Z80 assembler\par
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\keepn\nowidctlpar\s1\li-1276\sb240\sa60\qc\kerning32\b\f0\fs32 SNASM V3.2.4.1 \endash  6502/Z80 assembler\par
 
-\pard\nowidctlpar\li-1276\qc\kerning0\b0\f1\fs24\'a9 Copyright Michael Dailly, 2002-2020. All rights reserved.\par
+\pard\nowidctlpar\li-1276\qc\kerning0\b0\f1\fs24\'a9 Copyright Michael Dailly, 2002-2024. All rights reserved.\par
 \par
 I can be reached at:-\par
-{{\field{\*\fldinst{HYPERLINK "mailto:mike@dailly.org" }}{\fldrslt{\ul\cf1\cf1\ul mike@dailly.org}}}}\f1\fs24\line or\line {{\field{\*\fldinst{HYPERLINK http://dailly.blogspot.com/ }}{\fldrslt{http://dailly.blogspot.com/\ul0\cf0}}}}\f1\fs24\par
-\par
+{{\field{\*\fldinst{HYPERLINK "mailto:mike@dailly.org" }}{\fldrslt{\ul\cf1\cf1\ul mike@dailly.org}}}}\f1\fs24\line\par
 \par
 \par
 
 \pard\nowidctlpar\li-1276\b SNASM\b0  is a fully featured 65xxx and Z80 cross assembler. It supports complex macros, dynamic instruction creation and full 6502,65c02, 65816 and Z80 support. It is also supports symbol output to #CSpec and VICE emulators as well as a basic MAP.  It is actively being used by myself for retro development so is being constantly upgraded with new features.  \par
 \par
-\par
-\par
-\par
-\b THIS ASSEMBLER IS TOTALY FREE AND CAN BE USED BY ANYONE FOR ANYTHING. BEING FREE, I ACCEPT NO RESPONSIBILITY FOR ANY PROBLEMS RESULTING IN THE USE OF THIS PROGRAM. IF YOU ARE GOING TO INCLUDE IT IN ANOTHER PACKAGE, YOU ARE STILL FREE TO DO SO, BUT PLEASE LET ME KNOW.\par
 
-\pard\keepn\nowidctlpar\s3\li-1276\sb240\sa60\f0\fs26\par
-
-\pard\nowidctlpar\b0\fs24\par
+\pard\nowidctlpar\f0\par
 \par
 
 \pard\keepn\nowidctlpar\s3\li-1276\sb240\sa60\b\fs26 Command Line:\par
@@ -34,15 +27,14 @@ I can be reached at:-\par
           -next\tab\tab\tab Enables ZX Spectrum Next instructions\par
           -d SYM[=VAL]\tab define a value. If Value not provided, sym=1\par
     \par
- \par
+ \b\f0\fs26\par
 
-\pard\keepn\nowidctlpar\s3\li-1276\sb240\sa60\b\f0\fs26\par
-\page Numerical\par
+\pard\keepn\nowidctlpar\s3\li-1276\sb240\sa60\page Numerical\par
 
-\pard\nowidctlpar\fi720\li-1276\b0\f1\fs24 0 - 9\tab\tab\tab\tab Decimal\par
-$A-$F\tab\tab\tab Hex\par
-%0-%1\tab\tab\tab Binary\par
-?0-7 \tab\tab\tab\tab Octal\par
+\pard\nowidctlpar\fi720\li-1276\b0\f1\fs24 0 - 9\tab\tab\tab\tab Decimal ( '_' can be used as a seperator 12_34)\par
+$A-$F\tab\tab\tab\tab Hex ( '_' can be used as a seperator $FF_FF)\par
+%0-%1\tab\tab\tab\tab Binary ( '_' can be used as a seperator %10_10)\par
+?0-7 \tab\tab\tab\tab Octal ( '_' can be used as a seperator ?77_77)\par
 A-Z[A-Z0-9_][:]\tab\tab Label\par
 @A-Z[A-Z0-9_][:]\tab\tab Local Label\par
 !A-Z[A-Z0-9_][:]\tab\tab Local Label\par
@@ -64,10 +56,10 @@ expression,y\tab\tab\tab Absolute +Y if >=256\par
 (expression),y\tab\tab\tab Zero page indirect +Y\par
 (expression),z\tab\tab\tab Zero page indirect +Z\tab\tab (45GS02)\par
 (expression,x)\tab\tab\tab Zero page indirect +X\par
-[$00]                                   Direct Page  \tab\tab\tab (65816 / 45GS02)\par
-[$00],y                                Direct Page+Y\tab\tab\tab (65816)\par
-[$00],z                                Direct Page+Z\tab\tab\tab (45GS02)\par
->expression                         24 bit LONG\tab\tab\tab (65816)\par
+[$00]                                   \tab Direct Page  \tab\tab\tab (65816 / 45GS02)\par
+[$00],y                                \tab Direct Page+Y\tab\tab\tab (65816)\par
+[$00],z                                \tab Direct Page+Z\tab\tab\tab (45GS02)\par
+>expression                         \tab 24 bit LONG\tab\tab\tab (65816)\par
 >expression,x\tab\tab\tab 24 bit LONG+X\tab\tab (65816)\par
 (expression,x)\tab\tab\tab Absolute+X\tab\tab\tab (65816, 65c02)\par
 expression,s\tab\tab\tab Stack relative\tab\tab\tab (65816)\par
@@ -104,45 +96,46 @@ Label[:]\tab\tab\tab\tab\tab Set to current PC\line @Label[:]\tab\tab\tab\tab Lo
 
 \pard\keepn\nowidctlpar\s3\li-1276\sb240\sa60\page\b\f0\fs26 Assembler Commands:\par
 
-\pard\nowidctlpar\li-1276\b0\f1\fs22\line           RSRESET\tab\tab\tab\tab\tab sets to 0\tab\tab\tab (structures)\par
-\tab RSSET\tab [Expression]\tab\tab\tab\tab if no expression, defaults to 0\tab (structures)\par
+\pard\nowidctlpar\li-1276\b0\f1\fs22\line RSRESET\tab\tab\tab\tab\tab sets to 0\tab\tab\tab (structures)\par
+RSSET\tab [Expression]\tab\tab\tab\tab if no expression, defaults to 0\tab (structures)\par
 \par
-\tab SEG\tab\tab NAME,<bank>:<offset>,<target_pc>\tab\tab Define segment block\line\tab SEG\tab\tab NAME,<flatAddress>,<target_pc>\tab\tab Define segment block\par
+SEG\tab NAME,<bank>:<offset>,<target_pc>\tab Define segment block\line SEG\tab NAME,<flatAddress>,<target_pc>\tab Define segment block\par
 \par
-          ALIGN  \tab POW2_Size\tab\tab\tab Align to a POW2 size\par
+ALIGN \tab POW2_Size\tab\tab\tab Align to a POW2 size\par
 \par
-\tab INCLUDE\tab <Drive:\\Path\\FileName>\tab include a file for assembly\par
-\tab INCBIN\tab <Drive:\\Path\\FileName>\tab include a raw binary file\par
+INCLUDE\tab <Drive:\\Path\\FileName>[,offset[,length]] include a file for assembly\par
+INCBIN\tab <Drive:\\Path\\FileName>\tab\tab   include a raw binary file\par
+INCPRG\tab <Drive:\\Path\\FileName>\tab\tab   include a PRG file (skip header)\par
 \par
-\tab MESSAGE\tab\ldblquote Text\rdblquote ,Expression,[\'85]\tab\tab Like a BASIC print statement (pass2 only)\par
-\tab MESSAGE\tab 0\tab\tab\tab\tab Prints 0\par
-\tab MESSAGE\tab\ldblquote L1:\rdblquote ,L1,\rdblquote  L2: \ldblquote ,L2\tab\tab Print L1: [Label]  L2: [Label]\par
+MESSAGE\tab\ldblquote Text\rdblquote ,Expression,[\'85]\tab\tab Like a BASIC print statement (pass2 only)\par
+MESSAGE\tab 0\tab\tab\tab\tab Prints 0\par
+MESSAGE\tab\ldblquote L1:\rdblquote ,L1,\rdblquote  L2: \ldblquote ,L2\tab\tab Print L1: [Label]  L2: [Label]\par
 \par
-\tab Label[:] MACRO\tab\tab\tab\tab define a macro\par
-\tab ENDM\tab\tab\tab\tab\tab\tab end of macro definition\par
-\tab\\0..\\9,\\a..\\f\tab\tab\tab\tab\tab 16 macro parameters (eg.  "\b lda #\\0\b0 "  or  "\b\\1 #$00\b0 " )\par
-\tab IF,IFDEF,IFNDEF,ELSE,ENDIF\tab\tab Conditional compilation\par
+Label[:] MACRO\tab\tab\tab define a macro\par
+ENDM\tab\tab\tab\tab\tab end of macro definition\par
+\\0..\\9,\\a..\\f\tab\tab\tab\tab 16 macro parameters (eg.  "\b lda #\\0\b0 "  or  "\b\\1 #$00\b0 " )\par
+IF,IFDEF,IFNDEF,ELSE,ENDIF\tab Conditional compilation\par
 \par
-\tab LONGA         <on/off>\tab\tab\tab\tab Turn 16 accumulator register on/off in 65816 mode.\par
-\tab LONGI          <on/off>\tab\tab\tab\tab Turn 16 bit index register on/off  in 65816 mode.\par
+LONGA <on/off>\tab\tab\tab Turn 16 accumulator register on/off in 65816 mode.\par
+LONGI  <on/off>\tab\tab\tab Turn 16 bit index register on/off  in 65816 mode.\par
 \par
-\tab SAVEBIN   \ldblquote name\rdblquote , start, len\tab\tab\tab Save a binary blob\par
-\tab SAVESNA  \ldblquote name\rdblquote , PC [,Stack]\tab\tab Save SNA. Stack=$4000 by default\line           SAVENEX  \ldblquote name\rdblquote , PC [,Stack]\tab\tab Save NEX. Stack=$4000 by default\par
-\tab SAVEPRG   \ldblquote name\rdblquote , StartAdd\tab\tab\tab Save PRG. \par
+SAVEBIN   \ldblquote name\rdblquote , start, len\tab\tab Save a binary blob\par
+SAVESNA  \ldblquote name\rdblquote , PC [,Stack]\tab Save SNA. Stack=$4000 by default\line SAVENEX  \ldblquote name\rdblquote , PC [,Stack]\tab Save NEX. Stack=$4000 by default\par
+SAVEPRG   \ldblquote name\rdblquote , StartAdd\tab\tab Save PRG. \par
 \tab\par
-\tab FOR VAR=XX to YY step SS\tab\tab\tab Repeat the code inside the loop, VAR can be used as a symbol.\par
-\tab NEXT\line\par
-\page\b\f0\fs26 OPT\b0\f1\fs22\tab\tab\tab\tab\tab compiler options  \tab\tab (eg.  \ldblquote\b opt   prg\b0\rdblquote )\par
-Prg\tab\tab\tab\tab\tab outputs a 2 byte .PRG file header at the start of the output file.\par
-Plus4=StartAddress\tab\tab\tab outputs a basic command to exe a start address (for the Plus/4)\line C64=StartAddress\tab\tab\tab outputs a basic command to exe a start address (for the C64)\par
+FOR VAR=XX to YY step SS\tab\tab Repeat the code inside the loop, VAR can be used as a symbol.\par
+NEXT\line\par
+\page\b\f0\fs26 OPT\b0\f1\fs22\tab\tab\tab\tab compiler options  \tab\tab (eg.  \ldblquote\b opt   prg\b0\rdblquote )\par
+Prg\tab\tab\tab\tab outputs a 2 byte .PRG file header at the start of the output file.\par
+Plus4=StartAddress\tab\tab outputs a basic command to exe a start address (for the Plus/4)\line C64=StartAddress\tab\tab outputs a basic command to exe a start address (for the C64)\par
 MEGA65=StartAddress\tab\tab outputs a basic command to exe a start address (for the Mega65)\par
 SNA=StartAddress : StackAdd\tab Save SNA, and set Set start address and stack base\par
 Illegal\tab\tab\tab\tab Enable undocumented opcodes    (\b dcm\b0 , \b ins\b0 , \b lax\b0 , \b xaa\b0 )\par
 A65c02\tab\tab\tab\tab Enable 65c02 opcodes\par
 A65816\tab\tab\tab\tab Enable 65816 opcodes + 16bit registers & 24bit address space\par
-A45GS02\tab\tab\tab\tab Enable 45GS02 (Mega65) opcodes\par
-Z80\tab\tab\tab\tab\tab Enable Z80 opcodes\tab\par
-ZXNEXT\tab\tab\tab\tab Enable ZX Next opcodes\par
+A45GS02\tab\tab\tab Enable 45GS02 (Mega65) opcodes\par
+Z80\tab\tab\tab\tab Enable Z80 opcodes\tab\par
+ZXNEXT\tab\tab\tab Enable Z80 and ZX Next opcodes\par
 \par
 \b\f0\fs26 SNasm Expressions\par
 \b0\f1\fs24 +\tab\tab\tab\tab Add\b\f0\fs26\par
@@ -207,8 +200,8 @@ FILESIZE( )\tab\tab\tab Get the size of a file\par
 \par
 \page Known Bugs\par
 \b0\fs24\par
-1) Nested \b if/else/endif \b0 statements don\rquote t seem to work. (Inside macros at in case)\par
-\b\fs28\line\line Whats I\rquote d still like to add?\b0\par
+\b\fs28\par
+\line Whats I\rquote d still like to add?\b0\par
 
 \pard\nowidctlpar\fi1276\li-1276\fs24 1) File Listing. Standard output file listing.\par
 2) DO/WHILE construction for building tables etc.\par
@@ -457,8 +450,27 @@ V3.2.0  -   May 28th 2022\line             Added FOR/NEXT loops\par
             Fixed LDDRX instruction byte codes\par
             Proper Version added to assembly EXE\par
             Change internal LEX processing and state saving/stacking\par
-
-\pard\widctlpar\fi1276\li164\par
+\par
+V3.2.2  -\tab Fixed a bug where EQUs wouldn't detect undefined symbols\par
+\tab\tab "opt ZXNEXT" no longer needs "opt z80" before it.\par
+\tab\tab You can now specify an offset and/or length into an incbin \par
+\tab\tab\tab incbin "f"[,offset]\par
+\tab\tab\tab incbin "f"[,offset,length]\par
+\tab\tab Fixed a bug in nested "IF" statements\par
+\tab\tab Fixed a hard crash when using a macroname as a label\line\par
+V3.2.3  -\tab March 30th 2024\line\tab\tab Fixed "NEXTREG" showing undefined symbols as value too large\line\tab\tab Added a check for numbers next to labels without whitespace. \line\tab\tab Fixed a crash when first "a" was left out of SBC,ADD and SDC\line\tab\tab Moved to itch.io\par
+\par
+V3.2.4  -\tab April 1st 2024\line\tab\tab Fixed "RSSET RS+1" - RS was being reset to 0\par
+\tab\tab Added binary seperator %11_00_00_11 is now valid\par
+\tab\tab Added hex seperator $FF_FF is now valid\par
+\tab\tab Added octal seperator ?77_77 is now valid\par
+\tab\tab Added decimal seperator 12_34 is now valid\par
+\par
+V3.2.4.1  -\tab July 16th 2024\line\tab\tab Fixed HEX inside and IF/ENDIF block\par
+\tab\tab You can now use "." inside a label again (PDS)\par
+\tab\tab BANK(unknown)now reports and undefined symbol\line\tab\tab BANKOFF(unknown)now reports and undefined symbol\par
+\tab\tab\par
+\line\par
 
 \pard\widctlpar\fi1276\li-1276\par
 \cf0\f1\fs24\par

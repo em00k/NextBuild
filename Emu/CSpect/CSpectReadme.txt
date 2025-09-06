@@ -1,5 +1,5 @@
-﻿#CSpect V2.19.5.0 ZXSpectrum emulator by Mike Dailly
-(c)Copyright 1998-2023 All rights reserved
+﻿#CSpect v3.0.2.1 ZXSpectrum emulator by Mike Dailly
+(c)Copyright 1998-2025 All rights reserved
 
 Be aware...emulator is far from well tested, and might crash for any reason - sometimes just out of pure spite!
 
@@ -8,6 +8,224 @@ NOTE: DISTRIBUTION WITH TITLES IS NOT PERMITTED WITHOUT WRITTEN CONSENT.
 
 Whats new
 ======================================================================================
+v3.0.2.1
+---------
+Fixed a fullscreen/screen flicker on startup issue
+
+v3.0.2.0
+---------
+Added more complete startup logging
+Fixed a crash in 60hz 48k spectrum mode
+Mouse movement scaled a little to make it less sensitive
+Capped Mouse deltas to help slow mouse down
+New custom CSpect command "SETBRK"/"CLRBRK", and debugger commands "SET"/"CLR" change to bitfield types so you can set multiple brk types at once
+    Type Execute=1, Read=2, Write=4, OutPort=8, InPort=16
+
+
+v3.0.1.5b
+---------
+Added binary to debugger command processor evaluation (so "g %00010000" will goto address $0010/16)
+Added new custom CSpect command "SETBRK Type,StartAddress,EndAddress" to set breakpoints. $ED,$01,TYPE,STARTLO,STARTHI,ENDLO,ENDHI
+    Type Execute=0, Read=1, Write=2, OutPort=3, InPort=4
+Added new custom CSpect command "CLRBRK Type,StartAddress,EndAddress" to clear breakpoints. $ED,$02,TYPE,STARTLO,STARTHI,ENDLO,ENDHI
+    Type Execute=0, Read=1, Write=2, OutPort=3, InPort=4
+New Debugger commands added Set/Clr to block set breakpoints 
+    Set <Type>,<StartAddress>,<EndAddress>, where addresses are 16bits
+    Clr <Type>,<StartAddress>,<EndAddress>, where addresses are 16bits
+    Where Type is Execute=0, Read=1, Write=2, OutPort=3, InPort=4
+Timers are now recorded properly in the rewind system, and can now be back traced.
+Timers added to the debugger view
+HALT instruction (finally) fixed. Will now suspect exectution until an IRQ. In the debugger it'll step over it.
+
+
+v3.0.1.4b
+---------
+Updating the CSpect z80 WAIT command, so that interrupts re-enable the CPU and the waits are "stacked" and unstacked on RETIs
+
+
+v3.0.1.3b
+---------
++More internal changes
+ | Added quick bank registers
+ | RamBank/RamBankAddress moved to non-managed memory
+ | VSync check mirror added, as OpenTK access is very slow
+ | Compile time option for fast memory support
+ | -cspect to enable special CSpect CPU instruction "WAIT" , ​to wait for HL raster line ($ED 00). Not on HARDWARE. This is to aid in porting.
+ | Removing more debugger/profiling stuff on a compile time option
+ 
+
+v3.0.1.2b
+---------
+Fixed DEBUG OUT plugin
+
+
+v3.0.1.1b
+---------
+Fix for gamepads and extended buttons
+Temp fix for a hard crash when blending
+
+v3.0.1.0
+---------
+First V3 public release
+
+v3.0.0.6b
+---------
+Fixed ULA top/bottom rendering
+Crash on exit fixed - I think. Please let me know
+Fixed a small memory leak
+
+v3.0.0.5b
+---------
+Fixed a crash when ULA/Layer2 blending was enabled before Layer2 was.
+Fixed a crash in 16 colour tilmaps
+Fixed Layer2 palettes
+Fixed Windows Right mouse button
+Fixed Sprite Window plugin not re-opening.
+Mac mouse still not working
+Crash on exit
+
+v3.0.0.4b
+---------
+Fixed a Layer2 clipping crash.
+Fixed Layer 2 window clipping
+Copper Plugin updated to have register names (CTRL+ALT+C)
+ESCAPE now works in non BASIC key mode (when -esc used on the command line)  (presses and releases SHIFT+1 together)
+SNX files now enable ZXNEXT mode
+SNX files now setup next registers the same as a .NEX file
+NextReg $6E now reads correctly
+NextReg $6F now reads correctly
+NextReg $34 now reads correctly
+NextReg $28 now reads correctly
+Fixed 640x256 clipping
+Copper Disassembler updated with register names and new fixed font and colours.
+
+v3.0.0.3b
+---------
+Added "-threaded" command line option to enable the threaded renderer - may speed up, may slow down...
+Fixed sprites disappearing
+
+v3.0.0.2b
+---------
+Added missing archive file "OpenTK.dll.config" which stopped it wotking on MacOS and Linux
+
+v3.0.0.1b
+---------
+Fixed debugger memory access lookup for +IX) and +IY) opcodes
+Fixed timex rendering
+New bundling/packaging tool being used
+Fixed Layer2 320x256 right clip window
+Fixed Sprites over the border
+Fixed Tilemap rendering
+Fixed ULA windowing when XScroll=0
+Fixed Timex border
+
+v3.0.0.0b
+---------
+Major internal restructuring to allow for API porting
+Fixed a crash when the debugger "command" was just spaces
+Major internal restructuring of mouse code to allow for custom Mac dynamiclib
+Major cross the board rendering optimisations, which will result in emulation breaking in some (many?) cases
+Major Z80 emulation optimisations which may also result in emulation failures.
+
+v2.19.9.2
+---------
+Fixed a bug in -COM2 command line reading
+
+v2.19.9.1
+---------
+Fixed BREAK opcode being swapped to $FD00 - coz I'm an idiot
+Added new BREAK opcode to the debugger
+
+v2.19.9.0
+---------
+BREAK opcode swapped to $FD00 - should map to a NOP on real hardware
+Fixed a hard crash in sprites over the top border in modes 3,4 and 5
+
+v2.19.8.1
+---------
+Fixed debug keys - F1,F10 etc. Sorry - my configs got nuked and that disabled them. Now working again.
+Icon should also be fixed
+
+v2.19.8.0
+---------
+Added a new extension DebugOut, allowing you to have your Z80 write text to the console (see readme.txt)
+Changed to a "console app" so that console writing works the same on each platform.
+Beast demo updated to demo "DebugOut" using "D" and "R" keys
+
+v2.19.7.3
+---------
+Fixed command line option -mmc which was being over written by the drive to make the command line simpler
+
+v2.19.7.2
+---------
+Fixed a bug where gamepads could be ignored if there were dummy controllers being enabled. Now controllers need at least 1 button
+Fixed a bug where a program uses the NEX file to load from, and queries the "position" and it was wrong.
+
+v2.19.7.1
+---------
+DMA timing a little closer
+I now emulate the DMA "bug" where everything is out by 1 byte if running at 3.5 or 7 Mhz.
+DMA Sample now uses keys 1,2,3,4 to swap CPU speeds - and demo the DMA bug
+New non-GPL2 AY Emulation built in directly.
+With the removal of the old AY Audio, Plugin License changed to MIT
+
+v2.19.7.0
+---------
+High Freq monitor support. When started with -fullscreen and -vsync, CSpect will now try to set the monitor frequency to match the target FPS
+Fixed up bugs in Layer2 demo - was pretty old, and broken. Now working as you'd expect.
+Fixed up lowres build batchfile, and swapped to a .NEX image
+Fixed up DMA dmo so it builds again - NOTE: you don't use ZXNEXT & Z80 together. Just use ZXNEXT
+Old LDIRScale command removed - was never implemented.
+Fixed CTC cascading.
+Fixed streaming length of open file
+
+v2.19.6.2
+---------
+Added mouse wheel support via port 0x0ADF
+-emu now DISABLES emulation machine ID (0x08). This is now default, and -emu will set a REAL ZX Next (ID of 0x0a)
+Try to detect wrong use of -nextrom so it doesn't all just die a horrible death.
+Added Zip2SD tool, allowing you to build an SD card image from a ZIP file.
+
+v2.19.6.1
+---------
+Fixed a bug in updated esxDOS where FSTAT with an open file wasn't working
+
+v2.19.6.0
+---------
+Alt+F4 should work again
+The latest OS (V2.07l) now works
+
+v2.19.5.4
+---------
+Window ICON is only set on Windows, as MacOS appears to have a MONO bug that crashes (not tried Linux yet so disabled)
+
+v2.19.5.3
+---------
+Fixed a crash where you startup in 48k mode then press F2 - due to esxDOS not being initialised properly
+esxDOS now always "on" if no command line set
+
+v2.19.5.2
+---------
+On HARD reset, spritres are now cleared
+On HARD reset memory is cleared/roms reloaded
+ULA line is now always cleared if enabled
+Cleaned up debugger DIVMMC/NextRef layout
+F8 now toggles VSync
+Added new IFileIO interface to Plugin system
+New [Function] attribute to allow cross plugin calling
+Added cross plugin calling via a new "Execute()" command.
+Internal refactor of esxDOS plugin to allow filesystem replacements
+NEX file handle passing to z80 changed to use new inter-plugin calling system
+Icon added to CSpect Window Title Bar
+
+v2.19.5.1
+---------
+Fixed a NEX loading issue when limited numbers of banks are contained
+Fixed "seeking" to the end of a file when limited numbers of banks contained
+Added F_GETPOS to RST08 plugin
+Version check removed (please subscribe to itch.io page)
+Old analytics disabled
+
 v2.19.5.0
 ---------
 Fixed Layer 2, 320x256 right clipping
@@ -23,8 +241,8 @@ Fixed a debugger memory window crash
 First pass at a sprite viewer
 Fixed "EQUs" being used as debugger address symbols
 Added NextReg $B2 for extended MD Pad buttons
-Fixed DMA continous mode when also in Prescaler mode - though, please don't do this! :D Note: This is a total fudge, it may break.
-Fixed DMA status register. DMA End flag, and 1 byte trasnfered flag now works.
+Fixed DMA continuous mode when also in Prescaler mode - though, please don't do this! :D Note: This is a total fudge, it may break.
+Fixed DMA status register. DMA End flag, and 1 byte transferred flag now works.
 
 v2.19.4.4
 ----------

@@ -1,4 +1,4 @@
-ZXSpectrum emulator by Mike Dailly (c) Copyright 1998-2023 All rights reserved
+ZXSpectrum emulator by Mike Dailly (c) Copyright 1998-2024 All rights reserved
 
 Be aware...emulator is far from well tested, and might crash for any reason - sometimes just out of pure spite!
 
@@ -28,7 +28,7 @@ Command Line Options
 -s14               =  enable 14Mhz mode
 -s28               =  enable 28Mhz mode
 -exit              =  to enable "EXIT" opcode of "DD 00"
--brk               =  to enable "BREAK" opcode of "DD 01"
+-brk               =  to enable "BREAK" opcode of "FD 00"
 -esc               =  to disable ESCAPE exit key (use exit opcode, close button or ALT+F4 to exit)
 -cur               =  to map cursor keys to 6789 (l/r/d/u)
 -8_3               =  set filenames back to 8.3 detection
@@ -45,7 +45,7 @@ Command Line Options
 -vsync             =  Sync to display (for smoother scrolling when using "-60 -sound", but a little faster)
 -com="COM?:BAUD"   =  Setup com port for UART. i.e. -com="COM5:115200". if not set, coms will be disabled.
 -basickeys         =  Enable Next BASIC key interface (F10 toggles)
--tv                =  Disable the TV shader (or CTRL+F1)
++tv                =  Enable the TV shader (or CTRL+F1)
 -emu               =  Enable the emulator "bit" in the hardware registers
 -major=<value>     =  Sets the value returned by NextReg $01
 -minor=<value>     =  Sets the value returned by NextReg $0E
@@ -58,7 +58,9 @@ Command Line Options
 -freerun           =  Disable all timer locks and run as fast as we can (must use -sound as well)
 +def[0-9]"text"    =  Debugger macro command, executed using ALT+[0-9] allowing handy pre-defined bookmarks
 -divmap            =  Disable the DivMMC automapping (might speed things up for some people)
--nodelay           =  Do now wait for NEX file delay (used to display title screens etc)
+-nodelay           =  Do not wait for NEX file delay (used to display title screens etc)
+-mouse             =  Disable mouse capture
+-threaded          =  Enable the experimental threaded renderer
 
 
 Manual SDCARD setup 
@@ -97,16 +99,18 @@ F2      - load SNA
 F3      - reset
 F5      - Take screenshot
 F6      - Cycle through different speeds (3.5,7,14 and 28)
+F8      - Toggle VSync
 F10     - Toggle Key mode
 
 
 Standard Plugin Keys
 ======================================================================================
 CTRL+ALT+C          Copper Disassembler
-CTRL+ALT+S          Show copper wait lines
+CTRL+ALT+X          Show copper wait lines, and IRQs
 CTRL+ALT+R          Show Next Register window
 CTRL+ALT+SHIFT+A    Assosiate .SNX and .NEX fies to this EXE
 CTRL+ALT+P          Bring up the profiler
+CTRL+ALT+S          Show sprite viewer
 
 Debugger Keys
 ======================================================================================
@@ -147,6 +151,7 @@ M <address>         Set memory window base address (in normal 64k window)
 M <bank>:<offset>   Set memory window into physical memory using bank/offset
 G <address>         Goto address in disassembly window
 BR <address>        Toggle Breakpoint
+BR <bank>:<offset>  Toggle Physical address breakpoint
 WRITE <address>     Toggle a WRITE access break point
 READ  <address>     Toggle a READ access break point (also when EXECUTED)
 INPORT <16bitport>  Toggle a breakpoint on port READ
@@ -174,11 +179,22 @@ LOG IN  [port]      LOG all port reads from [port]. If port is not specified, AL
                     (Logging only occurs when values port changes)
 NEXTREG <reg>,<val> Poke a next register	
 OUT Port,Value      Out a value to a 16bit port
-SAVE "NAME",add,len                   Save in the 64K memory space
-SAVE "NAME",BANK:OFFSET,length        Save in physical memory using a bank and offset as the start address
-SAVE "NAME",BANK:OFFSET,BANK:OFFSET   Save in physical memory using a bank and offset as the start address, and as an end address
-LOAD "NAME",add[,len]                 Load in the 64K memory space with optional length
-LOAD "NAME",BANK:OFFSET[,length]      Load in physical memory using a bank and offset as the start address, with optional length
+Set <Type>,<StartAddress>,<EndAddress>  Set a range of breakpoints, where TYPE is the breakpoint type (see below)
+Clr <Type>,<StartAddress>,<EndAddress>  Clear a range of breakpoints, where TYPE is the breakpoint type (see below)
+SAVE "NAME",add,len                     Save in the 64K memory space
+SAVE "NAME",BANK:OFFSET,length          Save in physical memory using a bank and offset as the start address
+SAVE "NAME",BANK:OFFSET,BANK:OFFSET     Save in physical memory using a bank and offset as the start address, and as an end address
+LOAD "NAME",add[,len]                   Load in the 64K memory space with optional length
+LOAD "NAME",BANK:OFFSET[,length]        Load in physical memory using a bank and offset as the start address, with optional length
+
+
+Breakpoint Type 
+---------------
+Execute     -   0
+Read        -   1
+Write       -   2
+OutPort     -   3
+InPort      -   4
 
 
 Symbol file format
@@ -289,19 +305,102 @@ Called one per game/frame refresh
 
 
 
+DebugOut extension
+======================================================================================
+This adds a new "RST $18" command that will output text to the console. There are 2 ways to call this.
+
+        ; HL should point to a null terminated string
+		ld	hl,TestString
+		RST	$18
+
+The second method is.
+		RST	$18
+        db  $FF                        ; this is "RST $38" instruction
+        dw  Message
+
+If the second is used, the PC is set to after the last USED argument. NOTE: This will not run on actual hardware.
+The second method will allow all registers to be dumped
 
 
 
-esxDOS simulation
-===================
-M_GETSETDRV	-	simulated
-F_OPEN		-	simulated
-F_READ		-	simulated
-F_WRITE		-	simulated
-F_CLOSE		-	simulated
-F_SEEK      	-   	simulated
-F_FSTAT     	-   	simulated
-F_STAT      	-   	simulated
+
+Examples
+-------------
+; Simple text out
+Example1:   db	"Hello World",0
+
+; Out a 8 digit hex value (lower case)
+Example2    db	"Hello World %x",0
+            db  $21,$43,$65,$87         ; must ALWAYS be a 32bit number
+
+; Out a 8 digit hex value (upper case)
+Example3    db	"Hello World %X",0
+            db  $21,$43,$65,$87         ; must ALWAYS be a 32bit number
+
+; Out a 4 digit hex value (upper case). The top bits are MASKED off. 
+Example4    db	"Hello World %4X",0
+            db  $21,$43,$65,$87         ; must ALWAYS be a 32bit number
+
+; Out a signed decimal value 
+Example5    db	"Hello World %d",0
+            dw  12345,0                 ; must ALWAYS be a 32bit number
+
+; Out a signed decimal value 
+Example6    db	"Hello World %d",0
+            dw  $43,$21,$ff,$ff         ; must ALWAYS be a 32bit number
+
+; Output a sub string
+Example7    db	"Hello World %s",0
+            dw  StringToOuput           ; point to someplace in memory
+; substring to print "somewhere" in paged in memory
+StringToOuput:
+            db  "substring",0
+
+
+
+; Out a 32bit binary value 
+Example8    db	"Hello World %b",0
+            db  %10101010,%11110000,%01111110,%11001100        ; must ALWAYS be a 32bit number
+
+; Out an 8bit signed binary value 
+Example9    db	"Hello World %8b",0
+            db  %10101010,0,0,0                             ; must ALWAYS be a 32bit number
+
+; Out a 16bit signed binary value 
+Example10   db	"Hello World %16b",0
+            db  %10101010,%11001100,0,0                     ; must ALWAYS be a 32bit number
+
+
+Printing a register
+-----------------------
+%raf  =   AF register
+%rbc  =   BC register
+%rde  =   DE register
+%rhl  =   HL register     (Must use method 2 in order to use this)
+%rAF  =   'AF register
+%rBC  =   'BC register
+%rDE  =   'DE register
+%rHL  =   'HL register
+%rsp  =   SP register
+%rpc  =   PC register
+%rIM  =   IM register
+%rII  =   I register
+
+; Out a register value 
+Example8    db	"Hello World %af %rbc %rBC %rix",0          ; af,bc regs, ALT BC and IX
+
+
+
+            ; Full example
+TestString	db	"Hello %s value is - 0x%X, %d, %8b %rpc %raf %rbc %rde",0
+		    dw	SubString
+		    db	$21,$43,$ba,$fd
+		    dw	12345,0
+		    db	%11110000,%10101010,%11001100,%10000001
+SubString	db	"world",0
+
+
+
 
 
 
@@ -364,7 +463,6 @@ Next OS streaming API
 ; This call must be made to terminate a streaming operation. 
 ; Please see example application code, stream.asm, for full usage information 
 ; (available separately or at the end of this document).
-
 
 
 

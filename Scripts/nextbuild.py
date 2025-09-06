@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# v7.3 NextBuild / NextLib by David Saphier (c) 2021 / em00k 13-Feb-2021
+# v7.6 NextBuild / NextLib by David Saphier (c) 2025 / em00k 06-09-2025
 # ZX Basic Compiler by (c) Jose Rodriguez
 # Thanks to Jari Komppa for help with the cfg parser 
 # Extra thanks to Jose for help integrating into the zxb python modules and nextcreator.py 
@@ -200,7 +200,7 @@ def ParseNEXCfg():
             # raise 
         if bmpfile != None:
                 
-            outstring += '!BMP8'+bmpfile[:-1]+',0,0,0,0,255' + CRLF
+            outstring += '!BMP8'+bmpfile+',0,0,0,0,255' + CRLF
             
         try:
             with open(inputfile, 'rt') as f:

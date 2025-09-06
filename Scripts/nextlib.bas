@@ -326,9 +326,13 @@ end asm
 #DEFINE OUTINB \
 	Dw $90ED
 
+' old break macro 
+'define BREAK \
+'DB $c5,$DD,$01,$0,$0,$c1 \
+
 #define BREAK \
-	DB $c5,$DD,$01,$0,$0,$c1 \
-	
+	DB $c5,$FD,$00,$0,$0,$c1 \
+
 #define BBREAK \
 	ASM\
 	BREAK\
@@ -1423,171 +1427,172 @@ end sub
 
 #ifndef NEX
 Sub LoadSDBank(byval filen as String,ByVal address as uinteger,ByVal length as uinteger,ByVal offset as ulong, bank as ubyte)
-	'filen = "myfile.bin"
-	'address = address to load to must be $0  
-	'length to load, set to 0 to autodetect 
-	'offset into file 
-	'bank
-	'; current slots 2 is stored 
-	'; bank is paged into slot 2
-	'; will continue to loop and increase bank every 8kb 
-	'; uses string in ram passed so doesnt need to copy the fname 
+    'filen = "myfile.bin"
+    'address = address to load to must be $0  
+    'length to load, set to 0 to autodetect 
+    'offset into file 
+    'bank
+    '; current slots 2 is stored 
+    '; bank is paged into slot 2
+    '; will continue to loop and increase bank every 8kb 
+    '; uses string in ram passed so doesnt need to copy the fname 
 
-		
-		asm 		;en00k 2020 / David Saphier	
-		PROC
-		LOCAL initdrive, filehandle, error, mloop, fileseek
-		LOCAL loadsdout, loadsdout, filesize, printrst, failed, slot6
-		LOCAL fixstring, offset
+        
+        asm         ;en00k 2020 / David Saphier 
+        PROC
+        LOCAL initdrive, filehandle, error, mloop, fileseek
+        LOCAL loadsdout, filesize, printrst, failed, slot6
+        LOCAL fixstring, offset
 
-		call _checkints
-		di
-		
-		ld d,(IX+5) : ld e,(IX+4) : ex de,hl		; this gets the string sent
-		ld a,(hl) : ld b,a : add hl,2 
-		ld (nameaddress),hl 
-		
-		push hl 									; start of dtring in memory 
-		add hl,a : ld a,(hl) : ld (hl),0 			; ensures end is zero 
-		ld (fixstring+1),hl : ld (fixstring+4),a 
-		pop hl 
-		push ix 
-		push hl 
-		;BREAK
-		;ld (endofloadsdbank+1),sp 				; move stack to temp
-		;ld sp,endfilename-2						; because we're paging $4000-$5fff
-		
-		; get current regs from $52
-		ld a,$52 								; mmu slot 6 
-		ld bc,$243B								; Register Select 
-		out(c),a									; read reg 
-		inc b 		
-		in a,(c)		
-		ld (slot6+1),a 							; store bank
-		 
-		; store the address, len, offset values in ram with smc 
-		
-ldadd:	ld c,(ix+6) : ld b,(ix+7) 				; address 
-		ld a,b : and 127 : or $40 : ld b,a : ld (address+2),bc
-		
-		ld c,(ix+8) : ld b,(ix+9) 				; size 
-		ld (loadsize+1),bc 						; if size is 0 then we will detect
-		ld a,b : add a,c : ld (changesize+1),a 
-		
-		ld l,(ix+10) : ld h,(ix+11) 		
-		ld (offset+1),hl							; offset DE 	
+        call _check_interrupts
+        di
+        
+        ld d,(IX+5) : ld e,(IX+4) : ex de,hl        ; this gets the string sent
+        ld a,(hl) : ld b,a : add hl,2 
+        ld (nameaddress),hl 
+        
+        push hl                                     ; start of dtring in memory 
 
-		ld l,(ix+12) : ld h,(ix+13)						
-		ld (offset+4),hl 							; offset BE 
+        add hl,a : ld a,(hl) : ld (hl),0            ; ensures end is zero 
+        ld (fixstring+1),hl : ld (fixstring+4),a 
+        pop hl 
+        push ix 
+        push hl 
+        ;; break
+        ;ld (endofloadsdbank+1),sp              ; move stack to temp
+        ;ld sp,endfilename-2                        ; because we're paging $4000-$5fff
+        
+        ; get current regs from $52
+        ld a,$52                                ; mmu slot 6 
+        ld bc,$243B                             ; Register Select 
+        out(c),a                                    ; read reg 
+        inc b       
+        in a,(c)        
+        ld (slot6+1),a                          ; store bank
+         
+        ; store the address, len, offset values in ram with smc 
+        
+ldadd:  ld c,(ix+6) : ld b,(ix+7)               ; address 
+        ld a,b : and 127 : or $40 : ld b,a : ld (address+2),bc
+        
+        ld c,(ix+8) : ld b,(ix+9)               ; size 
+        ld (loadsize+1),bc                      ; if size is 0 then we will detect
+        ld a,b : add a,c : ld (changesize+1),a 
+        
+        ld l,(ix+10) : ld h,(ix+11)         
+        ld (offset+1),hl                            ; offset DE     
 
-		ld l,(ix-4) : ld h,(ix-3)					; filespec 
-		
-		ld a,(ix+15)								; get our custom bank 
-		ld (curbank),a 
-		nextreg $52,a
-		
-		push hl : pop ix 
-		;ld ix,.LABEL._filename
-		ld (nameaddressfname+2),hl 
-		
+        ld l,(ix+12) : ld h,(ix+13)                     
+        ld (offset+4),hl                            ; offset BE 
+
+        ld l,(ix-4) : ld h,(ix-3)                   ; filespec 
+        
+        ld a,(ix+15)                                ; get our custom bank 
+        ld (curbank),a 
+        nextreg $52,a
+        
+        push hl : pop ix 
+        ;ld ix,.LABEL._filename
+        ld (nameaddressfname+2),hl 
+        
 initdrive:
-		ld a, '*' 	
-		ld b, FA_READ
-		; ix = filespec 
-		ESXDOS : db F_OPEN
-		ld (filehandle),a			; store file handle 
-		; this is where we should handle an error 
-		jp c,error 					; c flag had an error.  
+        ld a, '*'   
+        ld b, FA_READ
+        ; ix = filespec 
+        ESXDOS : db F_OPEN
+        ld (filehandle),a           ; store file handle 
+        ; this is where we should handle an error 
+        jp c,error                  ; c flag had an error.  
 
-fstat:	ld ix, fileinfobuffer
-		ESXDOS : db F_STAT
-		jp c,error 					; c flag had an error.  
-		
+fstat:  ld ix, fileinfobuffer
+        ESXDOS : db F_STAT
+        jp c,error                  ; c flag had an error.  
+        
 changesize:
-		ld a,0 : or a : call z,filesize0
-		
-		ld a,(filehandle) 
+        ld a,0 : or a : call z,filesize0
+        
+        ld a,(filehandle) 
 fileseek:
-		ld ixl,0						; start  
-		ld l,0						; cspect bug?
-offset: 	ld de,0000					; filled in at start ldadd
-		ld bc,0000
-		ESXDOS : db F_SEEK			; seek 
-		jp c,error 					; c flag had an error.  
+        ld ixl,0                        ; start  
+        ld l,0                      ; cspect bug?
+offset:     ld de,0000                  ; filled in at start ldadd
+        ld bc,0000
+        ESXDOS : db F_SEEK          ; seek 
+        jp c,error                  ; c flag had an error.  
 address: 
-		ld ix,0000		
-loadsize:		
-		ld bc,0000 				; length to load from BC in stack 
+        ld ix,0000      
+loadsize:       
+        ld bc,0000              ; length to load from BC in stack 
 loadagain:
-		
-		ld a,(filehandle) 			; read to address 
-		ESXDOS : db $9d
+        
+        ld a,(filehandle)           ; read to address 
+        ESXDOS : db $9d
 
-		jp c,error 					; c flag had an error. 
-		ld (filesize),bc 			; bc read bytes 
-		
-		ld a,$20 : cp b : jr nz,loadsdout
-		ld a,(curbank) : inc a : ld (curbank),a  : nextreg $52,a 
-		jr loadagain
-		
+        jp c,error                  ; c flag had an error. 
+        ld (filesize),bc            ; bc read bytes 
+        
+        ld a,$20 : cp b : jr nz,loadsdout
+        ld a,(curbank) : inc a : ld (curbank),a  : nextreg $52,a 
+        jr loadagain
+        
 filesize0:
-		ld bc,(fileinfobuffer+7)
-		ld a,b
-		ld (filesize),a
-		ld a,c
-		ld (filesize+1),a
-		ld bc,$2000 
-		ld (loadsize+1),bc 
-		ret 
-		
+        ld bc,(fileinfobuffer+7)
+        ld a,b
+        ld (filesize),a
+        ld a,c
+        ld (filesize+1),a
+        ld bc,$2000 
+        ld (loadsize+1),bc 
+        ret 
+        
 fileinfobuffer:
-		ds 11,0			; this will contain the file info
+        ds 11,0         ; this will contain the file info
 filehandle:
-		db 0 
+        db 0 
 curbank:
-		db 0 
+        db 0 
 end asm 
 filesize2:
 asm 
 filesize:
-		dw 00,00,$FF
+        dw 00,00,$FF
 nameaddress: 
-		dw 0000 
-	error:
-		nextreg $69,0					; turn off layer 2 
-		ld a,(slot6+1) : nextreg $52,a 	; bring back slot 2 
-		ld b,60
-		ld ix,failed : call printrst
-nameaddressfname:		
-		ld ix,.LABEL._filename : call printrst
-	mloop:
-		ld a,0 : out (254),a : ld a,2 : out (254),a  : djnz mloop : jp mloop
+        dw 0000 
+    error:
+        nextreg $69,0                   ; turn off layer 2 
+        ld a,(slot6+1) : nextreg $52,a  ; bring back slot 2 
+        ld b,60
+        ld ix,failed : call printrst
+nameaddressfname:       
+        ld ix,.LABEL._filename : call printrst
+    mloop:
+        ld a,0 : out (254),a : ld a,2 : out (254),a  : djnz mloop : jp mloop
 printrst:
-		ld a,(ix+0) : or a : ret z : rst 16 : inc ix : jp printrst
+        ld a,(ix+0) : or a : ret z : rst 16 : inc ix : jp printrst
 failed: 
-		db 16,2,17,6
-		db "Failed to open : ",13,0	 	
-		
+        db 16,2,17,6
+        db "Failed to open : ",13,0     
+        
 loadsdout:
-		ld a,(filehandle)
-		ESXDOS : db F_CLOSE		; done, close file 
-	
-slot6:	ld a,0 : nextreg $52,a
+        ld a,(filehandle)
+        ESXDOS : db F_CLOSE     ; done, close file 
+    
+slot6:  ld a,0 : nextreg $52,a
 fixstring:
-		ld hl,0000				; smc from above 
-		ld (hl),0	
+        ld hl,0000              ; smc from above 
+        ld (hl),0   
 endofloadsdbank:
-		;ld sp,0000
-		pop hl					; restore hl 
-		pop ix 					; restore ix 
-		ReenableInts
-		ENDP
-	end asm 
+        ;ld sp,0000
+        pop hl                  ; restore hl 
+        pop ix                  ; restore ix 
+        ReenableInts
+        ENDP
+    end asm 
 end sub 
 #else
-	#DEFINE LoadSDBank(arga,argb,argc,argd,arge) \
-		
-#ENDIF
+    #define LoadSDBank(arga,argb,argc,argd,arge) \
+        
+#endif
 
 Sub LoadSD(byval filen as String,ByVal address as uinteger,ByVal length as uinteger,ByVal offset as ulong)
 
