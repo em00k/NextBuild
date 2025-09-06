@@ -91,9 +91,9 @@ jobs:
         shell: bash
         run: |
           if [[ -f CHANGELOG.md ]]; then
-            # Use top section of CHANGELOG.md if you keep it structured, else attach whole file
-            echo "body<<'EOF'" >> "$GITHUB_OUTPUT"
-            awk '1; /^$/' CHANGELOG.md >> "$GITHUB_OUTPUT"
+            # Use top section of CHANGELOG.md 
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
+            head -n 30 CHANGELOG.md >> "$GITHUB_OUTPUT"
             echo "EOF" >> "$GITHUB_OUTPUT"
           else
             # Short log since last tag
@@ -103,7 +103,7 @@ jobs:
             else
               body="$(git log -n 50 --pretty=format:'* %s (%h)')"
             fi
-            echo "body<<'EOF'" >> "$GITHUB_OUTPUT"
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
             echo "$body" >> "$GITHUB_OUTPUT"
             echo "EOF" >> "$GITHUB_OUTPUT"
           fi
