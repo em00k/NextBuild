@@ -83,7 +83,7 @@ jobs:
       - name: Zip source tree
         run: |
           mkdir -p out
-          zip -r "out/project-v${{ steps.version.outputs.version }}.zip" . \
+          zip -r "out/NextBuild-v${{ steps.version.outputs.version }}.zip" . \
             -x ".git/*" ".github/workflows/*" "out/*"
 
       - name: Generate release notes (fallback)
@@ -117,4 +117,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            out/project-v${{ steps.version.outputs.version }}.zip
+            out/NextBuild-v${{ steps.version.outputs.version }}.zip
