@@ -4,3 +4,4 @@ __pycache__
 *.log
 Memory.txt
 *.cfg
+.claude
