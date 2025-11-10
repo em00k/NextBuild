@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #0000FF;
+	font-weight: bold;
+}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">Keys</p>
+<p>[Keyboard] - Key detection </p>
+<hr />
+<p>Description:</p>
+<p class="style2">FUNCTION GetKeys() </p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Returns:</em></p>
+<p>ASCII code of pressed key </p>
+<p><em>Notes:</em></p>
+<p>Waits for a key press </p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION MultiKeys(Scancode) </p>
+<p><em>Parameters:</em></p>
+<p>UByte Scancode (like SC_ENTER, SC_SPACE, etc) </p>
+<p><em>Returns:</em></p>
+<p>0 in not pressed, any other value if pressed </p>
+<p>&nbsp;</p>
+<p class="style2">FUNCTION GetKeyScanCode() </p>
+<p><em>Parameters:</em></p>
+<p>None</p>
+<p><em>Returns:</em></p>
+<p>UInteger Key scan code if pressed, or 0 if none. Scan codes are like SC_ENTER or SC_SPACE </p>
+<p><em>Notes:</em></p>
+<p>Scan codes are:</p>
+<p>1st ROW<br />
+  KEYB = 07F10h<br />
+ KEYN = 07F08h<br />
+  KEYM = 07F04h<br />
+  KEYSYMBOL = 07F02h<br />
+KEYSPACE = 07F01h</p>
+<p>2nd ROW<br />
+  KEYH = 0BF10h<br />
+  KEYJ        = 0BF08h<br />
+  KEYK = 0BF04h<br />
+  KEYL        = 0BF02h<br />
+KEYENTER    = 0BF01h</p>
+<p>3rd ROW<br />
+  KEYY = 0DF10h<br />
+  KEYU = 0DF08h<br />
+  KEYI = 0DF04h<br />
+  KEYO = 0DF02h<br />
+KEYP = 0DF01h</p>
+<p>4th ROW<br />
+ KEY6 = 0EF10h<br />
+  KEY7 = 0EF08h<br />
+  KEY8 = 0EF04h<br />
+  KEY9 = 0EF02h<br />
+KEY0 = 0EF01h</p>
+<p>5th ROW<br />
+  KEY5        = 0F710h<br />
+  KEY4 = 0F708h<br />
+  KEY3 = 0F704h<br />
+  KEY2 = 0F702h<br />
+KEY1 = 0F701h</p>
+<p>6th ROW<br />
+  KEYT        = 0FB10h<br />
+  KEYR = 0FB08h<br />
+  KEYE = 0FB04h<br />
+  KEYW = 0FB02h<br />
+KEYQ = 0FB01h</p>
+<p>7th ROW<br />
+ KEYG = 0FD10h<br />
+  KEYF = 0FD08h<br />
+  KEYD = 0FD04h<br />
+  KEYS = 0FD02h<br />
+KEYA = 0FD01h</p>
+<p>8th ROW<br />
+  KEYV = 0FE10h<br />
+  KEYC = 0FE08h<br />
+  KEYX = 0FE04h<br />
+  KEYZ = 0FE02h<br />
+  KEYCAPS = 0FE01h</p>
+<hr />
+<p>#Include &lt;Keys.bas&gt;</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

@@ -1,0 +1,123 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Fuse - the Free Unix Spectrum Emulator
+Upstream-Contact: fuse-emulator-devel@lists.sourceforge.net
+Source: https://sourceforge.net/projects/fuse-emulator/
+
+Files: *
+Copyright: 1999-2018 Philip Kendall and others
+License: GPL-2+
+  The complete text of the license can be found in the file COPYING.txt
+Comment:
+  See the AUTHORS.txt file for details on other contributors.
+  .
+  Files are assumed to be under same license terms as the application
+  as a whole unless otherwise explicitly stated in the file.
+  .
+  This program was built using MinGW-w64 and statically linked against
+  the MinGW-w64 runtime. See 3rd-party\mingw-w64-runtime.txt for further
+  notices.
+
+Files: libaudiofile-1.dll
+Copyright: 1998-2000, 2003-2004, 2010-2013 Michael Pruett
+           2000-2001 Silicon Graphics, Inc.
+License: LGPL-2.1+
+  The complete text of the license can be found in the file
+  3rd-party\lgpl-2.1.txt
+
+Files: libbz2-1.dll
+Copyright: 1996-2010 Julian R Seward
+License: BSD-style
+  The complete text of the license can be found in the file
+  3rd-party\libbz2.txt
+
+Files: libgcc_s_sjlj-1.dll
+Copyright: 1986-2016 Free Software Foundation, Inc.
+License: GPL-3+ and GCC-Runtime-Library-Exception-3.1
+  The complete text of the license can be found in the files
+  3rd-party\gpl-3.txt and 3rd-party\gcc-runtime-library-exception-3.1.txt
+
+Files: libgcrypt-20.dll
+Copyright: 1989,1991-2016 Free Software Foundation, Inc.
+           2012-2016 g10 Code GmbH
+           2013-2015 Jussi Kivilinna
+License: LGPL-2.1+
+  The complete text of the license can be found in the file
+  3rd-party\lgpl-2.1.txt
+
+Files: libgpg-error-0.dll
+Copyright: 2003-2007, 2013-2016 g10 Code GmbH
+License: LGPL-2.1+
+  The complete text of the license can be found in the file
+  3rd-party\lgpl-2.1.txt
+
+Files: libpng16-16.dll
+Copyright: 2000-2002, 2004, 2006-2017 Glenn Randers-Pehrson
+           1998-2000 Glenn Randers-Pehrson
+           1996, 1997 Andreas Dilger
+           1995, 1996 Guy Eric Schalnat, Group 42, Inc.
+License: libpng
+  The complete text of the license can be found in the file
+  3rd-party\libpng.txt
+
+Files: libspectrum-8.dll
+Copyright: 1999-2018 Philip Kendall and others
+License: GPL-2+
+  The complete text of the license can be found in the file
+  3rd-party\gpl-2.txt
+
+Files: libstdc++-6.dll
+Copyright: 1986-2016 Free Software Foundation, Inc.
+License: GPL-3+ and GCC-Runtime-Library-Exception-3.1
+  The complete text of the license can be found in the files
+  3rd-party\gpl-3.txt and 3rd-party\gcc-runtime-library-exception-3.1.txt
+
+Files: libwinpthread-1.dll
+Copyright: 2011 mingw-w64 project
+License: MIT
+  The complete text of the license can be found in the file
+  3rd-party\libwinpthread.txt
+
+Files: libxml2-2.dll
+Copyright: 1998-2012 Daniel Veillard
+License: MIT
+  The complete text of the license can be found in the file
+  3rd-party\libxml2.txt
+
+Files: zlib1.dll
+Copyright: 1995-2017 Jean-loup Gailly and Mark Adler
+License: Zlib
+  The complete text of the license can be found in the file
+  3rd-party\zlib.txt
+
+Files: roms\{128-?.rom, 48.rom, plus2-?.rom, plus3-?.rom, tc2048.rom}
+Copyright: Amstrad
+License: distribution-allowed
+  See roms\README.copyright for further information.
+
+Files: roms\{disciple.rom, plusd.rom}
+Copyright: Datel Microelectronics
+License: distribution-allowed
+  See roms\README.copyright for further information.
+
+Files: roms\plus3e-?.rom
+Copyright: Amstrad and Garry Lancaster
+License: distribution-allowed
+  See roms\README.copyright for further information.
+
+Files: roms\se-?.rom
+Copyright: 1999-2013 Andrew Owen
+           1989-1990 BetaSoft
+           1981 Nine Tiles Networks Ltd
+License: GPL-2+
+  The complete text of the license can be found in the file
+  3rd-party\gpl-2.txt. See roms\README.copyright for further information.
+
+Files: roms\speccyboot-1.4.rom
+Copyright: 2009 Patrick Persson
+License: MIT
+  See roms\README.copyright for further information.
+
+Files: roms\tc2048-?.rom
+Copyright: Amstrad and Timex
+License: distribution-allowed
+  See roms\README.copyright for further information.

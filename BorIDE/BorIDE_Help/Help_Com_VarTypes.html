@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>Untitled Document</TITLE>
+	<META NAME="GENERATOR" CONTENT="LibreOffice 3.5  (Windows)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGED" CONTENT="20120524;16562616">
+	<STYLE TYPE="text/css">
+	<!--
+		P.style1 { font-size: 36pt; font-weight: bold }
+		H3.cjk { font-family: "SimSun" }
+		H3.ctl { font-family: "Mangal" }
+		H3.style7-western { color: #006699 }
+		H3.style7-cjk { color: #006699; font-family: "SimSun" }
+		H3.style7-ctl { color: #006699; font-family: "Mangal" }
+		H4.cjk { font-family: "SimSun" }
+		H4.ctl { font-family: "Mangal" }
+		H4.style7-western { color: #006699 }
+		H4.style7-cjk { color: #006699; font-family: "SimSun" }
+		H4.style7-ctl { color: #006699; font-family: "Mangal" }
+	-->
+	</STYLE>
+</HEAD>
+<BODY LANG="de-AT" BGCOLOR="#ffffcc" DIR="LTR">
+<P><IMG SRC="boride_logo.png" NAME="Grafik1" ALIGN=BOTTOM WIDTH=600 HEIGHT=64 BORDER=0></P>
+<P CLASS="style1">Types</P>
+<HR>
+<P>A data <EM>type</EM> describes how the information of a variable
+is stored in memory. For example, a variable can hold a floating
+point number or a string in the legacy Sinclair BASIC. But sometimes
+this is a waste of time and memory. For example, why don't we use a
+single byte to store a value we know it's always an integer between 0
+and 10? Now you can: ZX BASIC allows more data types to save memory
+and achieve higher speed. 
+</P>
+<P>There are 3 kinds of types: <STRONG>integers</STRONG>, <STRONG>decimals</STRONG>
+and <STRONG>strings</STRONG> 
+</P>
+<H3 CLASS="style7-western"><A NAME="Integers"></A>Integers</H3>
+<P>Integers are a numeric type. They can be <EM>unsigned</EM> (their
+value is always 0 or positive) or <EM>signed</EM> (can take negative
+values). ZX Basic integer types sizes are 8, 16 and 32 bits. Unsigned
+types have the prefix <EM>U</EM>. 
+</P>
+<P ALIGN=CENTER STYLE="margin-bottom: 0cm">Integer types 
+</P>
+<TABLE CELLPADDING=5 CELLSPACING=2>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P>Identifier 
+			</P>
+		</TH>
+		<TH STYLE="border: none; padding: 0cm">
+			<P>Size 
+			</P>
+		</TH>
+		<TH STYLE="border: none; padding: 0cm">
+			<P>Signed? 
+			</P>
+		</TH>
+		<TH STYLE="border: none; padding: 0cm">
+			<P>Range 
+			</P>
+		</TH>
+		<TH STYLE="border: none; padding: 0cm">
+			<P>Description 
+			</P>
+		</TH>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">Byte </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>1 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>Yes 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>-128..127 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>8 bits signed integer 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">UByte </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>1 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>No 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>0..255 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>8 bits unsigned integer 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">Integer </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>2 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>Yes 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>-32768..32767 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>16 bits signed integer 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">UInteger </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>2 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>No 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>0..65535 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>16 bits unsigned integer 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">Long </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>4 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>Yes 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>&minus;2,147,483,648 .. +2,147,483,647 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>32 bits signed integer 
+			</P>
+		</TD>
+	</TR>
+	<TR>
+		<TH STYLE="border: none; padding: 0cm">
+			<P ALIGN=LEFT><FONT COLOR="#ff00ff">ULong </FONT>
+			</P>
+		</TH>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>4 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>No 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>0 .. 4,294,967,295 
+			</P>
+		</TD>
+		<TD STYLE="border: none; padding: 0cm">
+			<P>32 bits unsigned integer 
+			</P>
+		</TD>
+	</TR>
+</TABLE>
+<H3 CLASS="style7-western"><A NAME="Decimals"></A>Decimals</H3>
+<P><STRONG>Decimals</STRONG>, as suggested, stores decimal numeric
+types. Their sizes are 32 bit for <EM>Fixed</EM> type and 40 bytes
+for <EM>Float</EM> one. 
+</P>
+<H4 CLASS="style7-western"><A NAME="Fixed"></A>Fixed</H4>
+<P>32 bit Fixed Point decimal. First 16 bits are the integer part,
+whilst remaining 16 contains the decimal one. Ranges from
+-32767.9999847 to 32767.9999847 with a precision of 1 / 2^16
+(0.000015 aprox.). Fixed points decimal are less precise than
+Floating ones, but much faster and requires less space (1 byte less).
+Also, their range is much limited. They're usually used on screen
+drawing when Floating point is too slow and decimal calculations are
+required. 
+</P>
+<H4 CLASS="style7-western"><A NAME="Float"></A>Float</H4>
+<P>Floating point type is <STRONG>identical</STRONG> to the Sinclair
+BASIC one. It requires 5 bytes (1 byte for exponent, 4 bits for
+mantissa). Read the ZX Spectrum manual.</P>
+<BLOCKQUOTE><EM>To store the number in the computer, we use five
+bytes, as follows:</EM> 
+</BLOCKQUOTE>
+<OL>
+	<LI><BLOCKQUOTE STYLE="margin-bottom: 0cm">write the first eight
+	bits of the mantissa in the second byte (we know that the first bit
+	is 1), the second eight bits in the third byte, the third eight bits
+	in the fourth byte and the fourth eight bits in the fifth byte; 
+	</BLOCKQUOTE>
+	<LI><BLOCKQUOTE STYLE="margin-bottom: 0cm">replace the first bit in
+	the second byte which we know is 1 by the sign: 0 for plus, 1 for
+	minus; 
+	</BLOCKQUOTE>
+	<LI><BLOCKQUOTE>write the exponent +128 in the first byte. For
+	instance, suppose our number is 1 / 10, then<BR>1 / 10 = (4 / 5) * 2
+	^ (-3) 
+	</BLOCKQUOTE>
+</OL>
+<H3 CLASS="style7-western"><A NAME="Strings"></A>Strings</H3>
+<P>String types are used to store alphanumerical strings. Strings can
+contain up to 65535 characters (depending on available free memory),
+and they can change its size dynamically so, unlike other data types,
+their content is stored in a different memory area, called the Heap 
+</P>
+<P>In most BASIC dialects, string variables used to have the <STRONG>$</STRONG>
+suffix (also called <EM>sigil</EM>), but suffixes are optional in ZX
+BASIC (you can omit them). 
+</P>
+<HR>
+<P>Supported Plattforms:</P>
+<P>All</P>
+</BODY>
+</HTML>

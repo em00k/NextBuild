@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF00FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style5 {color: #FF0000}
+.style6 {color: #006699}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">OR</p>
+<p>[Logical Operator] - Returns True or False for a logic comparsion </p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> argument1 OR argument2 </p>
+<p><em>Parameters:</em></p>
+<p>argument1: any argument</p>
+<p>argument2: another argument  </p>
+<p><em>Description:</em></p>
+<p>Performs the <em>Logical Disjunction</em> and returns <em>TRUE</em> if any of the arguments is <em>TRUE</em>. </p>
+<p>Logicals operators are like in ZX Spectrum Basic. Their result can be either <em>False</em> (which is represented with 0) or <em>True</em>, which might be any other value. <u>Don't expect <em>True</em> value number to be always <strong>1</strong></u>. If you need 0/1 values for boolean evaluations, use --strict-boolean compiler option. This might add a little overhead to boolean evaluations, tough.<br />
+</p>
+<table align="center">
+  <caption>
+    a <strong>OR</strong> b
+  </caption>
+  <tbody>
+    <tr>
+      <th> a </th>
+      <th> b </th>
+      <th> Result </th>
+    </tr>
+    <tr>
+      <td> False </td>
+      <td> False </td>
+      <td> False </td>
+    </tr>
+    <tr>
+      <td> False </td>
+      <td> True </td>
+      <td> True </td>
+    </tr>
+    <tr>
+      <td> True </td>
+      <td> False </td>
+      <td> True </td>
+    </tr>
+    <tr>
+      <td> True </td>
+      <td> True </td>
+      <td> True </td>
+    </tr>
+  </tbody>
+</table>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3">REM</span> 'Or
+<span class="style3">LET</span> a = -<span class="style5">1</span>
+<span class="style3">LET</span> b = 17
+<span class="style3">IF</span> a&lt;0 <span class="style6">OR</span> b=17 <span class="style3">THEN</span>
+	<span class="style3">PRINT </span>&quot;looks like a is smaller than zero or b is equal to 17&quot;
+<span class="style3">END IF</span></pre>
+</blockquote>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This operator is Sinclair BASIC Compatible </li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>AND, NOT, XOR </p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

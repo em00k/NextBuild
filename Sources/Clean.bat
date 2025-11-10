@@ -1,0 +1,1 @@
+del /S temp.tap temp.bas* Compile.txt Memory.txt *.cfg *.sna *.bmi *.bor *.nex *.asm

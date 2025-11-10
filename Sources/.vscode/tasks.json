@@ -1,0 +1,193 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile ZXbasic",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "./../Scripts/nextbuild.py",
+                "${file}"
+            ],
+            "windows": {
+                "command": "./../zxbasic/python/python.exe",
+                "args": [
+                    "./../Scripts/nextbuild.py",
+                    "${file}"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "fileLocation": [
+                    "absolute"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            }
+        },
+        {
+            "label": "Run in Cspect",
+            "type": "shell",
+            "command": "mono ./../Emu/CSpect/CSpect.exe -16bit -nojoy -brk -tv -vsync -nextrom -map=${fileDirname}/${fileBasenameNoExtension}.map -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.nex",
+            "windows": {
+                "command": "./../Emu/CSpect/CSpect.exe -w3 -16bit -brk -tv -vsync -nextrom -map=${fileDirname}/${fileBasenameNoExtension}.map -zxnext -mmc=${fileDirname}\\data\\ ${fileDirname}/${fileBasenameNoExtension}.nex"
+            },
+            "dependsOn": [
+                "Compile ZXbasic"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Generate TAP",
+            "type": "shell",
+            "command": "python3",
+            "args": [
+                "./../Scripts/nextbuild.py",
+                "${file}",
+                "TAP"
+            ],
+            "windows": {
+                "command": "./../zxbasic/python/python.exe",
+                "args": [
+                    "./../Scripts/nextbuild.py",
+                    "${file}",
+                    "TAP"
+                ]
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "problemMatcher": {
+                "fileLocation": [
+                    "absolute"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            }
+        },
+        {
+            "label": "Run compiled TAP",
+            "type": "shell",
+            "command": "powershell",
+            "args": [
+                "ii",
+                "${fileDirname}/${fileBasenameNoExtension}.tap",
+            ],
+            "dependsOn": [
+                "Generate TAP"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            },
+        },
+
+
+        {
+            "label": "Parse source file",
+            "type": "shell",
+            "command": "mono ./../Emu/CSpect/CSpect.exe -16bit -nojoy -brk -tv -vsync -nextrom -map=${fileDirname}/memory.txt -zxnext -fill=00 -mmc=${fileDirname}/data/ ${fileDirname}/${fileBasenameNoExtension}.nex",
+            "isBackground": true,
+            "windows": {
+                "command": "./../zxbasic/python/python.exe",
+                "args": [
+                    "./../zxbasic/zxbc.py",
+                    "--parse-only",
+                    "-W",
+                    "160",
+                    "-W",
+                    "140",
+                    "-W",
+                    "150",
+                    "-W",
+                    "170",
+                    "-W",
+                    "190",
+                    "-I",
+                    "./../Scripts/",
+                    "${file}"
+                ]
+            },
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            },
+            "problemMatcher": {
+                "fileLocation": [
+                    "absolute"
+                ],
+                "pattern": {
+                    "regexp": "^(.*):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        },
+        {
+            "label": "Update Nextbuild from github [affects scripts & nextlib.bas, .vscode]",
+            "type": "shell",
+            "command": "powershell",
+            "windows": {
+                "command": [
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Scripts/nextlib.bas -outfile ./../Scripts/nextlib.bas;",
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Scripts/nextbuild.py -outfile ./../Scripts/nextbuild.py;",
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/tasks.json -outfile ./../Sources/.vscode/tasks.json;",
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/settings.json -outfile ./../Sources/.vscode/settings.json;",
+                "wget https://raw.githubusercontent.com/em00k/NextBuild/master/Sources/.vscode/extensions.json -outfile ./../Sources/.vscode/extensions.json;",
+                ]
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": false
+            }
+        }
+    ]
+}

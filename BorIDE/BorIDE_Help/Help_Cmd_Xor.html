@@ -1,0 +1,99 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF00FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style5 {color: #FF0000}
+.style6 {color: #006699}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">XOR</p>
+<p>[Logical Operator] - Returns True or False for a logic comparsion </p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> argument1 XOR argument2 </p>
+<p><em>Parameters:</em></p>
+<p>argument1: any argument</p>
+<p>argument2: another argument  </p>
+<p><em>Description:</em></p>
+<p>Performs a logical XOR (Exclusive OR) and returns TRUE if one of the arguments is true   and one of the arguments is false. In essense, returns true if ONLY one   of the arguments is true. </p>
+<p>Logicals operators are like in ZX Spectrum Basic. Their result can be either <em>False</em> (which is represented with 0) or <em>True</em>, which might be any other value. <u>Don't expect <em>True</em> value number to be always <strong>1</strong></u>. If you need 0/1 values for boolean evaluations, use --strict-boolean compiler option. This might add a little overhead to boolean evaluations, tough.</p>
+<table width="121" align="center">
+  <caption>
+    a <strong>XOR</strong> b
+  </caption>
+  <tbody>
+    <tr>
+      <td width="32"> a<br />
+      </td>
+      <td width="32"> b<br />
+      </td>
+      <td width="53"> Result</td>
+    </tr>
+    <tr>
+      <td> False<br />
+      </td>
+      <td> False<br />
+      </td>
+      <td> False</td>
+    </tr>
+    <tr>
+      <td> False<br />
+      </td>
+      <td> True<br />
+      </td>
+      <td> True</td>
+    </tr>
+    <tr>
+      <td> True<br />
+      </td>
+      <td> False<br />
+      </td>
+      <td> True</td>
+    </tr>
+    <tr>
+      <td> True<br />
+      </td>
+      <td> True<br />
+      </td>
+      <td> False</td>
+    </tr>
+  </tbody>
+</table>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3">REM</span> 'Or
+<span class="style3">LET</span> a = -<span class="style5">1</span>
+<span class="style3">LET</span> b = 17
+<span class="style3">IF</span> a=-1 <span class="style6">XOR</span> b=17 <span class="style3">THEN</span>
+	<span class="style3">PRINT </span>&quot;Both arguments are both false or true, but I can't tell which&quot;
+<span class="style3">END IF</span></pre>
+</blockquote>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This operator is not available in Sinclair BASIC</li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>AND, OR, NOT</p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #FF00FF;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style8 {color: #FF0000}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">ASM</p>
+<p>[Special] - Inserts assembly code </p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> ASM</p>
+<blockquote>
+  <p class="style2">&lt;Any Assembly code&gt; </p>
+</blockquote>
+<p class="style2">END ASM </p>
+<p><em>Parameters:</em></p>
+<p>none</p>
+<p><em>Description:</em></p>
+<p>Starts immediate inline assembly using standard cpu opcodes. Use with caution. </p>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3">FUNCTION</span> FASTCALL whatLetter (A <span class="style3">AS</span> <span class="style8">UBYTE</span>) <span class="style3">AS</span> <span class="style8">UBYTE</span>
+<span class="style3">ASM</span>
+JP START
+DATA:
+DEFB &quot;A Man, A Plan, A Canal, Panama&quot;
+START:
+LD HL,DATA
+LD E, A
+LD D, 0
+ADD HL, DE
+LD A, (HL)
+<span class="style3">END ASM</span>
+<span class="style3">END FUNCTION</span></pre>
+</blockquote>
+<p>The first example will move compilation forward to match the next   multiple of 256 bytes. This is useful in machine code routines as it   matches a new &quot;high byte&quot; position in memory. That is to say that the   data can be addressed by address&nbsp;??00 - the low byte will be zero. This   is often a key optimization for data tables and screen addressing   routines. </p>
+<p>Aligning to a 16K (16384) boundary might be useful in 128K programming. </p>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This is not available in Sinclair BASIC</li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>ALIGN, END ASM </p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

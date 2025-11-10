@@ -1,0 +1,145 @@
+' palette upload and cycling example 0.1
+' NextBuild emook2018
+
+#include <nextlib.bas>
+
+NextReg($43,$1)						' ULANext control reg
+NextReg($42,7)						  ' ULANext number of inks : 255 127 63 31 15 7 
+NextReg($14,$e3)  					' global transparency value 
+NextReg($40,$b)    				' $40 Palette Index Register  I assume that colours 0-7 ink 8-15 bright ink 16+ paper in ULA mode
+NextReg($41,$e7)  					' value of index 
+
+paper 0 : ink 7 : BRIGHT 0:  border 0 : cls
+
+' PalUpload(@Palette,0,128) ' load entire 512 bytes for 9bit 256 colours entries
+' lets do a loop to upload the palette data from an offset to make the colours cycle a bit 
+
+do 
+	
+	' print some text with changing ink, doesnt matter it goes above 7
+	BOLD 1
+	print at 23,0
+	for x=0 to 10
+		print ink x;"ZX SPECTRUM NEXT - PALETTE CYCLE";"ZX SPECTRUM NEXT - PALETTE CYCLE";"ZX SPECTRUM NEXT - PALETTE CYCLE";
+	next x
+	
+	ex=0												' reset exit timer
+	
+	' do a loop with a for next loop, read the palette data and upload it from an offset
+	
+	DO 
+	
+		
+		For x=0 to 63 step 2
+			pause 2
+			PalUpload(@Palette+x,0,1)
+			
+		next x 
+		
+		ex=ex+1										' increase the exit timer
+		
+	loop until ex=5							' timer hit 5 so next bit 
+
+	for x=0 to 23								'slightly different text arrangment 
+		print ink x;"ZX SPECTRUM NEXT - PALETTE CYCLE";
+	next x
+	
+	ex=0												' reset exit timer
+	
+	DO 													' next loop
+
+		For x=0 to 63 step 2	
+			pause 2
+			PalUpload(@Palette+x,0,1)
+			
+		next x 
+		ex=ex+1
+		
+	loop until ex=5
+	
+loop 
+
+PAUSE 0
+
+' This is the palette data in 9 bit format
+' So DEFB LSB,MSB - the MSB will be either 0 or 1, LSB will be 0-255
+' We dont use all these colours but kept so we can set all the colours
+Palette:
+ASM
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,011,000,011,000
+
+	DEFB	224,000,196,000,168,000,136,000
+	DEFB	044,000,012,000,013,000,014,000
+	DEFB	043,000,135,000,167,000,199,000
+	DEFB	230,000,197,000,229,000,229,000	
+
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000	
+	DEFB	255,000,255,000,218,000,218,000
+	DEFB	182,000,182,000,146,000,146,000
+	DEFB	109,000,109,000,073,000,073,000
+	DEFB	037,000,037,000,000,000,000,000
+end asm 
+
+  

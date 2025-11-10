@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>Untitled Document</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #FFFFCC;
+}
+.style1 {
+	font-size: xx-large;
+	font-weight: bold;
+}
+.style2 {
+	color: #666666;
+	font-weight: bold;
+}
+.style3 {color: #0000FF}
+.style10 {color: #FF00FF}
+.style11 {color: #666666}
+.style12 {color: #00FF00}
+-->
+</style></head>
+
+<body>
+<p><img src="boride_logo.png" width="600" height="64" /></p>
+<p class="style1">AT</p>
+<p>[Modifier] - Used with PRINT command, it defines the position of characters output </p>
+<hr />
+<p>Syntax:</p>
+<p class="style2"> AT <span class="style12">y,x </span></p>
+<p><em>Parameters:</em></p>
+<p>y: y coordinate in characters counted from the top (0-23)</p>
+<p>x; x coordinate in characters counted from left (0-31) </p>
+<p><em>Description:</em></p>
+<p><strong>AT</strong> is not a statement, but a <em>modifier</em>.  It can be used both as a <a href="Help_Cmd_Print.html" target="_self">PRINT</a> modifier and a variable declaration modifier </p>
+<p><em>Examples:</em></p>
+<blockquote>
+  <pre><span class="style3">REM</span> Print a string at position y=12 and x=15
+<span class="style3">PRINT</span> <span class="style11">AT</span> 12,15;&quot;String&quot;</pre>
+</blockquote>
+<p>The above program prints the characters &quot;String&quot; at given position. </p>
+<p><em>Notes:</em></p>
+<ul>
+  <li>This identifier is compatible with Sinclair BASIC (see <a href="Help_Cmd_Print.html" target="_self">PRINT</a>), but <em>expands</em> it, since it allows positioning at rows 22 and 23 (all 24 rows are   available to the programmer). Traditionally, Sinclair BASIC only allows   to print at rows 0..21. </li>
+  <li>This identifier <em>expands</em> the Sinclair BASIC version when used with <a href="Help_Cmd_And.html" target="_self">DIM</a> </li>
+</ul>
+<p><em>See also:</em></p>
+<p><a href="Help_Cmd_Int.html" target="_self"></a>DIM, PRINT, CSRLIN, POS </p>
+<hr />
+<p>Supported Plattforms:</p>
+<p>ZX Spectrum</p>
+</body>
+</html>

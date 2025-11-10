@@ -1,0 +1,120 @@
+name: Release (auto)
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - "update.json"
+      - ".github/version"
+      - "package.json"
+      - "CHANGELOG.md"
+      - "**/*.py"
+      - "**/*.bas"
+      - "**/*.asm"
+      - "!**/*.md"
+  workflow_dispatch: {}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # needed to create releases
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # we want tags available
+
+      # --- Determine version ---
+      - name: Determine version
+        id: version
+        shell: bash
+        run: |
+          set -euo pipefail
+          ver=""
+
+          # 1) update.json -> {"version":"1.2.3"} (your “latest update version info”)
+          if [[ -f update.json ]]; then
+            ver=$(jq -r '.version // empty' update.json || true)
+          fi
+
+          # 2) .github/version (plain text)
+          if [[ -z "$ver" && -f .github/version ]]; then
+            ver=$(tr -d ' \t\n\r' < .github/version)
+          fi
+
+          # 3) package.json (Node projects)
+          if [[ -z "$ver" && -f package.json ]]; then
+            ver=$(jq -r '.version // empty' package.json || true)
+          fi
+
+          # 4) latest tag (v1.2.3 or 1.2.3)
+          if [[ -z "$ver" ]]; then
+            if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+              t=$(git describe --tags --abbrev=0)
+              ver="${t#v}"
+            fi
+          fi
+
+          # 5) fallback = short SHA (not ideal, but keeps CI flowing)
+          if [[ -z "$ver" ]]; then
+            ver="0.0.0-$(git rev-parse --short HEAD)"
+          fi
+
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+          echo "Resolved version: $ver"
+
+      # --- (Optional) build step ---
+      # Add your build here if you need compiled artifacts, otherwise skip.
+      # - name: Build
+      #   run: |
+      #     ./build.sh
+
+      # --- Create ZIP (choose one mode) ---
+      # MODE A: zip the *built* output folder (replace "dist" with your build output)
+      # - name: Zip artifacts
+      #   run: |
+      #     mkdir -p out
+      #     zip -r "out/project-v${{ steps.version.outputs.version }}.zip" dist
+
+      # MODE B: zip the repository source (excluding git metadata)
+      - name: Zip source tree
+        run: |
+          mkdir -p out
+          zip -r "out/NextBuild-v${{ steps.version.outputs.version }}.zip" . \
+            -x ".git/*" ".github/workflows/*" "out/*"
+
+      - name: Generate release notes (fallback)
+        id: notes
+        shell: bash
+        run: |
+          if [[ -f CHANGELOG.md ]]; then
+            # Use top section of CHANGELOG.md 
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
+            head -n 30 CHANGELOG.md >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          else
+            # Short log since last tag
+            if git describe --tags --abbrev=0 >/dev/null 2>&1; then
+              last=$(git describe --tags --abbrev=0)
+              body="$(git log --pretty=format:'* %s (%h)' "$last"..HEAD)"
+            else
+              body="$(git log -n 50 --pretty=format:'* %s (%h)')"
+            fi
+            echo "body<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$body" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}
+          name: Release v${{ steps.version.outputs.version }}
+          body: ${{ steps.notes.outputs.body }}
+          draft: false
+          prerelease: false
+          files: |
+            out/NextBuild-v${{ steps.version.outputs.version }}.zip
