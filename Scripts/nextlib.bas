@@ -392,7 +392,7 @@ end asm
 		end asm\
 
 #DEFINE nextregna reg \
-		dw $91ed \
+		dw $92ed \
 		db reg 
 
 #DEFINE ESXDOS \
