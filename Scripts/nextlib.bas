@@ -386,13 +386,13 @@ end asm
 
 #DEFINE nnextreg reg,value\
 		ASM\
-		dw $92ed\
+		dw $91ed\
 		db reg\
 		db value\
 		end asm\
 
 #DEFINE nextregna reg \
-		dw $92ed \
+		dw $91ed \
 		db reg 
 
 #DEFINE ESXDOS \
